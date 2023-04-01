@@ -34,8 +34,8 @@ jobs:
 
       - name: Build React
         run: |
+          cd frontend
           npm run build
-          cd ..
 
       - name: Create and start virtual environment
         run: |
