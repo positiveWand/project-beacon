@@ -22,6 +22,17 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          python-version: '16'
+
+      - name: Install and build React Project
+        run: |
+          cd frontend
+          npm install
+          np run build
+
       - name: Create and start virtual environment
         run: |
           python -m venv venv
@@ -39,6 +50,7 @@ jobs:
           path: |
             . 
             !venv/
+            !frontend/node_modules/
 
   deploy:
     runs-on: ubuntu-latest
