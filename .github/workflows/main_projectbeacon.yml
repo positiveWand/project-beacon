@@ -31,7 +31,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          np run build
+          npm run build
 
       - name: Create and start virtual environment
         run: |
