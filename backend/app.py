@@ -20,9 +20,3 @@ def assets_resource(filename):
 def dbtest():
     dao = dbconnection.DBConnection("azure-testdb")
     return str(dao.efp("SELECT * FROM user"))
-
-@app.route('/modeltest', methods=['GET'])
-def dbtest():
-    aRunner = main.Run()
-    aRunner.run()
-    return "성공!"
