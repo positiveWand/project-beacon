@@ -237,7 +237,3 @@ if __name__ == "__main__":
 
     main = Main(train_config, env_config, debug=False)
     main.run()
-
-    output = [module.__name__ for module in sys.modules.values() if module]
-    output = sorted(output)
-    print('The list of imported Python modules are :',output)
