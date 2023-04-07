@@ -1,6 +1,5 @@
 from db import dbconnection
 from flask import Flask, render_template, send_from_directory
-from GDN_SMART3 import main
 
 app = Flask(__name__, template_folder="../frontend/dist")
 
