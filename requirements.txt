@@ -6,5 +6,5 @@ numpy>=1.21.5
 torch>=1.12
 tensorflow>=2.9
 tensorboard>=2.9
-pyg>=2.3
+torch_geometric>=2.3
 scikit-learn>=1.1
