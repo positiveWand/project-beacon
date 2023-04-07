@@ -1,6 +1,4 @@
 # preprocess data
-import numpy as np
-import re
 
 
 def get_most_common_features(target, all_features, max = 3, min = 3):

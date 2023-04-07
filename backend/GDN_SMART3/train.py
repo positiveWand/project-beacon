@@ -1,21 +1,14 @@
-import numpy as np
+
 import torch
 from torch.utils.tensorboard import SummaryWriter
-import matplotlib.pyplot as plt
-import torch.nn as nn
+
 import time
 from util.time import *
 from util.env import *
-from sklearn.metrics import mean_squared_error
+
 from test import *
 import torch.nn.functional as F
-import numpy as np
-from evaluate import get_best_performance_data, get_val_performance_data, get_full_err_scores
-from sklearn.metrics import precision_score, recall_score, roc_auc_score, f1_score
-from torch.utils.data import DataLoader, random_split, Subset
-from scipy.stats import iqr
-import tensorflow as tf
-import tensorboard as tb
+
 
 
 
@@ -28,7 +21,6 @@ def loss_func(y_pred, y_true):
 
 
 def train(model = None, save_path = '', config={},  train_dataloader=None, val_dataloader=None, feature_map={}, dataset_name='smart', train_dataset=None):
-    tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
     writer = SummaryWriter('runs')
     seed = config['seed']
 

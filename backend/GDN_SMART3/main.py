@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader, random_split, Subset
 from torch.utils.tensorboard import SummaryWriter
 
+from sklearn.preprocessing import MinMaxScaler
 
 from util.env import get_device, set_device
 from util.preprocess import build_loc_net, construct_data
 from util.net_struct import get_feature_map, get_fc_graph_struc
+from util.iostream import printsep
 
 from datasets.TimeDataset import TimeDataset
 
@@ -28,7 +30,6 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
-import json
 import random
 
 
@@ -241,3 +242,7 @@ if __name__ == "__main__":
 
     main = Main(train_config, env_config, debug=False)
     main.run()
+
+    output = [module.__name__ for module in sys.modules.values() if module]
+    output = sorted(output)
+    print('The list of imported Python modules are :',output)
