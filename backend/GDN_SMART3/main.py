@@ -6,12 +6,10 @@ import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader, random_split, Subset
 from torch.utils.tensorboard import SummaryWriter
 
-from sklearn.preprocessing import MinMaxScaler
 
 from util.env import get_device, set_device
 from util.preprocess import build_loc_net, construct_data
 from util.net_struct import get_feature_map, get_fc_graph_struc
-from util.iostream import printsep
 
 from datasets.TimeDataset import TimeDataset
 
