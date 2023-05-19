@@ -1,16 +1,21 @@
 import Header from './Header'
 import MapContainer from './MapContainer';
+import ControlBar from './ControlBar';
+import {MapStore} from './MapStore';
+
+const mapStore = new MapStore();
 
 export default function SearchPage() {
-    const testNav = [
-        {name: "link1", to: "link1 link"},
-        {name: "link2", to: "link2 link"}
+    const navTarget = [
+        {name: "홈", to: "link1 링크 URL", active: false},
+        {name: "탐색", to: "link2 링크 URL", active: true},
     ];
 
     return (
         <>
-            <Header title="B.M.S" navTargets={testNav}></Header>
-            <MapContainer/>
+            <Header title="B.M.S" navTargets={navTarget}></Header>
+            <ControlBar mapStore={mapStore}/>
+            <MapContainer mapStore={mapStore}/>
         </>
     );
 }
