@@ -131,6 +131,11 @@ class MapStore {
     }
     setVisibleBeacons(newBeacons) {
         this.#visibleBeacons = newBeacons;
+        this.updateMap();
+    }
+    resetVisibleBeacons() {
+        this.#visibleBeacons = [...this.#beacons];
+        this.updateMap();
     }
 
     static toContentObject(aBeacon) {
