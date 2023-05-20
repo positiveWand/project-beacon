@@ -1,5 +1,5 @@
 import { useState } from "react";
-import UpdateButton from "./UpdateButton";
+import WaitingButton from "./WaitingButton";
 
 function dateFormat(date) {
     let month = date.getMonth() + 1;
@@ -58,7 +58,7 @@ export default function ControlBar({mapStore}) {
                 <input type="submit" value="검색" />
             </form>
             <div>
-                <UpdateButton clickHandler={handleFetchButtonClick} disabled={loading} />
+                <WaitingButton defaultText="업데이트" waitingText="업데이트 중" clickHandler={handleFetchButtonClick} waiting={loading} spacing={["me-2"]}/>
                 <span>업데이트 일자: {syncTimestamp}</span>
             </div>
         </div>
