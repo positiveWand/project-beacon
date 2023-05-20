@@ -1,5 +1,6 @@
 import { useState } from "react";
 import WaitingButton from "./WaitingButton";
+import ToggleButtonGroup from "./ToggleButtonGroup";
 
 function dateFormat(date) {
     let month = date.getMonth() + 1;
@@ -45,6 +46,36 @@ export default function ControlBar({mapStore}) {
         }, 3500);
     }
 
+    let testNameAndHandler= [
+        {
+            id: "check1",
+            text: "항목1",
+            color: "green",
+            handler: () => {
+                console.log("항목1");
+                console.log(mapStore);
+            }
+        },
+        {
+            id: "check2",
+            text: "항목2",
+            color: "yellow",
+            handler: () => {
+                console.log("항목2");
+                console.log(mapStore);
+            }
+        },
+        {
+            id: "check3",
+            text: "항목3",
+            color: "red",
+            handler: () => {
+                console.log("항목3");
+                console.log(mapStore);
+            }
+        },
+    ];
+
     return (
         <div className="container">
             <h3>검색</h3>
@@ -56,6 +87,9 @@ export default function ControlBar({mapStore}) {
                     <option value="high">높음</option>
                 </select>
                 <input type="submit" value="검색" />
+            </form>
+            <form action="#">
+                <ToggleButtonGroup groupContent={testNameAndHandler} elementSpacing="me-2"/>
             </form>
             <div>
                 <WaitingButton defaultText="업데이트" waitingText="업데이트 중" clickHandler={handleFetchButtonClick} waiting={loading} spacing={["me-2"]}/>
