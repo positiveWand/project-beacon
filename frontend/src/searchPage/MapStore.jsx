@@ -28,6 +28,7 @@ class MapStore {
         this.#eventListeners = [];
 
         this.#beacons = [];
+        this.#visibleBeacons = [];
     }
 
     removeAllMarkers() {
@@ -90,6 +91,8 @@ class MapStore {
                 }
             });
         }
+
+        this.triggerEvent("update", {});
     }
 
     setMap(newMap) {
@@ -109,14 +112,14 @@ class MapStore {
             lng: newCenter.lng,
         }
 
-        this.handleEvent("centerchange", {});
+        this.triggerEvent("centerchange", {});
     }
 
     getBeacons() {
-        return [...this.#beacons];
+        return this.#beacons;
     }
     setBeacons(newBeacons) {
-        this.#beacons = newBeacons;
+        this.#beacons = [...newBeacons];
     }
     addBeacons(aBeacon) {
         if(!aBeacon) {
@@ -127,10 +130,10 @@ class MapStore {
     }
 
     getVisibleBeacons() {
-        return [...this.#visibleBeacons];
+        return this.#visibleBeacons;
     }
     setVisibleBeacons(newBeacons) {
-        this.#visibleBeacons = newBeacons;
+        this.#visibleBeacons = [...newBeacons];
         this.updateMap();
     }
     resetVisibleBeacons() {
@@ -140,7 +143,8 @@ class MapStore {
 
     static toContentObject(aBeacon) {
         return {
-            title: aBeacon.name,
+            id: aBeacon.id,
+            name: aBeacon.name,
             content: {
                 lat: aBeacon.coordinate.lat,
                 lng: aBeacon.coordinate.lng,
@@ -151,7 +155,7 @@ class MapStore {
     }
 
 
-    handleEvent(event, object) {
+    triggerEvent(event, object) {
         for(let {targetEvent, handler} of this.#eventListeners) {
             if(targetEvent == event) {
                 handler(object);

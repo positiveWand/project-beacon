@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, useContext } from "react";
+import { MapStoreContext } from "./MapStoreContext";
 
 const { naver } = window;
 
@@ -20,17 +21,12 @@ function useMapCenter(mapStore) {
     )
 }
 
-export default function MapContainer({mapStore}) {
+export default function MapContainer() {
+    const mapStore = useContext(MapStoreContext);
     const [loading, setLoading] = useState(false);
     const mapElement = useRef(null);
     const mapObject = useRef(null);
     const mapCoordinate = useMapCenter(mapStore);
-
-    function updateMapScreen() {
-        mapStore.updateMap();
-
-        setLoading(false);
-    }
 
     function fetchMapBeacons() {
         // Map Beacons 요청
@@ -39,7 +35,7 @@ export default function MapContainer({mapStore}) {
             mapStore.setBeacons([
                 {
                     id: 0,
-                    name: "abcd",
+                    name: "항로표지0",
                     coordinate: {
                         lat: 37.3784357,
                         lng: 126.594079,
@@ -49,7 +45,7 @@ export default function MapContainer({mapStore}) {
                 },
                 {
                     id: 1,
-                    name: "defg",
+                    name: "항로표지1",
                     coordinate: {
                         lat: 37.3767306,
                         lng: 126.5805178,
@@ -59,10 +55,70 @@ export default function MapContainer({mapStore}) {
                 },
                 {
                     id: 2,
-                    name: "ghij",
+                    name: "항로표지2",
                     coordinate: {
                         lat: 37.3639067,
                         lng: 126.5882425,
+                    },
+                    state: "high",
+                    failure_prob: 90,
+                },
+                {
+                    id: 3,
+                    name: "항로표지3",
+                    coordinate: {
+                        lat: 37.3825279,
+                        lng: 126.5803461,
+                    },
+                    state: "high",
+                    failure_prob: 99,
+                },
+                {
+                    id: 4,
+                    name: "항로표지4",
+                    coordinate: {
+                        lat: 37.3822551,
+                        lng: 126.5607767,
+                    },
+                    state: "medium",
+                    failure_prob: 55,
+                },
+                {
+                    id: 5,
+                    name: "항로표지5",
+                    coordinate: {
+                        lat: 37.33368,
+                        lng: 126.5467005,
+                    },
+                    state: "low",
+                    failure_prob: 10,
+                },
+                {
+                    id: 6,
+                    name: "항로표지6",
+                    coordinate: {
+                        lat: 37.3983488,
+                        lng: 126.5206079,
+                    },
+                    state: "low",
+                    failure_prob: 20,
+                },
+                {
+                    id: 7,
+                    name: "항로표지7",
+                    coordinate: {
+                        lat: 37.3568799,
+                        lng: 126.5418939,
+                    },
+                    state: "medium",
+                    failure_prob: 60,
+                },
+                {
+                    id: 8,
+                    name: "항로표지8",
+                    coordinate: {
+                        lat: 37.3369557,
+                        lng: 126.5607767,
                     },
                     state: "high",
                     failure_prob: 90,
@@ -71,8 +127,7 @@ export default function MapContainer({mapStore}) {
 
             mapStore.setVisibleBeacons(mapStore.getBeacons());
 
-            // Map 화면 갱신
-            updateMapScreen();
+            setLoading(false);
         }, 2000);
     }
 
@@ -112,9 +167,12 @@ export default function MapContainer({mapStore}) {
         currentLng = mapCoordinate.lng;
     }
 
+    let mapEventTestElement = <div>위도:{currentLat}, 경도:{currentLng}, 로딩 중:{loading.toString()}</div>;
+    mapEventTestElement = null;
+
     return (
         <>
-            <div>위도:{currentLat}, 경도:{currentLng}, 로딩 중:{loading.toString()}</div>
+            {mapEventTestElement}
             <div id="map" ref={mapElement} style={{ minHeight: '600px' }}></div>
         </>
     );

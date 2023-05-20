@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import WaitingButton from "./WaitingButton";
 import ToggleButtonGroup from "./ToggleButtonGroup";
+import KeywordSearchBar from "./KeywordSearchBar";
+import SelectSearchBar from "./SelectSearchBar";
+import { MapStoreContext } from "./MapStoreContext";
 
 function dateFormat(date) {
     let month = date.getMonth() + 1;
@@ -18,11 +21,12 @@ function dateFormat(date) {
     return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 }
 
-export default function ControlBar({mapStore}) {
+export default function ControlBar({gridFraction}) {
     const [loading, setLoading] = useState(false);
     const [syncTimestamp, setSyncTimestamp] = useState(dateFormat(new Date()));
+    const mapStore = useContext(MapStoreContext);
 
-    function handleSearchSubmit(event) {
+    function handleKeywordSearchSubmit(event) {
         console.log("검색 양식 제출됨");
         event.preventDefault();
         let targetName = event.target.name.value;
@@ -46,54 +50,15 @@ export default function ControlBar({mapStore}) {
         }, 3500);
     }
 
-    let testNameAndHandler= [
-        {
-            id: "check1",
-            text: "항목1",
-            color: "green",
-            handler: () => {
-                console.log("항목1");
-                console.log(mapStore);
-            }
-        },
-        {
-            id: "check2",
-            text: "항목2",
-            color: "yellow",
-            handler: () => {
-                console.log("항목2");
-                console.log(mapStore);
-            }
-        },
-        {
-            id: "check3",
-            text: "항목3",
-            color: "red",
-            handler: () => {
-                console.log("항목3");
-                console.log(mapStore);
-            }
-        },
-    ];
-
     return (
-        <div className="container">
-            <h3>검색</h3>
-            <form action="#" role="search" onSubmit={handleSearchSubmit}>
-                <input type="search" name="name" id="" placeholder="항로표지 이름..."/>
-                <select name="state" id="">
-                    <option value="low">낮음</option>
-                    <option value="medium">중간</option>
-                    <option value="high">높음</option>
-                </select>
-                <input type="submit" value="검색" />
-            </form>
-            <form action="#">
-                <ToggleButtonGroup groupContent={testNameAndHandler} elementSpacing="me-2"/>
-            </form>
-            <div>
-                <WaitingButton defaultText="업데이트" waitingText="업데이트 중" clickHandler={handleFetchButtonClick} waiting={loading} spacing={["me-2"]}/>
-                <span>업데이트 일자: {syncTimestamp}</span>
+        <div style={{display: "grid", gridTemplateColumns: gridFraction.join("fr ") + "fr"}} className="border-bottom border-2">
+            <KeywordSearchBar handler={handleKeywordSearchSubmit} styleClass={["p-3 border-end border-2"]}/>
+            <div className="d-flex justify-content-between flex-fill p-3">
+                <SelectSearchBar/>
+                <div className="d-flex align-items-center">
+                    <WaitingButton defaultText="업데이트" waitingText="업데이트 중" clickHandler={handleFetchButtonClick} waiting={loading} spacing={["me-2"]}/>
+                    <span>업데이트 일자: {syncTimestamp}</span>
+                </div>
             </div>
         </div>
     );
