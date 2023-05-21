@@ -155,6 +155,22 @@ class MapStore {
         });
     }
 
+    addPlusFilter(name, newFilter) {
+
+    }
+    deletePlusFilter(name) {
+
+    }
+    addMinusFilter(name, newFilter) {
+
+    }
+    deleteMinusFilter(name) {
+
+    }
+    filterBeacons() {
+
+    }
+
     setMap(newMap) {
         this.#map = newMap;
     }

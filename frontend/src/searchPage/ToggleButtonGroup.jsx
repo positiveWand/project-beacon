@@ -20,8 +20,8 @@ export default function ToggleButtonGroup({ groupContent, elementSpacing}) {
 
                     return (
                         <>
-                            <input type="checkbox" className="btn-check" autoComplete="off" id={aTarget.id}/>
-                            <label className={styleClass.join(" ")} htmlFor={aTarget.id} onClick={aTarget.handler}>{aTarget.text}</label>
+                            <input type="checkbox" className="btn-check" autoComplete="off" id={aTarget.id} onChange={aTarget.handler}/>
+                            <label className={styleClass.join(" ")} htmlFor={aTarget.id}>{aTarget.text}</label>
                         </>
                     );
                 })
