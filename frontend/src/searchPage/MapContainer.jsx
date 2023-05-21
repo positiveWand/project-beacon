@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore, useContext } from "react";
 import { MapStoreContext } from "./MapStoreContext";
 
-const { naver } = window;
-
 function useMapCenter(mapStore) {
     function subscribe(callback) {
         let theListener = mapStore.addEventListener("centerchange", e => {

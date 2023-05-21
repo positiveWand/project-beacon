@@ -12,6 +12,7 @@ const { naver } = window;
 class MapStore {
     #map;
     #markers;
+    #infowindows;
 
     #center;
     #eventListeners;
@@ -21,6 +22,7 @@ class MapStore {
 
     constructor() {
         this.#markers = [];
+        this.#infowindows = [];
         this.#center = {
             lat: -1,
             lng: -1,
@@ -57,7 +59,7 @@ class MapStore {
 
     removeAllMarkers() {
         for(const aMarker of this.#markers) {
-            aMarker.setMap(null);
+            aMarker.marker.setMap(null);
         }
         this.#markers = [];
     }
@@ -84,7 +86,7 @@ class MapStore {
                 }
             });
 
-            this.#markers.push(aMarker);
+            this.#markers.push({id: aBeacon.id, marker: aMarker});
 
             let contentObject = MapStore.toContentObject(aBeacon);
 
@@ -95,6 +97,8 @@ class MapStore {
             let aInfoWindow = new naver.maps.InfoWindow({
                 content: contentString,
             });
+
+            this.#infowindows.push({id: aBeacon.id, infowindow: aInfoWindow});
 
             naver.maps.Event.addListener(aMarker, 'click', () => {
                 console.log(aBeacon);
@@ -117,6 +121,28 @@ class MapStore {
         }
 
         this.triggerEvent("update", {});
+    }
+
+    moveAndZoomTo(coord, zoom) {
+        const location = new naver.maps.LatLng(coord.lat, coord.lng);
+        this.#map.updateBy(location, zoom);
+    }
+
+    closeAllInfoWindow() {
+        this.#infowindows.map(aPair => {
+            aPair.infowindow.close();
+        });
+    }
+
+    showInfowindow(id) {
+        this.closeAllInfoWindow();
+        const targetMarker = this.#markers.find(aPair => {
+            return aPair.id == id;
+        });
+        const targetInfowindow = this.#infowindows.find(aPair => {
+            return aPair.id == id;
+        });
+        targetInfowindow.infowindow.open(this.#map, targetMarker);
     }
 
     setMap(newMap) {
