@@ -1,8 +1,8 @@
 import BoxItem from "./BoxItem";
 
-export default function BoxList({content, itemClickHandler}) {
+export default function BoxList({content, itemClickHandler, styleClass}) {
     return (
-        <div className="overflow-y-auto">
+        <div className={["scrollbox overflow-y-auto"].concat(styleClass).join(" ")}>
             <ul className="p-2 d-flex flex-column h-100">
             {
                 content.map(aTarget => {

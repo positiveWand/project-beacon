@@ -10,36 +10,38 @@ const STATE_COLOR = [RED_MARKER_PATH, YELLOW_MARKER_PATH, GREEN_MARKER_PATH];
 const { naver } = window;
 
 class MapStore {
-    #map;
-    #markers;
-    #infowindows;
+    #map; // 지도 객체
+    #markers; // 지도 상에 위치한 마커들: 맵
+    #infowindows; // 정보창들: 맵
 
-    #plusFilters;
-    #minusFilters;
+    #beacons; // 비콘 객체들: 배열
+    #visibleBeacons; // 지도 상에 출력된 비콘 객체들: 배열
 
-    #center;
-    #eventListeners;
+    #unionFilters; // 합집합 필터들: 맵
+    #intersectionFilters; // 교집합 필터들: 맵
 
-    #beacons;
-    #visibleBeacons;
+    #center; // 지도의 중심
+    #eventListeners; // 이벤트 리스너들: 배열
 
     constructor() {
+        this.#map = undefined;
         this.#markers = new Map();
         this.#infowindows = new Map();
 
-        this.#plusFilters = new Map();
-        this.#minusFilters = new Map();
+        this.#beacons = [];
+        this.#visibleBeacons = [];
+
+        this.#unionFilters = new Map();
+        this.#intersectionFilters = new Map();
 
         this.#center = {
             lat: -1,
             lng: -1,
         };
         this.#eventListeners = [];
-
-        this.#beacons = [];
-        this.#visibleBeacons = [];
     }
 
+    // 지도 초기화
     initialize() {
         const location = new naver.maps.LatLng(37.3784357, 126.594079);
         const mapOptions = {
@@ -58,10 +60,21 @@ class MapStore {
                 lng: this.#map.getCenter().lng(),
             });
         });
+
+        this.addUnionFilter("low", aBeacon => {
+            return aBeacon.state == "low";
+        });
+        this.addUnionFilter("medium", aBeacon => {
+            return aBeacon.state == "medium";
+        });
+        this.addUnionFilter("high", aBeacon => {
+            return aBeacon.state == "high";
+        });
     }
+    // 지도 삭제
     destory() {
         this.#map.destroy();
-        this.#map = null;
+        this.#map = undefined;
     }
 
     removeAllMarkers() {
@@ -71,14 +84,43 @@ class MapStore {
         this.#markers = new Map();
     }
 
-    updateMap() {
-        const beacons = this.getVisibleBeacons();
+    closeAllInfowindow() {
+        for (const aInfowindow of this.#infowindows.values()) {
+            if(!aInfowindow) {
+                continue;
+            }
+            aInfowindow.close();
+        }
+    }
+
+    showInfowindow(id) {
+        this.closeAllInfowindow();
+        const targetMarker = this.#markers.get(id);
+        const targetInfowindow = this.#infowindows.get(id);
+        targetInfowindow.open(this.#map, targetMarker);
+        let targetElement = document.querySelector("div.infowindow header a");
+        targetElement.addEventListener("click", () => {
+            console.log("info window close button clicked");
+            targetInfowindow.close();
+        });
+
+        targetElement = document.querySelector("div.infowindow > button");
+        targetElement.addEventListener("click", () => {
+            console.log("info window detail button clicked");
+        });
+    }
+
+    updateMap(beacons) {
         let beacon_color = null;
+        console.log(beacons);
+        this.#visibleBeacons = beacons;
 
         for(let aBeacon of beacons) {
             if(this.#markers.get(aBeacon.id)) {
                 continue;
             }
+
+            console.log(aBeacon);
 
             for(let i = 0; i < STATE_THRESHOLD.length; i++) {
                 if(STATE_THRESHOLD[i] <= aBeacon.failure_prob) {
@@ -110,7 +152,6 @@ class MapStore {
             this.#infowindows.set(aBeacon.id, aInfoWindow);
 
             naver.maps.Event.addListener(aMarker, 'click', () => {
-                console.log(aBeacon);
                 if(aInfoWindow.getMap()) {
                     aInfoWindow.close();
                 } else {
@@ -130,21 +171,21 @@ class MapStore {
         }
 
         this.#markers.forEach((aMarker, id) => {
-            if (!this.#visibleBeacons.find(aBeacon => { return aBeacon.id == id; })) {
+            if (!beacons.find(aBeacon => { return aBeacon.id == id; })) {
                 if(!aMarker) {
                     return;
                 }
                 aMarker.setMap(null);
-                this.#markers.set(id, undefined);
+                this.#markers.delete(id);
             }
         });
         this.#infowindows.forEach((aInfowindow, id) => {
-            if (!this.#visibleBeacons.find(aBeacon => { return aBeacon.id == id; })) {
+            if (!beacons.find(aBeacon => { return aBeacon.id == id; })) {
                 if(!aInfowindow) {
                     return;
                 }
                 aInfowindow.setMap(null);
-                this.#infowindows.set(id, undefined);
+                this.#infowindows.delete(id);
             }
         });
 
@@ -156,48 +197,43 @@ class MapStore {
         this.#map.morph(location, zoom);
     }
 
-    closeAllInfowindow() {
-        for (const aInfowindow of this.#infowindows.values()) {
-            aInfowindow.close();
-        }
+    addUnionFilter(name, newFilter) {
+        this.#unionFilters.set(name, newFilter);
+        this.updateMap(this.filteredBeacons(this.#beacons));
     }
-
-    showInfowindow(id) {
-        this.closeAllInfowindow();
-        const targetMarker = this.#markers.get(id);
-        const targetInfowindow = this.#infowindows.get(id);
-        targetInfowindow.open(this.#map, targetMarker);
-        let targetElement = document.querySelector("div.infowindow header a");
-        targetElement.addEventListener("click", () => {
-            console.log("info window close button clicked");
-            targetInfowindow.close();
+    deleteUnionFilter(name) {
+        this.#unionFilters.delete(name);
+        this.updateMap(this.filteredBeacons(this.#beacons));
+    }
+    addIntersectionFilter(name, newFilter) {
+        this.#intersectionFilters.set(name, newFilter);
+        this.updateMap(this.filteredBeacons(this.#beacons));
+    }
+    deleteIntersectionFilter(name) {
+        this.#intersectionFilters.delete(name);
+        this.updateMap(this.filteredBeacons(this.#beacons));
+    }
+    clearFilters() {
+        this.#unionFilters = new Map();
+        this.addUnionFilter("low", aBeacon => {
+            return aBeacon.state == "low";
         });
-
-        targetElement = document.querySelector("div.infowindow > button");
-        targetElement.addEventListener("click", () => {
-            console.log("info window detail button clicked");
+        this.addUnionFilter("medium", aBeacon => {
+            return aBeacon.state == "medium";
         });
+        this.addUnionFilter("high", aBeacon => {
+            return aBeacon.state == "high";
+        });
+        this.#intersectionFilters = new Map();
+        this.updateMap(this.filteredBeacons(this.#beacons));
     }
-
-    addPlusFilter(name, newFilter) {
-        this.#plusFilters.set(name, newFilter);
-    }
-    deletePlusFilter(name) {
-        this.#plusFilters.delete(name);
-    }
-    addMinusFilter(name, newFilter) {
-        this.#minusFilters.set(name, newFilter);
-    }
-    deleteMinusFilter(name) {
-        this.#minusFilters.delete(name);
-    }
-    filterBeacons() {
+    filteredBeacons(beacons) {
         let filtered = [];
 
-        this.#beacons.map(aBeacon => {
+        beacons.map(aBeacon => {
             let result = false;
 
-            for (const test of this.#plusFilters.values()) {
+            for (const test of this.#unionFilters.values()) {
                 result = result || test(aBeacon);
             }
 
@@ -209,14 +245,14 @@ class MapStore {
         filtered = filtered.filter(aBeacon => {
             let result = true;
 
-            for (const test of this.#minusFilters.values()) {
+            for (const test of this.#intersectionFilters.values()) {
                 result = result && test(aBeacon);
             }
             console.log(result);
             return result;
         });
 
-        this.setVisibleBeacons(filtered);
+        return filtered;
     }
 
     setMap(newMap) {
@@ -244,6 +280,7 @@ class MapStore {
     }
     setBeacons(newBeacons) {
         this.#beacons = [...newBeacons];
+        this.updateMap(this.filteredBeacons(this.#beacons));
     }
     addBeacons(aBeacon) {
         if(!aBeacon) {
@@ -255,14 +292,6 @@ class MapStore {
 
     getVisibleBeacons() {
         return this.#visibleBeacons;
-    }
-    setVisibleBeacons(newBeacons) {
-        this.#visibleBeacons = [...newBeacons];
-        this.updateMap();
-    }
-    resetVisibleBeacons() {
-        this.#visibleBeacons = [...this.#beacons];
-        this.updateMap();
     }
 
     static toContentObject(aBeacon) {

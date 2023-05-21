@@ -7,7 +7,7 @@ export default function WaitingButton({defaultText, waitingText, clickHandler, w
         buttonContent = (
             <>
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span>{ " "+waitingText }</span>
+                <span>{ waitingText }</span>
             </>
         );
     }

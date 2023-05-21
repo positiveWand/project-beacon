@@ -50,7 +50,7 @@ export default function SearchPage() {
             <MapStoreContext.Provider value={mapStore}>
                 <ControlBar gridFraction={[1.5, 4]}/>
                 <div className="flex-grow-1 flex-shirnk-1 overflow-y-auto" style={{display: "grid", gridTemplateColumns: "1.5fr 4fr"}}>
-                    <BoxList content={visibleBeacons.map(aBeacon => MapStore.toContentObject(aBeacon))} itemClickHandler={handleItemClick}/>
+                    <BoxList content={visibleBeacons.map(aBeacon => MapStore.toContentObject(aBeacon))} itemClickHandler={handleItemClick} styleClass={["border-end", "border-2"]}/>
                     <MapContainer/>
                 </div>
             </MapStoreContext.Provider>

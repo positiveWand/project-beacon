@@ -6,3 +6,17 @@ html, body, #root, #root>div {
     background-color: lightgray;
     transition: all 0.2s;
 }
+
+.scrollbox::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbox::-webkit-scrollbar-thumb {
+    background: gray; /* 스크롤바의 색상 */
+    
+    border-radius: 10px;
+}
+
+.scrollbox::-webkit-scrollbar-track {
+    background: lightgray;  /*스크롤바 뒷 배경 색상*/
+}

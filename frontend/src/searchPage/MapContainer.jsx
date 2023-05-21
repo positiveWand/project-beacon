@@ -122,8 +122,6 @@ export default function MapContainer() {
                 },
             ]);
 
-            mapStore.setVisibleBeacons(mapStore.getBeacons());
-
             setLoading(false);
         }, 2000);
     }

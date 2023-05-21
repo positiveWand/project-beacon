@@ -22,7 +22,10 @@ function dateFormat(date) {
 }
 
 export default function ControlBar({gridFraction}) {
-    const [loading, setLoading] = useState(false);
+    const [keyword, setKeyword] = useState("");
+    const [checked, setChecked] = useState([true, true, true]);
+    const [resetLoading, setResetLoading] = useState(false);
+    const [fetchLoading, setFetchLoading] = useState(false);
     const [syncTimestamp, setSyncTimestamp] = useState(dateFormat(new Date()));
     const mapStore = useContext(MapStoreContext);
 
@@ -33,29 +36,38 @@ export default function ControlBar({gridFraction}) {
 
         console.log(keyword);
 
-        mapStore.addMinusFilter("keyword", aBeacon => {
+        mapStore.addIntersectionFilter("keyword", aBeacon => {
             console.log(aBeacon, aBeacon.name.includes(keyword));
             return aBeacon.name.includes(keyword);
         });
-        console.log("dfdf");
-        mapStore.filterBeacons();
     }
 
-    function handleFetchButtonClick(event) {
-        setLoading(true);
+    function handleResetButton(event) {
+        setResetLoading(true);
+        setChecked([true, true, true]);
+        setKeyword("");
+        mapStore.clearFilters();
+        setResetLoading(false);
+    }
+
+    function handleFetchButton(event) {
+        setFetchLoading(true);
         setTimeout(() => {
             setSyncTimestamp(dateFormat(new Date()));
-            setLoading(false);
+            setFetchLoading(false);
         }, 3500);
     }
 
     return (
         <div style={{display: "grid", gridTemplateColumns: gridFraction.join("fr ") + "fr"}} className="border-bottom border-2">
-            <KeywordSearchBar handler={handleKeywordSearchSubmit} styleClass={["p-3 border-end border-2"]}/>
+            <KeywordSearchBar keyword={keyword} setKeyword={setKeyword} onSubmit={handleKeywordSearchSubmit} styleClass={["p-3", "border-end", "border-2"]}/>
             <div className="d-flex justify-content-between flex-fill p-3">
-                <SelectSearchBar/>
+                <div className="d-flex">
+                    <SelectSearchBar checked={checked} setChecked={setChecked}/>
+                    <WaitingButton defaultText="초기화" waitingText="" clickHandler={handleResetButton} waiting={resetLoading} spacing={[]}/>
+                </div>
                 <div className="d-flex align-items-center">
-                    <WaitingButton defaultText="업데이트" waitingText="업데이트 중" clickHandler={handleFetchButtonClick} waiting={loading} spacing={["me-2"]}/>
+                    <WaitingButton defaultText="업데이트" waitingText=" 업데이트 중" clickHandler={handleFetchButton} waiting={fetchLoading} spacing={["me-2"]}/>
                     <span>업데이트 일자: {syncTimestamp}</span>
                 </div>
             </div>

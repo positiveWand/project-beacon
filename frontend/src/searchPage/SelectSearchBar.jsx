@@ -2,88 +2,71 @@ import { useState, useContext, useEffect } from "react";
 import ToggleButtonGroup from "./ToggleButtonGroup";
 import { MapStoreContext } from "./MapStoreContext";
 
-export default function SelectSearchBar() {
-    const [isChecked, setIsChecked] = useState([true, true, true]);
+export default function SelectSearchBar({ checked, setChecked }) {
     const mapStore = useContext(MapStoreContext);
-
-    useEffect(() => {
-        setIsChecked([true, true, true]);
-        mapStore.addPlusFilter("low", aBeacon => {
-            return aBeacon.state == "low";
-        });
-        mapStore.addPlusFilter("medium", aBeacon => {
-            return aBeacon.state == "medium";
-        });
-        mapStore.addPlusFilter("high", aBeacon => {
-            return aBeacon.state == "high";
-        });
-    }, []);
 
     let selectContent= [
         {
             id: "low",
             text: "낮음",
             color: "green",
-            checked: isChecked[0],
+            checked: checked[0],
             handler: (event) => {
                 console.log("low filter clicked");
 
-                let newIsChecked = [...isChecked];
-                newIsChecked[0] = !newIsChecked[0];
-                setIsChecked(newIsChecked);
+                let newChecked = [...checked];
+                newChecked[0] = !newChecked[0];
+                setChecked(newChecked);
                 console.log("hello", event.currentTarget.checked);
                 if(event.currentTarget.checked) {
-                    mapStore.addPlusFilter("low", aBeacon => {
+                    mapStore.addUnionFilter("low", aBeacon => {
                         return aBeacon.state == "low";
                     });
                 } else {
-                    mapStore.deletePlusFilter("low");
+                    mapStore.deleteUnionFilter("low");
                 }
-                mapStore.filterBeacons();
             }
         },
         {
             id: "medium",
             text: "중간",
             color: "yellow",
-            checked: isChecked[1],
+            checked: checked[1],
             handler: (event) => {
                 console.log("medium filter clicked");
 
-                let newIsChecked = [...isChecked];
-                newIsChecked[1] = !newIsChecked[1];
-                setIsChecked(newIsChecked);
+                let newChecked = [...checked];
+                newChecked[1] = !newChecked[1];
+                setChecked(newChecked);
 
                 if(event.currentTarget.checked) {
-                    mapStore.addPlusFilter("medium", aBeacon => {
+                    mapStore.addUnionFilter("medium", aBeacon => {
                         return aBeacon.state == "medium";
                     });
                 } else {
-                    mapStore.deletePlusFilter("medium");
+                    mapStore.deleteUnionFilter("medium");
                 }
-                mapStore.filterBeacons();
             }
         },
         {
             id: "high",
             text: "높음",
             color: "red",
-            checked: isChecked[2],
+            checked: checked[2],
             handler: (event) => {
                 console.log("high filter clicked");
 
-                let newIsChecked = [...isChecked];
-                newIsChecked[2] = !newIsChecked[2];
-                setIsChecked(newIsChecked);
+                let newChecked = [...checked];
+                newChecked[2] = !newChecked[2];
+                setChecked(newChecked);
 
                 if(event.currentTarget.checked) {
-                    mapStore.addPlusFilter("high", aBeacon => {
+                    mapStore.addUnionFilter("high", aBeacon => {
                         return aBeacon.state == "high";
                     });
                 } else {
-                    mapStore.deletePlusFilter("high");
+                    mapStore.deleteUnionFilter("high");
                 }
-                mapStore.filterBeacons();
             }
         },
     ];
