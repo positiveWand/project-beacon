@@ -14,8 +14,8 @@ export default function BoxItem({itemKey, title, content, badge, badgeColor, cli
             break;
     }
     return (
-        <li className="mb-2" key={itemKey} onClick={clickHandler}>
-            <a href="#" className="nav-link d-flex justify-content-between align-items-center border rounded px-2 py-2 hover-bg-lightgray">
+        <li className="mb-2 border rounded px-2 py-2 hover-bg-lightgray" key={itemKey} onClick={clickHandler}>
+            <a href="#" className="nav-link d-flex justify-content-between align-items-center">
                 <div>
                     <span hidden>{itemKey}</span>
                     <h4 className="m-0">{title}</h4>
