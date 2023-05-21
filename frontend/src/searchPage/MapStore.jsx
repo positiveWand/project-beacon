@@ -31,6 +31,30 @@ class MapStore {
         this.#visibleBeacons = [];
     }
 
+    initialize() {
+        const location = new naver.maps.LatLng(37.3784357, 126.594079);
+        const mapOptions = {
+            center: location,
+            zoom: 12,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: naver.maps.Position.TOP_RIGHT,
+            },
+        };
+        this.#map = new naver.maps.Map("map", mapOptions);
+
+        naver.maps.Event.addListener(this.#map, "drag", e => {
+            this.setCenter({
+                lat: this.#map.getCenter().lat(),
+                lng: this.#map.getCenter().lng(),
+            });
+        });
+    }
+    destory() {
+        this.#map.destroy();
+        this.#map = null;
+    }
+
     removeAllMarkers() {
         for(const aMarker of this.#markers) {
             aMarker.setMap(null);

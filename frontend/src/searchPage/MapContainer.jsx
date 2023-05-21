@@ -25,7 +25,6 @@ export default function MapContainer() {
     const mapStore = useContext(MapStoreContext);
     const [loading, setLoading] = useState(false);
     const mapElement = useRef(null);
-    const mapObject = useRef(null);
     const mapCoordinate = useMapCenter(mapStore);
 
     function fetchMapBeacons() {
@@ -132,30 +131,10 @@ export default function MapContainer() {
     }
 
     useEffect(() => {
-        const location = new naver.maps.LatLng(37.3784357, 126.594079);
-        const mapOptions = {
-            center: location,
-            zoom: 12,
-            zoomControl: true,
-            zoomControlOptions: {
-                position: naver.maps.Position.TOP_RIGHT,
-            },
-        };
-        mapObject.current = new naver.maps.Map("map", mapOptions);
-
-        naver.maps.Event.addListener(mapObject.current, "drag", e => {
-            mapStore.setCenter({
-                lat: mapObject.current.getCenter().lat(),
-                lng: mapObject.current.getCenter().lng(),
-            });
-        });
-
-        mapStore.setMap(mapObject.current);
-
+        mapStore.initialize();
         fetchMapBeacons();
         return () => {
-            mapObject.current.destroy();
-            mapObject.current = null;
+            mapStore.destory();
         }
     }, []);
 
