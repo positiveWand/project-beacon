@@ -29,17 +29,16 @@ export default function ControlBar({gridFraction}) {
     function handleKeywordSearchSubmit(event) {
         console.log("검색 양식 제출됨");
         event.preventDefault();
-        let targetName = event.target.name.value;
-        let targetState = event.target.state.value;
+        const keyword = event.target.name.value+"";
 
-        let allBeacons = mapStore.getBeacons();
-        let filteredBeacons = allBeacons.filter( aBeacon => {
-            return aBeacon.name.includes(targetName) && (aBeacon.state == targetState);
+        console.log(keyword);
+
+        mapStore.addMinusFilter("keyword", aBeacon => {
+            console.log(aBeacon, aBeacon.name.includes(keyword));
+            return aBeacon.name.includes(keyword);
         });
-        console.log(targetName, targetState);
-        console.log(filteredBeacons);
-        mapStore.setVisibleBeacons(filteredBeacons);
-        mapStore.updateMap();
+        console.log("dfdf");
+        mapStore.filterBeacons();
     }
 
     function handleFetchButtonClick(event) {
