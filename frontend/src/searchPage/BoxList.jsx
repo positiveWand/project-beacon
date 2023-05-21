@@ -1,11 +1,6 @@
 import BoxItem from "./BoxItem";
 
-export default function BoxList({content}) {
-    function handleItemClick(event) {
-        console.log(event.currentTarget.querySelector("div > span").innerText);
-        const targetKey = event.currentTarget.querySelector("div > span").innerText;
-    }
-
+export default function BoxList({content, itemClickHandler}) {
     return (
         <div className="overflow-y-auto">
             <ul className="p-2 d-flex flex-column h-100">
@@ -35,7 +30,7 @@ export default function BoxList({content}) {
                     content={"위도: " + aTarget.content.lat + " 경도: " + aTarget.content.lng} 
                     badge={badgeText} 
                     badgeColor={badgeColor}
-                    clickHandler={handleItemClick}/>
+                    clickHandler={itemClickHandler}/>
                 })
             }
             </ul>

@@ -125,24 +125,34 @@ class MapStore {
 
     moveAndZoomTo(coord, zoom) {
         const location = new naver.maps.LatLng(coord.lat, coord.lng);
-        this.#map.updateBy(location, zoom);
+        this.#map.morph(location, zoom);
     }
 
-    closeAllInfoWindow() {
+    closeAllInfowindow() {
         this.#infowindows.map(aPair => {
             aPair.infowindow.close();
         });
     }
 
     showInfowindow(id) {
-        this.closeAllInfoWindow();
+        this.closeAllInfowindow();
         const targetMarker = this.#markers.find(aPair => {
             return aPair.id == id;
         });
         const targetInfowindow = this.#infowindows.find(aPair => {
             return aPair.id == id;
         });
-        targetInfowindow.infowindow.open(this.#map, targetMarker);
+        targetInfowindow.infowindow.open(this.#map, targetMarker.marker);
+        let targetElement = document.querySelector("div.infowindow header a");
+        targetElement.addEventListener("click", () => {
+            console.log("info window close button clicked");
+            targetInfowindow.infowindow.close();
+        });
+
+        targetElement = document.querySelector("div.infowindow > button");
+        targetElement.addEventListener("click", () => {
+            console.log("info window detail button clicked");
+        });
     }
 
     setMap(newMap) {
