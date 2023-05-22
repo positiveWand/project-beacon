@@ -19,7 +19,9 @@ export function SignupPage() {
     return (
         <div className="d-flex flex-column overflow-y-auto">
             <Header title="B.M.S" navTargets={navTarget} toLoginHandler={handleToLoginButton} toSignupHandler={handleToSignupButton} />
-            <SignupForm/>
+            <div className='d-flex justify-content-center'>
+                <SignupForm styleClass={['w-25 mt-5']}/>
+            </div>
         </div>  
     );
 }
