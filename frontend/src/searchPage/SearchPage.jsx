@@ -30,9 +30,18 @@ export default function SearchPage() {
     const visibleBeacons = useVisibleBeacons(mapStore);
 
     const navTarget = [
-        {name: "홈", to: "link1 링크 URL", active: false},
-        {name: "탐색", to: "link2 링크 URL", active: true},
+        {name: "홈", to: "/src/mainPage/", active: false},
+        {name: "탐색", to: "/src/searchPage/", active: true},
     ];
+
+    function handleToLoginButton() {
+        console.log("[메인페이지] 로그인 버튼 클릭");
+        location.href = "/src/loginPage/";
+    }
+    function handleToSignupButton() {
+        console.log("[메인페이지] 회원가입 버튼 클릭");
+        location.href = "/src/signupPage/";
+    }
 
     function handleItemClick(event) {
         console.log(event.currentTarget.querySelector("div > span").innerText);
@@ -46,7 +55,7 @@ export default function SearchPage() {
 
     return (
         <div className="d-flex flex-column overflow-y-auto">
-            <Header title="B.M.S" navTargets={navTarget}></Header>
+            <Header title="B.M.S" navTargets={navTarget} toLoginHandler={handleToLoginButton} toSignupHandler={handleToSignupButton} />
             <MapStoreContext.Provider value={mapStore}>
                 <ControlBar gridFraction={[1.5, 4]}/>
                 <div className="flex-grow-1 flex-shirnk-1 overflow-y-auto" style={{display: "grid", gridTemplateColumns: "1.5fr 4fr"}}>

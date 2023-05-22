@@ -1,11 +1,4 @@
-export default function Header({ title, navTargets }) {
-    function handleLoginButton() {
-        console.log("로그인 버튼 클릭!");
-    }
-    function handleSignupButton() {
-        console.log("회원가입 버튼 클릭!");
-    }
-
+export default function Header({ title, navTargets, toLoginHandler, toSignupHandler }) {
     return (
         <header className="p-3 text-bg-primary border-bottom border-2">
             <div className="d-flex align-items-center">
@@ -20,13 +13,13 @@ export default function Header({ title, navTargets }) {
                             if(aTarget.active) {
                                 return (
                                     <li className="nav-item me-2">
-                                        <a className="nav-link active text-light" onClick={() => console.log(aTarget.to)} href="#">{aTarget.name}</a>
+                                        <a className="nav-link active text-light" onClick={() => console.log(aTarget.to)} href={aTarget.to}>{aTarget.name}</a>
                                     </li>
                                 );
                             } else {
                                 return (
                                     <li className="nav-item me-2">
-                                        <a className="nav-link text-light" onClick={() => console.log(aTarget.to)} href="#">{aTarget.name}</a>
+                                        <a className="nav-link text-light" onClick={() => console.log(aTarget.to)} href={aTarget.to}>{aTarget.name}</a>
                                     </li>
                                 );
                             }
@@ -34,8 +27,8 @@ export default function Header({ title, navTargets }) {
                     }
                     </ul>
                     <div>
-                        <button type="button" className="btn btn-light fw-bold me-2" onClick={handleLoginButton}>로그인</button>
-                        <button className="btn btn-light fw-bold" onClick={handleSignupButton}>회원가입</button>
+                        <button type="button" className="btn btn-light fw-bold me-2" onClick={toLoginHandler}>로그인</button>
+                        <button className="btn btn-light fw-bold" onClick={toSignupHandler}>회원가입</button>
                     </div>
                 </nav>
             </div>
