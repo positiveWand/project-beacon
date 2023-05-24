@@ -51,7 +51,7 @@ export default function LoginForm({styleClass}) {
         <label htmlFor="userid" className={['form-label', 'fw-bold', 'fs-'+subLabelSize].join(' ')}>아이디</label>
         <input type="text" id="userid" value={userid} onChange={handleUseridChange} className={['form-control', 'fs-'+inputTextSize].join(' ')} placeholder='아이디 입력' pattern={idPattern} required/>
         <div className='valid-feedback'>유효한 입력입니다.</div>
-        <div className='invalid-feedback'>영문, 숫자만 가능합니다!</div>
+        <div className='invalid-feedback'>16자리 이하의 영문, 숫자만 가능합니다!</div>
       </div>
       <div className='d-flex flex-column mt-3'>
         <label htmlFor="password" className={['form-label', 'fw-bold', 'fs-'+subLabelSize].join(' ')}>비밀번호</label>

@@ -19,9 +19,8 @@ function useMapCenter(mapStore) {
     )
 }
 
-export default function MapContainer() {
+export default function MapContainer({loading, setLoading}) {
     const mapStore = useContext(MapStoreContext);
-    const [loading, setLoading] = useState(false);
     const mapElement = useRef(null);
     const mapCoordinate = useMapCenter(mapStore);
 

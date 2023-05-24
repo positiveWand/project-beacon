@@ -27,8 +27,8 @@ export default function Header({ title, navTargets, toLoginHandler, toSignupHand
                     }
                     </ul>
                     <div>
-                        <button type="button" className="btn btn-light fw-bold me-2" onClick={toLoginHandler}>로그인</button>
-                        <button className="btn btn-light fw-bold" onClick={toSignupHandler}>회원가입</button>
+                        <button type="button" className="btn btn-light me-2" onClick={toLoginHandler}>로그인</button>
+                        <button className="btn btn-light" onClick={toSignupHandler}>회원가입</button>
                     </div>
                 </nav>
             </div>

@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useState } from "react";
 import Header from './Header'
 import MapContainer from './MapContainer';
 import ControlBar from './ControlBar';
@@ -28,6 +28,7 @@ function useVisibleBeacons(mapStore) {
 
 export default function SearchPage() {
     const visibleBeacons = useVisibleBeacons(mapStore);
+    const [fetchLoading, setFetchLoading] = useState(false);
 
     const navTarget = [
         {name: "홈", to: "/src/mainPage/", active: false},
@@ -57,10 +58,10 @@ export default function SearchPage() {
         <div className="d-flex flex-column overflow-y-auto">
             <Header title="B.M.S" navTargets={navTarget} toLoginHandler={handleToLoginButton} toSignupHandler={handleToSignupButton} />
             <MapStoreContext.Provider value={mapStore}>
-                <ControlBar gridFraction={[1.5, 4]}/>
+                <ControlBar gridFraction={[1.5, 4]} fetchLoading={fetchLoading} setFetchLoading={setFetchLoading}/>
                 <div className="flex-grow-1 flex-shirnk-1 overflow-y-auto" style={{display: "grid", gridTemplateColumns: "1.5fr 4fr"}}>
                     <BoxList content={visibleBeacons.map(aBeacon => MapStore.toContentObject(aBeacon))} itemClickHandler={handleItemClick} styleClass={["border-end", "border-2"]}/>
-                    <MapContainer/>
+                    <MapContainer loading={fetchLoading} setLoading={setFetchLoading}/>
                 </div>
             </MapStoreContext.Provider>
         </div>

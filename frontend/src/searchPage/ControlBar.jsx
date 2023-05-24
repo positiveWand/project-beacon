@@ -21,11 +21,10 @@ function dateFormat(date) {
     return date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 }
 
-export default function ControlBar({gridFraction}) {
+export default function ControlBar({gridFraction, fetchLoading, setFetchLoading}) {
     const [keyword, setKeyword] = useState("");
     const [checked, setChecked] = useState([true, true, true]);
     const [resetLoading, setResetLoading] = useState(false);
-    const [fetchLoading, setFetchLoading] = useState(false);
     const [syncTimestamp, setSyncTimestamp] = useState(dateFormat(new Date()));
     const mapStore = useContext(MapStoreContext);
 
