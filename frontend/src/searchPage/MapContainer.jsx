@@ -122,7 +122,7 @@ export default function MapContainer({loading, setLoading}) {
             ]);
 
             setLoading(false);
-        }, 2000);
+        }, 1000);
     }
 
     useEffect(() => {

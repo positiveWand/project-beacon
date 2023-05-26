@@ -147,6 +147,9 @@ class MapStore {
 
             let aInfoWindow = new naver.maps.InfoWindow({
                 content: contentString,
+
+                borderWidth: 0,
+                backgroundColor: 'transparent',
             });
 
             this.#infowindows.set(aBeacon.id, aInfoWindow);
