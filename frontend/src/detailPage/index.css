@@ -31,9 +31,10 @@ img{
 
 #impor1{
   background-color: pink;
-  padding-left: 50px;
+  padding-left: 300px;
   padding-top: 5px;
   padding-bottom: 5px;
+  height: 100px;
 }
 
 #con1{
@@ -42,8 +43,13 @@ img{
   
 }
 
+#isError{
+  margin-top: 100px;
+}
+
 #col1{
-  background-color: green;
+  background-color: gray;
+  
 }
 
 #col2{
