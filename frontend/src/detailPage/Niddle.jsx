@@ -8,12 +8,12 @@ function Niddle(props) {
 
   const RADIAN = Math.PI / 180;
 const data = [
-  { name: 'A', value: 30, color: '#ff0000' },
+  { name: 'A', value: 30, color: '#0000ff' },
   { name: 'B', value: 40, color: '#00ff00' },
-  { name: 'C', value: 30, color: '#0000ff' },
+  { name: 'C', value: 30, color: '#ff0000' },
 ];
-const cx = 150;
-const cy = 200;
+const cx = 200;
+const cy = 100;
 const iR = 50;
 const oR = 100;
 
@@ -45,9 +45,7 @@ const oR = 100;
 
     return (
       <div>
-      <button onClick={onIncrease}>+1</button>
-      <button onClick={onDecrease}>-1</button>
-      <PieChart width={400} height={500}>
+      <PieChart width={400} height={120}>
         <Pie
           dataKey="value"
           startAngle={180}
@@ -66,6 +64,7 @@ const oR = 100;
         </Pie>
         <circle cx={x0} cy={y0} r={r} fill="#d0d000" stroke="none" />,
         <path d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill="#d0d000" />,
+      
       </PieChart>
       </div>
     );

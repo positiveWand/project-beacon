@@ -63,10 +63,10 @@ function Rechart(props) {
   	}, [value])
 
         return (
-            <ResponsiveContainer width="100%" height="50%">
+            <div height="250px">
                 <LineChart
                     width={500}
-                    height={300}
+                    height={200}
                     data={data}
                     margin={{
                         top: 5,
@@ -88,7 +88,8 @@ function Rechart(props) {
                     />
                     <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
                 </LineChart>
-            </ResponsiveContainer>
+                <p>{value}</p>
+            </div>
         );
     
 }
