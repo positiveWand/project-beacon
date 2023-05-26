@@ -8,70 +8,89 @@ import { Table } from "react-bootstrap";
 import WhyError from "./WhyError.jsx";
 import IsError from "./IsError.jsx";
 import { useState, useEffect } from 'react';
+import { testdata } from "./Test";
 
 function App() {
-  const [ value, alertSet ] = useState(0);
-  const yes = "yes"
-  const getRandom = (min, max) => Math.random() * (max - min) + min;
- // const [value, setCount] = useState(0);
-  useEffect(()=>{
-    let timer = setTimeout(()=>{ alertSet(getRandom(0,100)) }, 10000);
-  });
-  return (
-    <div className="App">
-      <div id="con1" class = "container-fluid">
-        <div> 항로표지 상세정보 </div>
-        <div id="impor1">
-        <table>
-          <thead>
-            <tr>
-              <th wei colspan="1">  위도   </th>
-              <th colspan="1">  경도   </th>
-              <th >  항로표지 번호   </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>10.5</td>
-              <td>230</td>
-              <td> 6 </td>
-            </tr>
-          </tbody>
-        </table>
+  const [beaconName, setBeaconName] = useState("-");
+  const [beaconID, setBeaconID] = useState("-");
+  const [beaconCoord, setBeaconCoord] = useState({lat: "-", lng: "-"});
+  const [prob, setProb] = useState(34);
 
+  function fetchBeaconInfo(beaconID) {
+    const targetBeacon = testdata[beaconID];
+    console.log(targetBeacon);
+
+    setBeaconName(targetBeacon.name);
+    setBeaconID(targetBeacon.id);
+    setBeaconCoord({lat: targetBeacon.coordinate.lat, lng: targetBeacon.coordinate.lng});
+    setProb(targetBeacon.failure_prob);
+  }
+
+  useEffect(()=>{
+    const receivedRaw = location.href.split("?")[1];
+    const receivedObject = {};
+    receivedRaw.split("&").map(aItem => {
+      const split = aItem.split("=");
+      receivedObject[split[0]] = split[1];
+      return;
+    });
+    console.log(receivedObject);
+
+    fetchBeaconInfo(receivedObject["id"]);
+  }, []);
+
+  return (
+    <div className="App d-flex flex-column">
+      <div class="d-flex flex-column align-items-center m-4">
+        <h2 className="text-bg-primary rounded-3 fw-bold me-auto p-2">항로표지 상세정보</h2>
+        <div className="w-100 p-4 d-flex justify-content-center dashboard-content">
+          <div className="d-flex justify-content-center beacon-info">
+            <div>
+              <h6>이름</h6>
+              <p>{beaconName}</p>
+            </div>
+            <div>
+              <h6>번호</h6>
+              <p>{beaconID}</p>
+            </div>
+            <div>
+              <h6>위도</h6>
+              <p>{beaconCoord.lat}</p>
+            </div>
+            <div>
+              <h6>경도</h6>
+              <p>{beaconCoord.lng}</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="container-fluid">
-        <div> 상태분석 </div>
-        <div class="row">
-          <div id="col1" class="col">
-            <p>고장 확률</p>
-            <Niddle value={value}/>
-            <p>고장확률 : {value}</p>
+      <div class="d-flex flex-column align-items-center m-4">
+        <h2 className="text-bg-primary rounded-3 fw-bold me-auto p-2">상태분석</h2>
+        <div className="w-100" style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr"}}>
+          <div className="dashboard-content me-1 d-flex flex-column align-items-center p-3">
+            <h3 className="fw-bold">고장 확률</h3>
+            <Niddle value={prob}/>
+            <p className="fw-bold fs-5">{prob+"%"}</p>
             {
-              {value}.value > 70 ?
-              <p>심각한 위험</p> :
-              <p>주시 필요</p>
+              {prob}.prob > 70 ?
+              <p className="fw-bold fs-5">심각한 위험</p> :
+              <p className="fw-bold fs-5">주시 필요</p>
             }
           </div>
-          <div id="col2" class="col">
-            <p>고장 원인 예측</p>
-            <IsError id="isError" value={value}/>
+          <div className="dashboard-content mx-1 d-flex flex-column align-items-center p-3">
+            <h3 className="fw-bold">고장 원인</h3>
+            <IsError id="isError" value={prob}/>
           </div>
-          <div id="col3" class="col">
-            <p>고장 유형 분석</p>
-            <WhyError id="whyError" value={value}/>
+          <div className="dashboard-content ms-1 d-flex flex-column align-items-center p-3">
+            <h3 className="fw-bold">고장 유형</h3>
+            <WhyError id="whyError" value={prob}/>
           </div>
         </div>
 
-        <div class="row">
-          <div id="col4" class="col">
-            <Rechart value={value}/>
-
-          </div>
-          <div id="col5" class="col">
-            Column
-        
+        <div className="w-100 mt-2" style={{display: "grid", gridTemplateColumns: "1fr"}}>
+          <div className="dashboard-content d-flex flex-column align-items-center p-3">
+            <h3 className="fw-bold">고장 확률 추이 그래프</h3>
+            <Rechart value={prob}/>
           </div>
         </div>
 

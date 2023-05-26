@@ -6,13 +6,13 @@ import * as Niddle from "./Niddle.jsx";
 function IsError(props) {
     const value = props.value;
     return (
-        <div>
+        <div className="my-auto">
         {
           value >= 70
-          ? <p>측정 장비 이상</p>
-          : <p>아무튼 뭔가 고장남</p>
+          ? <p className="fw-bold text-decoration-underline fs-4">측정 장비 이상</p>
+          : <p className="fw-bold text-decoration-underline fs-4">연결 회로 이상</p>
         }
-      </div>
+        </div>
     );
 }
 export default IsError;

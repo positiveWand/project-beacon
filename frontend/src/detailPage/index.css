@@ -1,9 +1,18 @@
-html, body {
-  background: rgba( 0, 193, 213, 1);
+.dashboard-content {
+  border: 0.15rem solid lightgray;
+  background-color: rgb(247,244,243);
+  border-radius: 1rem;
 }
 
-img{
-  width: 35%;
+.beacon-info > div {
+  width: 15rem;
+}
+.beacon-info > div > h6 {
+  color: gray;
+}
+.beacon-info > div > p {
+  margin: 0;
+  font-size: 2rem;
 }
 
 .container{

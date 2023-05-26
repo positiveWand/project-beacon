@@ -65,7 +65,7 @@ function Rechart(props) {
         return (
             <div height="250px">
                 <LineChart
-                    width={500}
+                    width={1500}
                     height={200}
                     data={data}
                     margin={{
@@ -88,7 +88,6 @@ function Rechart(props) {
                     />
                     <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
                 </LineChart>
-                <p>{value}</p>
             </div>
         );
     

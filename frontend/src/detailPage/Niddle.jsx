@@ -8,8 +8,8 @@ function Niddle(props) {
 
   const RADIAN = Math.PI / 180;
 const data = [
-  { name: 'A', value: 30, color: '#0000ff' },
-  { name: 'B', value: 40, color: '#00ff00' },
+  { name: 'A', value: 30, color: '#00ff00' },
+  { name: 'B', value: 40, color: '#ffff00' },
   { name: 'C', value: 30, color: '#ff0000' },
 ];
 const cx = 200;
@@ -62,8 +62,8 @@ const oR = 100;
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <circle cx={x0} cy={y0} r={r} fill="#d0d000" stroke="none" />,
-        <path d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill="#d0d000" />,
+        <circle cx={x0} cy={y0} r={r} fill="#000000" stroke="none" />,
+        <path d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill="#000000" />,
       
       </PieChart>
       </div>
