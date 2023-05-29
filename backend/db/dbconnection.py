@@ -20,8 +20,7 @@ class DBConnection():
             password = "Beaconzzang!"
             port = 3306
             database = "testdb"
-            ssl_ca = os.path.abspath(__file__)[:-15]+"DigiCertGlobalRootCA.crt.pem"
-            ssl_disabled = False
+            ssl_disabled = True
 
             conn = pymysql.connect(host=host, user=user, password=password, port=port, database=database, ssl_ca=ssl_ca, ssl_disabled=ssl_disabled, charset='utf8')
         elif target == "azure-beacon":
@@ -30,8 +29,7 @@ class DBConnection():
             password = "Beaconzzang!"
             port = 3306
             database = "beacon"
-            ssl_ca = os.path.abspath(__file__)[:-15]+"DigiCertGlobalRootCA.crt.pem"
-            ssl_disabled = False
+            ssl_disabled = True
 
             conn = pymysql.connect(host=host, user=user, password=password, port=port, database=database, ssl_ca=ssl_ca, ssl_disabled=ssl_disabled, charset='utf8')
         
