@@ -1,10 +1,11 @@
+import {MAIN_PAGE} from "/src/route"
 import beacon_img from "/src/assets/beacon.png";
 
 export default function Header({ title, navTargets, toLoginHandler, toSignupHandler }) {
     return (
         <header className="p-3 text-bg-primary border-bottom border-2">
             <div className="d-flex align-items-center">
-                <a href="/src/mainPage/" className="d-inline-flex align-items-center mb-2 mb-lg-0 px-3 text-white text-decoration-none">
+                <a href={MAIN_PAGE} className="d-inline-flex align-items-center mb-2 mb-lg-0 px-3 text-white text-decoration-none">
                     <img src={beacon_img} alt="항로표지 아이콘" width={50} height={50}/>
                     <h1 className="mb-0 fw-bold"> {title} </h1>
                 </a>

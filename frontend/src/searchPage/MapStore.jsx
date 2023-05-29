@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import InformationWindow from "./InformationWindow";
+import {DETAIL_PAGE} from "/src/route"
 import blue_marker_img from "/src/assets/searchpage/marker_blue.png";
 import green_marker_img from "/src/assets/searchpage/marker_green.png";
 import yellow_marker_img from "/src/assets/searchpage/marker_yellow.png";
@@ -111,8 +112,8 @@ class MapStore {
         targetElement = document.querySelector("div.infowindow > button");
         targetElement.addEventListener("click", () => {
             console.log("info window detail button clicked");
-            console.log("/src/detailPage/?id=" + aBeacon.id);
-            location.href = "/src/detailPage/?id=" + aBeacon.id;
+            console.log(DETAIL_PAGE+"?id=" + aBeacon.id);
+            location.href = DETAIL_PAGE+"?id=" + aBeacon.id;
         });
     }
 
@@ -174,8 +175,8 @@ class MapStore {
                     targetElement = document.querySelector("div.infowindow > button");
                     targetElement.addEventListener("click", () => {
                         console.log("info window detail button clicked");
-                        console.log("/src/detailPage/?id="+aBeacon.id);
-                        location.href = "/src/detailPage/?id="+aBeacon.id;
+                        console.log(DETAIL_PAGE+"?id="+aBeacon.id);
+                        location.href = DETAIL_PAGE+"?id="+aBeacon.id;
                     });
                 }
             });
