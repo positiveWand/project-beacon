@@ -11,10 +11,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        //"dev/index": resolve(__dirname, 'index.html'),
+        "index": resolve(__dirname, 'index.html'),
         "detail": resolve(src, "detailPage", "index.html"),
         "search": resolve(src, "searchPage", "index.html"),
-        "main": resolve(src, "mainPage", "index.html")
+        "main": resolve(src, "mainPage", "index.html"),
+        "login": resolve(src, "loginPage", "index.html"),
+        "signup": resolve(src, "signupPage", "index.html")
       },
     }
   }
