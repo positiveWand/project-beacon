@@ -9,6 +9,8 @@ import WhyError from "./WhyError.jsx";
 import IsError from "./IsError.jsx";
 import { useState, useEffect } from 'react';
 import { testdata } from "./Test";
+import back_arrow_img from "/src/assets/undo.png";
+import {SEARCH_PAGE} from "/src/route";
 
 function App() {
   const [beaconName, setBeaconName] = useState("-");
@@ -27,7 +29,7 @@ function App() {
   }
 
   useEffect(()=>{
-    const receivedRaw = location.href.split("?")[1];
+    const receivedRaw = location.href.split("?")[1].split("#")[0];
     const receivedObject = {};
     receivedRaw.split("&").map(aItem => {
       const split = aItem.split("=");
@@ -41,6 +43,11 @@ function App() {
 
   return (
     <div className="App d-flex flex-column">
+      <div class="border-bottom border-3">
+        <a href={SEARCH_PAGE} className="d-inline-flex align-items-center m-3">
+          <img src={back_arrow_img} alt="뒤로가기 버튼" width="10%" className="border p-2 rounded-2 border-3 border-black"/>
+        </a>
+      </div>
       <div class="d-flex flex-column align-items-center m-4">
         <h2 className="text-bg-primary rounded-3 fw-bold me-auto p-2">항로표지 상세정보</h2>
         <div className="w-100 p-4 d-flex justify-content-center dashboard-content">

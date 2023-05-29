@@ -15,9 +15,3 @@ table{
 th {
   width: 200px;
 }
-	
-img {
-  width: 300px;
-  height: 210px;
-  object-fit: cover;
-}
