@@ -1,10 +1,14 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import InformationWindow from "./InformationWindow";
+import blue_marker_img from "/src/assets/searchpage/marker_blue.png";
+import green_marker_img from "/src/assets/searchpage/marker_green.png";
+import yellow_marker_img from "/src/assets/searchpage/marker_yellow.png";
+import red_marker_img from "/src/assets/searchpage/marker_red.png";
 
-const BLUE_MARKER_PATH = "/src/assets/searchPage/marker_blue.png";
-const GREEN_MARKER_PATH = "/src/assets/searchPage/marker_green.png";
-const YELLOW_MARKER_PATH = "/src/assets/searchPage/marker_yellow.png";
-const RED_MARKER_PATH = "/src/assets/searchPage/marker_red.png";
+const BLUE_MARKER_PATH = blue_marker_img;
+const GREEN_MARKER_PATH = green_marker_img;
+const YELLOW_MARKER_PATH = yellow_marker_img;
+const RED_MARKER_PATH = red_marker_img;
 const STATE_THRESHOLD = [70, 30, 0];
 const STATE_COLOR = [RED_MARKER_PATH, YELLOW_MARKER_PATH, GREEN_MARKER_PATH];
 const { naver } = window;

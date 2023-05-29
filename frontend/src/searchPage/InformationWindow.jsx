@@ -1,3 +1,5 @@
+import cross_img from "/src/assets/searchpage/close.png";
+
 export default function InformationWindow({info}) {
     let testInfo = {
         name: "Beacon 1",
@@ -15,7 +17,7 @@ export default function InformationWindow({info}) {
             <header className="container d-flex mb-2">
                 <h2 className="mb-0 me-5">{info.name}</h2>
                 <a href="#" className="d-inline-flex align-items-center">
-                    <img src="/src/assets/searchPage/close.png" alt="닫기 버튼" width={25} height={25}/>
+                    <img src={cross_img} alt="닫기 버튼" width={25} height={25}/>
                 </a>
             </header>
             <table className="table">

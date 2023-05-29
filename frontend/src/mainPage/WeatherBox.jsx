@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import black_marker_img from "/src/assets/black_marker.png";
 
 export default function WeatherBox({styleClass}) {
     const [weather, setWeather] = useState(null);
@@ -29,7 +30,7 @@ export default function WeatherBox({styleClass}) {
         <div className={["d-flex", "justify-content-center"].concat(styleClass).join(' ')}>
             <div className="d-flex flex-column align-items-center">
                 <div className="d-flex align-items-center">
-                    <img src="/src/assets/black_marker.png" alt="마커" height={20} width={20}/>
+                    <img src={black_marker_img} alt="마커" height={20} width={20}/>
                     <span className="ms-1">{(weather ? weather.name : "") + " 날씨"}</span>
                 </div>
                 <h2>날씨: {weather ? weather.weather[0].main : "-"}</h2>
