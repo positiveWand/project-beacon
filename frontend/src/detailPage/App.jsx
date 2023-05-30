@@ -45,7 +45,7 @@ function App() {
     <div className="App d-flex flex-column">
       <div class="border-bottom border-3">
         <a href={SEARCH_PAGE} className="d-inline-flex align-items-center m-3">
-          <img src={back_arrow_img} alt="뒤로가기 버튼" width="10%" className="border p-2 rounded-2 border-3 border-black"/>
+          <img src={back_arrow_img} alt="탐색 페이지로 돌아가기" width="10%" className="border p-2 rounded-2 border-3 border-black"/>
         </a>
       </div>
       <div class="d-flex flex-column align-items-center m-4">

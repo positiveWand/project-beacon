@@ -112,8 +112,8 @@ class MapStore {
         targetElement = document.querySelector("div.infowindow > button");
         targetElement.addEventListener("click", () => {
             console.log("info window detail button clicked");
-            console.log(DETAIL_PAGE+"?id=" + aBeacon.id);
-            location.href = DETAIL_PAGE+"?id=" + aBeacon.id;
+            console.log(DETAIL_PAGE+"?id=" + id);
+            location.href = DETAIL_PAGE+"?id=" + id;
         });
     }
 
