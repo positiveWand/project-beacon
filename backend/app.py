@@ -63,5 +63,4 @@ def assets_resource(filename):
 
 @app.route('/dbtest', methods=['GET'])
 def dbtest():
-    dao = dbconnection.DBConnection("azure-testdb")
-    return str(dao.efa("SELECT * FROM user"))
+    return str(db.get_all_beacons())
