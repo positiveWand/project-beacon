@@ -1,4 +1,4 @@
-import db.dao as db
+from db.dao import *
 from flask import Flask, render_template, send_from_directory, jsonify
 
 app = Flask(__name__, template_folder="../frontend/dist")
@@ -24,7 +24,7 @@ def detailPage():
     return render_template('/src/detailPage/index.html')
 
 @app.route('/beacon/<int:beacon_id>', methods=['GET'])
-def get_beacon(beacon_id):
+def beacon(beacon_id):
     # 특정 항로표지
     result = {
         'id': None,
@@ -36,8 +36,8 @@ def get_beacon(beacon_id):
         'state': None,
         'failure_prob': None,
     }
-    aBeacon = db.get_beacon(beacon_id)
-    aPredict = db.get_latest_predict(beacon_id)
+    aBeacon = get_beacon(beacon_id)
+    aPredict = get_latest_predict(beacon_id)
     result['id'] = aBeacon.id
     result['name'] = aBeacon.name
     result['coordinate']['lat'] = aBeacon.coord.lat
@@ -48,9 +48,30 @@ def get_beacon(beacon_id):
     return jsonify(result)
 
 @app.route('/beacon/all', methods=['GET'])
-def get_all_beacon():
+def all_beacon():
     # all
-    return
+    result = []
+    for aBeacon in get_all_beacons_with_recent():
+        b = {
+            'id': None,
+            'name': None,
+            'coordinate': {
+                'lat': None,
+                'lng': None,
+            },
+            'state': None,
+            'failure_prob': None,
+        }
+        b['id'] = aBeacon.id
+        b['name'] = aBeacon.name
+        b['coordinate']['lat'] = aBeacon.coord.lat
+        b['coordinate']['lng'] = aBeacon.coord.lng
+        b['state'] = aBeacon.state
+        b['failure_prob'] = aBeacon.recent_prob
+        result.append(b)
+        print(b)
+
+    return jsonify(result)
 
 @app.route('/<path:filename>', methods=['GET'])
 def resource(filename):
@@ -63,4 +84,4 @@ def assets_resource(filename):
 
 @app.route('/dbtest', methods=['GET'])
 def dbtest():
-    return str(db.get_all_beacons())
+    return str(get_all_beacons())

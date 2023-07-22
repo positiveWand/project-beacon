@@ -1,4 +1,4 @@
-from dataobject import DataObject
+from .dataobject import DataObject
 
 class Embedding(DataObject):
     def __init__(self, id, representation) -> None:

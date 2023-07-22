@@ -1,4 +1,4 @@
-from dataobject import DataObject
+from .dataobject import DataObject
 
 class Coordinate(DataObject):
     def __init__(self, lat, lng) -> None:

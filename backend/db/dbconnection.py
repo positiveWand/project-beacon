@@ -7,55 +7,48 @@ class DBConnection():
         conn = None
 
         if target == "local":
-            host = "localhost"
-            user = "test"
-            password = 'testpassword'
-            database = 'testdb'
+            self.host = "localhost"
+            self.user = "test"
+            self.password = 'testpassword'
+            self.database = 'testdb'
 
-            conn = pymysql.connect(host=host, user=user, password=password, database=database, charset='utf8')
         elif target == "azure-testdb":
-            host = "projectbeacon-db.mysql.database.azure.com"
-            user = "captain"
-            password = "Beaconzzang!"
-            port = 3306
-            database = "testdb"
-            ssl_disabled = True
+            self.host = "projectbeacon-db.mysql.database.azure.com"
+            self.user = "captain"
+            self.password = "Beaconzzang!"
+            self.port = 3306
+            self.database = "testdb"
+            self.ssl_disabled = True
 
-            conn = pymysql.connect(host=host, user=user, password=password, port=port, database=database, ssl_disabled=ssl_disabled, charset='utf8')
         elif target == "azure-beacon":
-            host = "projectbeacon-db.mysql.database.azure.com"
-            user = "captain"
-            password = "Beaconzzang!"
-            port = 3306
-            database = "beacon"
-            ssl_disabled = True
-
-            conn = pymysql.connect(host=host, user=user, password=password, port=port, database=database, ssl_disabled=ssl_disabled, charset='utf8')
-        
-        self.conn = conn
-        self.cursor = conn.cursor(pymysql.cursors.DictCursor)
-
-    def execute(self, sql, data = ()):
-        self.cursor.execute(sql, data)
-
-    def fetch(self):
-        self.cursor.fetchone()
+            self.host = "projectbeacon-db.mysql.database.azure.com"
+            self.user = "captain"
+            self.password = "Beaconzzang!"
+            self.port = 3306
+            self.database = "beacon"
+            self.ssl_disabled = True
     
-    def fetchall(self):
-        return self.cursor.fetchall()
+    def start_conn(self):
+        self.conn = pymysql.connect(host=self.host, user=self.user, password=self.password, port=self.port, database=self.database, ssl_disabled=self.ssl_disabled, charset='utf8')
+        self.cursor = self.conn.cursor(pymysql.cursors.DictCursor)
+    def close_conn(self):
+        self.conn.close()
     
     def efo(self, sql, data = ()):
+        self.start_conn()
         self.cursor.execute(sql, data)
+        self.close_conn()
         return self.cursor.fetchone()
 
     def efa(self, sql, data = ()):
+        self.start_conn()
         self.cursor.execute(sql, data)
         rows = self.cursor.fetchall()
+        self.close_conn()
         return rows
     
     def ec(self, sql, data = ()):
+        self.start_conn()
         self.cursor.execute(sql, data)
         self.conn.commit()
-
-    def __del__(self):
-        self.conn.close()
+        self.close_conn()
