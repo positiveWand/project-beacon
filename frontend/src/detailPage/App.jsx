@@ -28,7 +28,12 @@ function App() {
     // setProb(targetBeacon.failure_prob);
     fetch('/beacon/'+beaconID)
     .then(res => res.json())
-    .then(json => console.log(json));
+    .then(targetBeacon => {
+      setBeaconName(targetBeacon.name);
+      setBeaconID(targetBeacon.id);
+      setBeaconCoord({lat: targetBeacon.coordinate.lat, lng: targetBeacon.coordinate.lng});
+      setProb(targetBeacon.failure_prob);
+    });
   }
 
   useEffect(()=>{
