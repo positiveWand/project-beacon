@@ -1,5 +1,5 @@
-from db import dbconnection
-from flask import Flask, render_template, send_from_directory
+import db.dao as db
+from flask import Flask, render_template, send_from_directory, jsonify
 
 app = Flask(__name__, template_folder="../frontend/dist")
 
@@ -23,6 +23,35 @@ def searchPage():
 def detailPage():
     return render_template('/src/detailPage/index.html')
 
+@app.route('/beacon/<int:beacon_id>', methods=['GET'])
+def get_beacon(beacon_id):
+    # 특정 항로표지
+    result = {
+        'id': None,
+        'name': None,
+        'coordinate': {
+            'lat': None,
+            'lng': None,
+        },
+        'state': None,
+        'failure_prob': None,
+    }
+    aBeacon = db.get_beacon(beacon_id)
+    aPredict = db.get_latest_predict(beacon_id)
+    result['id'] = aBeacon.id
+    result['name'] = aBeacon.name
+    result['coordinate']['lat'] = aBeacon.coord.lat
+    result['coordinate']['lng'] = aBeacon.coord.lng
+    result['state'] = aPredict.get_state()
+    result['failure_prob'] = aPredict.score
+
+    return jsonify(result)
+
+@app.route('/beacon/all', methods=['GET'])
+def get_all_beacon():
+    # all
+    return
+
 @app.route('/<path:filename>', methods=['GET'])
 def resource(filename):
     print("resource", filename)
@@ -35,4 +64,4 @@ def assets_resource(filename):
 @app.route('/dbtest', methods=['GET'])
 def dbtest():
     dao = dbconnection.DBConnection("azure-testdb")
-    return str(dao.efp("SELECT * FROM user"))
+    return str(dao.efa("SELECT * FROM user"))

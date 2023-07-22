@@ -1,10 +1,9 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import time
 from util.time import *
 from util.env import *
-
-
 
 from util.data import *
 from util.preprocess import *

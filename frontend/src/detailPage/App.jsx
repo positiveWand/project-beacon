@@ -19,13 +19,16 @@ function App() {
   const [prob, setProb] = useState(34);
 
   function fetchBeaconInfo(beaconID) {
-    const targetBeacon = testdata[beaconID];
-    console.log(targetBeacon);
+    // const targetBeacon = testdata[beaconID];
+    // console.log(targetBeacon);
 
-    setBeaconName(targetBeacon.name);
-    setBeaconID(targetBeacon.id);
-    setBeaconCoord({lat: targetBeacon.coordinate.lat, lng: targetBeacon.coordinate.lng});
-    setProb(targetBeacon.failure_prob);
+    // setBeaconName(targetBeacon.name);
+    // setBeaconID(targetBeacon.id);
+    // setBeaconCoord({lat: targetBeacon.coordinate.lat, lng: targetBeacon.coordinate.lng});
+    // setProb(targetBeacon.failure_prob);
+    fetch('/beacon/'+beaconID)
+    .then(res => res.json())
+    .then(json => console.log(json));
   }
 
   useEffect(()=>{

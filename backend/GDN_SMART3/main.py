@@ -2,29 +2,20 @@
 import pandas as pd
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, random_split, Subset
-
-
+from torch.utils.data import DataLoader, Subset
 from util.env import get_device, set_device
 from util.preprocess import build_loc_net, construct_data
 from util.net_struct import get_feature_map, get_fc_graph_struc
-
 from datasets.TimeDataset import TimeDataset
-
 from models.GDN import GDN
-
 from train import train
-from test import test
-from evaluate import get_err_scores, get_best_performance_data, get_val_performance_data, get_full_err_scores
+from evaluate import get_best_performance_data, get_val_performance_data, get_full_err_scores
 
 import sys
 from datetime import datetime
-
 import os
 import argparse
 from pathlib import Path
-
-
 import random
 
 
@@ -35,25 +26,32 @@ class Main():
         self.env_config = env_config
         self.datestr = None
 
+        # 데이터 로드
         dataset = self.env_config['dataset']
-        #train_orig = pd.read_csv(f'./data/{dataset}/2018-10_104.csv', sep=',', index_col=0)
-        train_orig = pd.read_csv(f'./data/{dataset}/2018-10_105.csv', sep=',', index_col=0)
-        #train_orig = pd.read_csv(f'./data/{dataset}/2018-10_106.csv', sep=',', index_col=0)
-        #train_orig = pd.read_csv(f'./data/{dataset}/2018-10_107.csv', sep=',', index_col=0)
+        #train_orig = pd.read_csv(f'./data/{dataset}/994403586_2018.csv', sep=',', index_col=0)
+        train_orig = pd.read_csv(f'./data/{dataset}/anomaly.csv', sep=',', index_col=0)
+        #train_orig = pd.read_csv(f'./data/{dataset}/normal.csv', sep=',', index_col=0)
         train_orig = train_orig.fillna(0)
 
-        train = train_orig[['MAIN_VOLT_STATUS', 'SOLAR_VOLT_STATUS','BATTERY_VOLT_STATUS', 'SPARE_VOLT_STATUS', 'AIS_CURR_STATUS', 'LANTERN_CURR_STATUS', 'DATALOGGER_CURR_STATUS', 'CHARGER_CURR_STATUS', 'DISCHARGER_CURR_STATUS']]
+        # 고장예측 장비 칼럼
+        train = train_orig[[
+            'LANTERN_STATUS', 'RACON_STATUS', 'BATTERY_STATUS', 'CHARGER_STATUS', 'SOLAR_STATUS', 'DATALOGGER_STATUS', 'SPARE_STATUS', 'MAIN_VOLT_STATUS',
+            'SUB_VOLT_STATUS', 'SOLAR_VOLT_STATUS', 'WIND_VOLT_STATUS', 'WAVE_VOLT_STATUS', 'CHARGER_VOLT_STATUS', 'BATTERY_VOLT_STATUS', 'SPARE_VOLT_STATUS',
+            'AIS_CURR_STATUS', 'LANTERN_CURR_STATUS', 'DATALOGGER_CURR_STATUS', 'SPARE_CURR_STATUS', 'WIND_SPEED_STATUS', 'WIND_DIRECT_STATUS', 'AIR_TEMPER_STATUS',
+            'HUMIDITY_STATUS', 'DEW_POINT_STATUS', 'AIR_PRESSURE_STATUS', 'HORIZON_VISIBL_STATUS', 'WATER_LEVEL_STATUS', 'CURRENT1_STATUS', 'CURRENT2_STATUS',
+            'CURRENT3_STATUS', 'WAVE_HEIGHT_STATUS', 'WAVE_DRC_STATUS', 'SWELL_HEIGHT_STATUS', 'SWELL_DRC_STATUS', 'WATER_TEMPER_STATUS', 'PRECIPI_TYPE_STATUS',
+            'SALINITY_STATUS', 'ICE_STATUS', 'HEAT_PROSTR_STATUS', 'HELIOGRAPH_STATUS', 'OXYGEN_STATUS', 'OXYGEN_SATUR_STATUS', 'PH_STATUS', 'CHLOROPHYLL_STATUS',
+            'MUDDINESS_STATUS', 'PRECIPI_STATUS', 'CHARGER_CURR_STATUS', 'DISCHARGER_CURR_STATUS'
+            ]]
 
+        # 그래프 구축
         feature_map = get_feature_map(dataset)
         fc_struc = get_fc_graph_struc(dataset)
-
         set_device(env_config['device'])
         self.device = get_device()
         self.feature_map = feature_map
-
         fc_edge_index = build_loc_net(fc_struc, list(train.columns), feature_map=feature_map)
         fc_edge_index = torch.tensor(fc_edge_index, dtype=torch.long)
-
         train_dataset_indata = construct_data(train, feature_map, labels=0)
 
         cfg = {
@@ -187,7 +185,7 @@ if __name__ == "__main__":
     parser.add_argument('-epoch', help='train epoch', type=int, default=1)
     parser.add_argument('-slide_win', help='slide_win', type=int, default=5)
     parser.add_argument('-dim', help='dimension', type=int, default=64)
-    parser.add_argument('-slide_stride', help='slide_stride', type=int, default=5)
+    parser.add_argument('-slide_stride', help='slide_stride', type=int, default=2)
     parser.add_argument('-save_path_pattern', help='save path pattern', type=str, default='msl')
     parser.add_argument('-dataset', help='wadi / swat', type=str, default='smart')
     parser.add_argument('-device', help='cuda / cpu', type=str, default='cpu')
