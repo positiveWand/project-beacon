@@ -1,7 +1,7 @@
 from .dataobject import DataObject
 
 class Prediction(DataObject):
-    def __init__(self, id, time, score) -> None:
+    def __init__(self, id = None, time = None, score = None) -> None:
         self.id = id
         self.time = time
         self.score = score

@@ -16,7 +16,7 @@ function App() {
   const [beaconName, setBeaconName] = useState("-");
   const [beaconID, setBeaconID] = useState("-");
   const [beaconCoord, setBeaconCoord] = useState({lat: "-", lng: "-"});
-  const [prob, setProb] = useState(34);
+  const [prob, setProb] = useState(null);
 
   function fetchBeaconInfo(beaconID) {
     // const targetBeacon = testdata[beaconID];

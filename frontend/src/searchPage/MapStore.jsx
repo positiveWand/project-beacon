@@ -1,17 +1,18 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import InformationWindow from "./InformationWindow";
 import {DETAIL_PAGE} from "/src/route"
+import gray_marker_img from "/src/assets/searchpage/marker_gray.png"
 import blue_marker_img from "/src/assets/searchpage/marker_blue.png";
 import green_marker_img from "/src/assets/searchpage/marker_green.png";
 import yellow_marker_img from "/src/assets/searchpage/marker_yellow.png";
 import red_marker_img from "/src/assets/searchpage/marker_red.png";
 
+const GRAY_MARKER_PATH = gray_marker_img;
 const BLUE_MARKER_PATH = blue_marker_img;
 const GREEN_MARKER_PATH = green_marker_img;
 const YELLOW_MARKER_PATH = yellow_marker_img;
 const RED_MARKER_PATH = red_marker_img;
-const STATE_THRESHOLD = [70, 30, 0];
-const STATE_COLOR = [RED_MARKER_PATH, YELLOW_MARKER_PATH, GREEN_MARKER_PATH];
+const STATE_THRESHOLD = [66, 33, 0];
 const { naver } = window;
 
 class MapStore {
@@ -66,6 +67,9 @@ class MapStore {
             });
         });
 
+        this.addUnionFilter("else", aBeacon => {
+            return aBeacon.state != 'low' && aBeacon.state != 'medium' && aBeacon.state != 'high';
+        });
         this.addUnionFilter("low", aBeacon => {
             return aBeacon.state == "low";
         });
@@ -129,12 +133,22 @@ class MapStore {
 
             console.log(aBeacon);
 
-            for(let i = 0; i < STATE_THRESHOLD.length; i++) {
-                if(STATE_THRESHOLD[i] <= aBeacon.failure_prob) {
-                    beacon_color = STATE_COLOR[i];
-                    break;
-                }
+            // for(let i = 0; i < STATE_THRESHOLD.length; i++) {
+            //     if(STATE_THRESHOLD[i] <= aBeacon.failure_prob) {
+            //         beacon_color = STATE_COLOR[i];
+            //         break;
+            //     }
+            // }
+            if (aBeacon.state == 'high') {
+                beacon_color = RED_MARKER_PATH;
+            } else if (aBeacon.state == 'medium') {
+                beacon_color = YELLOW_MARKER_PATH;
+            } else if (aBeacon.state == 'low') {
+                beacon_color = GREEN_MARKER_PATH;
+            } else {
+                beacon_color = GRAY_MARKER_PATH;
             }
+
             let aMarker = new naver.maps.Marker({
                 position: new naver.maps.LatLng(aBeacon.coordinate.lat, aBeacon.coordinate.lng),
                 map: this.#map,
@@ -227,6 +241,9 @@ class MapStore {
     }
     clearFilters() {
         this.#unionFilters = new Map();
+        this.addUnionFilter("else", aBeacon => {
+            return aBeacon.state != 'low' && aBeacon.state != 'medium' && aBeacon.state != 'high';
+        });
         this.addUnionFilter("low", aBeacon => {
             return aBeacon.state == "low";
         });

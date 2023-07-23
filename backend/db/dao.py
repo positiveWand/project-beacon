@@ -29,7 +29,10 @@ def get_latest_predict(beacon_id):
     select_latest_predict = 'SELECT * FROM `PREDICT_LOG` WHERE `id` = %s ORDER BY `time` DESC LIMIT 1'
 
     aPredict = db.efo(select_latest_predict, (beacon_id))
-    result = Prediction(aPredict['id'], aPredict['time'], aPredict['score'])
+    if aPredict is not None:
+        result = Prediction(aPredict['id'], aPredict['time'], aPredict['score'])
+    else:
+        result = Prediction()
 
     return result
 

@@ -1,4 +1,5 @@
 from db.dao import *
+from batch.command import print_message
 from flask import Flask, render_template, send_from_directory, jsonify
 
 app = Flask(__name__, template_folder="../frontend/dist")
@@ -26,33 +27,26 @@ def detailPage():
 @app.route('/beacon/<int:beacon_id>', methods=['GET'])
 def beacon(beacon_id):
     # 특정 항로표지
-    result = {
-        'id': None,
-        'name': None,
-        'coordinate': {
-            'lat': None,
-            'lng': None,
-        },
-        'state': None,
-        'failure_prob': None,
-    }
     aBeacon = get_beacon(beacon_id)
     aPredict = get_latest_predict(beacon_id)
-    result['id'] = aBeacon.id
-    result['name'] = aBeacon.name
-    result['coordinate']['lat'] = aBeacon.coord.lat
-    result['coordinate']['lng'] = aBeacon.coord.lng
-    result['state'] = aPredict.get_state()
-    result['failure_prob'] = aPredict.score
 
-    return jsonify(result)
+    return jsonify({
+        'id': aBeacon.id,
+        'name': aBeacon.name,
+        'coordinate': {
+            'lat': aBeacon.coord.lat,
+            'lng': aBeacon.coord.lng,
+        },
+        'state': aPredict.get_state(),
+        'failure_prob': aPredict.score,
+    })
 
 @app.route('/beacon/all', methods=['GET'])
 def all_beacon():
     # all
-    result = []
+    beacon_list = []
     for aBeacon in get_all_beacons_with_recent():
-        b = {
+        obejct = {
             'id': None,
             'name': None,
             'coordinate': {
@@ -62,16 +56,15 @@ def all_beacon():
             'state': None,
             'failure_prob': None,
         }
-        b['id'] = aBeacon.id
-        b['name'] = aBeacon.name
-        b['coordinate']['lat'] = aBeacon.coord.lat
-        b['coordinate']['lng'] = aBeacon.coord.lng
-        b['state'] = aBeacon.state
-        b['failure_prob'] = aBeacon.recent_prob
-        result.append(b)
-        print(b)
-
-    return jsonify(result)
+        obejct['id'] = aBeacon.id
+        obejct['name'] = aBeacon.name
+        obejct['coordinate']['lat'] = aBeacon.coord.lat
+        obejct['coordinate']['lng'] = aBeacon.coord.lng
+        obejct['state'] = aBeacon.state
+        obejct['failure_prob'] = aBeacon.recent_prob
+        beacon_list.append(obejct)
+    print(beacon_list)
+    return jsonify(beacon_list)
 
 @app.route('/<path:filename>', methods=['GET'])
 def resource(filename):
@@ -85,3 +78,18 @@ def assets_resource(filename):
 @app.route('/dbtest', methods=['GET'])
 def dbtest():
     return str(get_all_beacons())
+
+@app.route('/command/<string:name>', methods=['GET'])
+def command(name):
+    result = False
+    if name == 'print_message':
+        result = print_message()
+    elif name == 'something':
+        pass
+    else:
+        pass
+
+    if result:
+        return "명령 처리 성공"
+    else:
+        return "명령 처리 실패"
