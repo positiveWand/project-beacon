@@ -82,7 +82,7 @@ def dbtest():
 @app.route('/command/<string:name>', methods=['GET'])
 def command(name):
     result = False
-    if name == 'print_message':
+    if name == 'pm':
         result = print_message()
     elif name == 'something':
         pass

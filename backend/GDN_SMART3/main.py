@@ -29,8 +29,8 @@ class Main():
         # 데이터 로드
         dataset = self.env_config['dataset']
         #train_orig = pd.read_csv(f'./data/{dataset}/994403586_2018.csv', sep=',', index_col=0)
-        train_orig = pd.read_csv(f'./data/{dataset}/anomaly.csv', sep=',', index_col=0)
-        #train_orig = pd.read_csv(f'./data/{dataset}/normal.csv', sep=',', index_col=0)
+        # train_orig = pd.read_csv(f'./data/{dataset}/anomaly.csv', sep=',', index_col=0)
+        train_orig = pd.read_csv(f'./data/{dataset}/normal.csv', sep=',', index_col=0)
         train_orig = train_orig.fillna(0)
 
         # 고장예측 장비 칼럼
@@ -45,14 +45,14 @@ class Main():
             ]]
 
         # 그래프 구축
-        feature_map = get_feature_map(dataset)
-        fc_struc = get_fc_graph_struc(dataset)
+        feature_map = get_feature_map(dataset) # list.txt 파일에 등록된 칼럼들 목록 list
+        fc_struc = get_fc_graph_struc(dataset) # feature_map의 칼럼들의 Fully-Connected 그래프
         set_device(env_config['device'])
         self.device = get_device()
         self.feature_map = feature_map
-        fc_edge_index = build_loc_net(fc_struc, list(train.columns), feature_map=feature_map)
+        fc_edge_index = build_loc_net(fc_struc, list(train.columns), feature_map=feature_map) # 0 -> 엣지 시작 노드 Feature Map에서의 인덱스, 1 -> 엣지 끝 노드 Feature Map에서의 인덱스
         fc_edge_index = torch.tensor(fc_edge_index, dtype=torch.long)
-        train_dataset_indata = construct_data(train, feature_map, labels=0)
+        train_dataset_indata = construct_data(train, feature_map, labels=0) # 1 row -> 1 tick의 데이터
 
         cfg = {
             'slide_win': train_config['slide_win'],

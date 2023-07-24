@@ -47,7 +47,7 @@ def get_all_predict(beacon_id):
 
 def get_all_beacons_with_recent():
     result = []
-    select_all_beacons_with_recent = 'SELECT * FROM `BEACON` A LEFT OUTER JOIN (SELECT id, time, score FROM `PREDICT_LOG` WHERE `time` = (SELECT MAX(`time`) FROM `PREDICT_LOG`)) B ON A.id = B.id'
+    select_all_beacons_with_recent = 'SELECT * FROM `BEACON` A LEFT OUTER JOIN (SELECT id, time, score FROM `PREDICT_LOG` B WHERE `time` = (SELECT MAX(`time`) FROM `PREDICT_LOG` C WHERE B.time = C.time)) D ON A.id = D.id'
 
     for aTuple in db.efa(select_all_beacons_with_recent):
         print(aTuple)

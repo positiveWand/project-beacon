@@ -24,9 +24,10 @@ class GraphLayer(MessagePassing):
 
         self.lin = Linear(in_channels, heads * out_channels, bias=False)
 
-        self.att_i = Parameter(torch.Tensor(1, heads, out_channels))
+        # 어텐션 계수(멀티헤드)
+        self.att_i = Parameter(torch.Tensor(1, heads, out_channels)) # 특징 어텐션
         self.att_j = Parameter(torch.Tensor(1, heads, out_channels))
-        self.att_em_i = Parameter(torch.Tensor(1, heads, out_channels))
+        self.att_em_i = Parameter(torch.Tensor(1, heads, out_channels)) # 임베딩 어텐션
         self.att_em_j = Parameter(torch.Tensor(1, heads, out_channels))
 
         if bias and concat:
@@ -82,26 +83,27 @@ class GraphLayer(MessagePassing):
                 embedding,
                 edges,
                 return_attention_weights):
-
-        x_i = x_i.view(-1, self.heads, self.out_channels)
-        x_j = x_j.view(-1, self.heads, self.out_channels)
+        x_i = x_i.view(-1, self.heads, self.out_channels) # 정보 취합 노드 특징값(N, #head, #out_channel)
+        x_j = x_j.view(-1, self.heads, self.out_channels) # 정보 제공 노드 특징값(N, #head, #out_channel)
 
 
         if embedding is not None:
-            embedding_i, embedding_j = embedding[edge_index_i], embedding[edges[0]]
-            embedding_i = embedding_i.unsqueeze(1).repeat(1, self.heads, 1)
-            embedding_j = embedding_j.unsqueeze(1).repeat(1, self.heads, 1)
+            embedding_i, embedding_j = embedding[edge_index_i], embedding[edges[0]] # 센서 임베딩(N, #임베딩 크기)
+            embedding_i = embedding_i.unsqueeze(1).repeat(1, self.heads, 1) # 센서 임베딩(N, #head, #임베딩 크기)
+            embedding_j = embedding_j.unsqueeze(1).repeat(1, self.heads, 1) # 센서 임베딩(N, #head, #임베딩 크기)
 
-            key_i = torch.cat((x_i, embedding_i), dim=-1)
+            key_i = torch.cat((x_i, embedding_i), dim=-1) # (N, #head, #out_channel + #임베딩 크기)
             key_j = torch.cat((x_j, embedding_j), dim=-1)
 
-        cat_att_i = torch.cat((self.att_i, self.att_em_i), dim=-1)
+        # self.att (1, #head, #out_channel)
+        # self.att_em (1, #head, #out_channel)
+        cat_att_i = torch.cat((self.att_i, self.att_em_i), dim=-1) # concat vector for attention coefficient (1, #head, #out_channel * 2)
         cat_att_j = torch.cat((self.att_j, self.att_em_j), dim=-1)
 
-        alpha = (key_i * cat_att_i).sum(-1) + (key_j * cat_att_j).sum(-1)
-        alpha = alpha.view(-1, self.heads, 1)
-        alpha = F.leaky_relu(alpha, self.negative_slope)
-        alpha = softmax(alpha, edge_index_i, num_nodes=size_i)
+        alpha = (key_i * cat_att_i).sum(-1) + (key_j * cat_att_j).sum(-1) # alpha(N, 1)
+        alpha = alpha.view(-1, self.heads, 1) # alpha(N, 1, 1)
+        alpha = F.leaky_relu(alpha, self.negative_slope) # alpha(N, 1, 1)
+        alpha = softmax(alpha, edge_index_i, num_nodes=size_i) # alpha(N, 1, 1)
 
         if return_attention_weights:
             self.__alpha__ = alpha
