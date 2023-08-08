@@ -37,8 +37,9 @@ class DBConnection():
     def efo(self, sql, data = ()):
         self.start_conn()
         self.cursor.execute(sql, data)
+        aRow = self.cursor.fetchone()
         self.close_conn()
-        return self.cursor.fetchone()
+        return aRow
 
     def efa(self, sql, data = ()):
         self.start_conn()
