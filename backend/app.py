@@ -4,29 +4,42 @@ from flask import Flask, render_template, send_from_directory, jsonify
 
 app = Flask(__name__, template_folder="../frontend/dist")
 
+# 페이지 라우팅 알고리즘
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
 
 @app.route('/main', methods=['GET'])
 def mainPage():
+    # 메인페이지 라우팅
     return render_template('/src/mainPage/index.html')
 @app.route('/login', methods=['GET'])
 def loginPage():
+    # 로그인페이지 라우팅
     return render_template('/src/loginPage/index.html')
 @app.route('/signup', methods=['GET'])
 def signupPage():
+    # 회원가입페이지 라우팅
     return render_template('/src/signupPage/index.html')
 @app.route('/search', methods=['GET'])
 def searchPage():
+    # 탐색페이지 라우팅
     return render_template('/src/searchPage/index.html')
 @app.route('/detail', methods=['GET'])
 def detailPage():
+    # 상세페이지 라우팅
     return render_template('/src/detailPage/index.html')
+@app.route('/<path:filename>', methods=['GET'])
+def resource(filename):
+    print("resource", filename)
+    return send_from_directory("../frontend/dist", filename)
+@app.route('/assets/<path:filename>', methods=['GET'])
+def assets_resource(filename):
+    return send_from_directory("../frontend/dist/assets", filename)
 
 @app.route('/beacon/<int:beacon_id>', methods=['GET'])
 def beacon(beacon_id):
-    # 특정 항로표지
+    # 특정 항로표지 정보 반환
     aBeacon = get_beacon(beacon_id)
     aPredict = get_latest_predict(beacon_id)
 
@@ -43,7 +56,7 @@ def beacon(beacon_id):
 
 @app.route('/beacon/all', methods=['GET'])
 def all_beacon():
-    # all
+    # 항로표지 목록 반환
     beacon_list = []
     for aBeacon in get_all_beacons_with_recent():
         obejct = {
@@ -66,21 +79,13 @@ def all_beacon():
     print(beacon_list)
     return jsonify(beacon_list)
 
-@app.route('/<path:filename>', methods=['GET'])
-def resource(filename):
-    print("resource", filename)
-    return send_from_directory("../frontend/dist", filename)
-
-@app.route('/assets/<path:filename>', methods=['GET'])
-def assets_resource(filename):
-    return send_from_directory("../frontend/dist/assets", filename)
-
 @app.route('/dbtest', methods=['GET'])
 def dbtest():
     return str(get_all_beacons())
 
 @app.route('/command/<string:name>', methods=['GET'])
 def command(name):
+    # 배치프로그램용
     result = False
     if name == 'pm':
         result = print_message()
