@@ -17,7 +17,7 @@ class DBConnection():
             self.user = "captain"
             self.password = "Beaconzzang!"
             self.port = 3306
-            self.database = "testdb"
+            self.database = "cnu_db"
             self.ssl_disabled = True
 
         elif target == "azure-beacon":

@@ -23,6 +23,26 @@ def get_beacon(beacon_id):
     result = Beacon(aBeacon['id'], aBeacon['lat'], aBeacon['lng'], aBeacon['name'])
 
     return result
+### user
+def get_all_users_id(): 
+    result = []
+    select_all_beacon_user_id = 'SELECT * FROM `Beacon_user`'
+
+    for user in db.efa(select_all_beacon_user_id):
+        result.append(user['user_id'])
+    return result
+def check_user(user_id,user_password): 
+    select_user = 'SELECT * FROM `Beacon_user` WHERE `user_id` = %s and `user_password` = %s'
+    s_user = db.efo(select_user,(user_id,user_password))
+    if  s_user is not None :
+        return True  
+    else :
+        return False  
+def add_user(user):
+    add = 'INSERT INTO `Beacon_user` (user_id,user_password,user_email) values(%s,%s,%s)' 
+    db.ec(add, (user['id'], user['password'], user['email']))
+    return True
+### user 
 
 def get_latest_predict(beacon_id):
     result = None
