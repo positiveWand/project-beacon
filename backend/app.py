@@ -1,6 +1,6 @@
 from db.dao import *
 from batch.command import print_message
-from flask import Flask, render_template, send_from_directory, jsonify
+from flask import Flask, render_template, send_from_directory, jsonify,request
 
 app = Flask(__name__, template_folder="../frontend/dist")
 
@@ -93,3 +93,26 @@ def command(name):
         return "명령 처리 성공"
     else:
         return "명령 처리 실패"
+    
+@app.route('/signup/post',methods= ['POST'])
+def signupRequest():
+    params = request.get_json()
+    if params['id'] in get_all_users_id() :
+        print(get_all_users_id())
+        return "false"
+    else :
+        add_user(params)
+        return "True" 
+@app.route('/login/post',methods=['POST'])
+def loginRequest():
+    resObject = {}
+    resObject['id'] = None
+    resObject['result'] = 'false'
+    params = request.get_json()
+    if params['id'] in get_all_users_id() :
+        if check_user(params['id'],params['password']) == True:
+           resObject['id'] = params['id']
+           resObject['result'] = 'true'
+    return jsonify(resObject)
+           
+           
