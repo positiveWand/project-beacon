@@ -1,0 +1,5 @@
+export const MAIN_PAGE_URL = '/route/main/'
+export const SEARCH_PAGE_URL = '/route/search/'
+export const DETAIL_PAGE_URL = '/route/detail/'
+export const SIGNUP_PAGE_URL = '/route/signup/'
+export const LOGIN_PAGE_URL = '/route/login/'

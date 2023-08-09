@@ -1,0 +1,16 @@
+export const GRAY_BORDER = 'border border-gray-500'
+export const GREEN_BORDER = 'border border-green-500'
+export const YELLOW_BORDER = 'border border-yellow-500'
+export const RED_BORDER = 'border border-red-500'
+
+export const TRANSPARENT_BACKGROUND = 'bg-transparent'
+export const GRAY_BACKGROUND = 'bg-gray-500'
+export const GREEN_BACKGROUND = 'bg-green-500'
+export const YELLOW_BACKGROUND = 'bg-yellow-500'
+export const RED_BACKGROUND = 'bg-red-500'
+
+export const WHITE_TEXT = 'text-white'
+export const GRAY_TEXT = 'text-gray-500'
+export const GREEN_TEXT = 'text-green-500'
+export const YELLOW_TEXT = 'text-yellow-500'
+export const RED_TEXT = 'text-red-500'
