@@ -44,6 +44,7 @@ def add_user(user):
     return True
 ### user 
 
+
 def get_latest_predict(beacon_id):
     result = None
     select_latest_predict = 'SELECT * FROM `PREDICT_LOG` WHERE `id` = %s ORDER BY `time` DESC LIMIT 1'
@@ -75,3 +76,20 @@ def get_all_beacons_with_recent():
         result.append(Beacon(aTuple['id'], aTuple['lat'], aTuple['lng'], aTuple['name'], aPrediction.get_state(), aPrediction.score))
 
     return result
+
+def get_all_favorite_beacons(user_id):
+    result = []
+    print(user_id)
+    select_all_favorite_beacons = 'SELECT `beacon_id` FROM `favorites` WHERE `user_id` = %s' 
+
+    for afavorite in db.efa(select_all_favorite_beacons,(user_id)):
+        result.append(afavorite['beacon_id'])
+    return result
+def add_favorite_beacon(user_id,beacon_id):
+    add = 'INSERT INTO `favorites` (user_id,beacon_id) values(%s,%s)' 
+    db.ec(add, (user_id, beacon_id))
+    return True
+def delete_favorite_beacon(user_id,beacon_id) : 
+    delete = 'DELETE FROM `favorites` WHERE `user_id`= %s and `beacon_id` = %s'
+    db.ec(delete,(user_id,beacon_id))
+    return True
