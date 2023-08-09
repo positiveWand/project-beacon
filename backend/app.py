@@ -97,16 +97,16 @@ def command(name):
     else:
         return "명령 처리 실패"
     
-@app.route('/signup/post',methods= ['POST'])
-def signupRequest():
+@app.route('/signup/post',methods= ['POST']) #signup / if id exist return false else add user and return true 
+def signupRequest(): 
     params = request.get_json()
     if params['id'] in get_all_users_id() :
         print(get_all_users_id())
         return "false"
     else :
         add_user(params)
-        return "True" 
-@app.route('/login/post',methods=['POST'])
+        return "true" 
+@app.route('/login/post',methods=['POST']) #login //if id exist session login
 def loginRequest():
     resObject = {}
     resObject['id'] = None
@@ -114,17 +114,42 @@ def loginRequest():
     params = request.get_json()
     if params['id'] in get_all_users_id() :
         if check_user(params['id'],params['password']) == True:
-           session['id'] =   resObject['id']
            resObject['id'] = params['id']
+           session['id'] =   resObject['id']
            resObject['result'] = 'true'
+    print(session['id'],resObject)
     return jsonify(resObject)
-@app.route('/login/check',methods=['GET','POST'])
-def loginCheck():
+@app.route('/login/check',methods=['GET','POST']) #login check
+def loginCheck() :
     if 'id' in session :
         return "true"
-
     return "false"  
-@app.route('/logout/get',methods = ['GET'])
-def logout():
+@app.route('/logout/get',methods = ['GET']) #logout
+def logout() :
     session.pop('id',None)
     return "true"
+@app.route('/beacon/favorites',methods= ['GET']) # favorite 
+def favorite_list() :
+    if 'id' in session : 
+        return get_all_favorite_beacons(session['id'])
+    return None
+@app.route('/beacon/favorites',methods=['POST'])
+def add_favorite():
+    resObject = {}
+    resObject['beacon_id'] = None
+    params = request.get_json()
+    if 'id' in session : 
+        resObject['beacon_id'] = params['beacon_id']
+        add_favorite_beacon(session['id'],resObject['beacon_id'])
+        return 'true'
+    else :
+        return "false"
+@app.route('/beacon/favorites',methods=['DELETE'])
+def delete_favorite():
+    params = request.get_json()
+    if 'id' in session :
+        delete_favorite_beacon(session['id'],params['beacon_id'])
+        return 'true'
+    else : 
+        return 'false'
+
