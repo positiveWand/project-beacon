@@ -15,23 +15,23 @@ def index():
 @app.route('/main', methods=['GET'])
 def mainPage():
     # 메인페이지 라우팅
-    return render_template('/src/mainPage/index.html')
+    return render_template('/route/main/index.html')
 @app.route('/login', methods=['GET'])
 def loginPage():
     # 로그인페이지 라우팅
-    return render_template('/src/loginPage/index.html')
+    return render_template('/route/login/index.html')
 @app.route('/signup', methods=['GET'])
 def signupPage():
     # 회원가입페이지 라우팅
-    return render_template('/src/signupPage/index.html')
+    return render_template('/route/signup/index.html')
 @app.route('/search', methods=['GET'])
 def searchPage():
     # 탐색페이지 라우팅
-    return render_template('/src/searchPage/index.html')
+    return render_template('/route/search/index.html')
 @app.route('/detail', methods=['GET'])
 def detailPage():
     # 상세페이지 라우팅
-    return render_template('/src/detailPage/index.html')
+    return render_template('/route/detail/index.html')
 @app.route('/<path:filename>', methods=['GET'])
 def resource(filename):
     print("resource", filename)
