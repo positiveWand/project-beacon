@@ -1,13 +1,16 @@
 from db.dao import *
 from batch.command import print_message
-from flask import Flask, render_template, send_from_directory, jsonify,request
-
+from flask import Flask, render_template, send_from_directory, jsonify,request,session,redirect,app,url_for
+from datetime import timedelta
+from markupsafe import escape
 app = Flask(__name__, template_folder="../frontend/dist")
+app.secret_key = "Beaconzzang!"
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
+
 
 @app.route("/", methods=['GET'])
 def index():
     return render_template('index.html')
-
 @app.route('/main', methods=['GET'])
 def mainPage():
     return render_template('/src/mainPage/index.html')
@@ -111,8 +114,17 @@ def loginRequest():
     params = request.get_json()
     if params['id'] in get_all_users_id() :
         if check_user(params['id'],params['password']) == True:
+           session['id'] =   resObject['id']
            resObject['id'] = params['id']
            resObject['result'] = 'true'
     return jsonify(resObject)
-           
-           
+@app.route('/login/check',methods=['GET','POST'])
+def loginCheck():
+    if 'id' in session :
+        return "true"
+
+    return "false"  
+@app.route('/logout/get',methods = ['GET'])
+def logout():
+    session.pop('id',None)
+    return "true"
