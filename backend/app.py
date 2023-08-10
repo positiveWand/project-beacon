@@ -40,7 +40,7 @@ def resource(filename):
 def assets_resource(filename):
     return send_from_directory("../frontend/dist/assets", filename)
 
-@app.route('/beacon/<int:beacon_id>', methods=['GET'])
+@app.route('/beacon/<string:beacon_id>', methods=['GET'])
 def beacon(beacon_id):
     # 특정 항로표지 정보 반환
     aBeacon = get_beacon(beacon_id)
