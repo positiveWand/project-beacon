@@ -1,5 +1,8 @@
 from . import dbconnection
 from .dto.beacon import Beacon
+from .dto.feature import Feature
+from .dto.inspection import Inspection
+from .dto.beaconFull import BeaconFull
 from .dto.coordinate import Coordinate
 from .dto.prediction import Prediction
 from .dto.embedding import Embedding
@@ -22,7 +25,39 @@ def get_beacon(beacon_id):
     aBeacon = db.efo(select_beacon, (beacon_id))
     result = Beacon(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'])
 
+def get_beacon_full(beacon_id):
+    result = None
+    select_beacon = 'SELECT * FROM `BEACONS` WHERE `beacon_id` = %s'
+
+    aBeacon = db.efo(select_beacon, (beacon_id))
+    result = BeaconFull(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'] , aBeacon['beacon_type'], aBeacon['beacon_group'], \
+                        aBeacon['beacon_purpose'], aBeacon['beacon_office'], aBeacon['beacon_installDate'], aBeacon['beacon_color'] ,\
+                            aBeacon['beacon_lightColor'] , aBeacon['beacon_lightCharacteristic'] , aBeacon['beacon_lightSignalPeriod'])
+
     return result
+
+def get_features(beacon_id):
+    result = []
+    select_features = 'SELECT * FROM `FEATURES` WHERE `beacon_id` = %s order by `feature_installDate` desc'
+
+    for feature in db.efa(select_features, beacon_id):
+        result.append(Feature(feature['feature_id'], feature['beacon_id'], feature['feature_type'], feature['feature_installDate'],\
+                              feature['feature_uninstallDate']))
+    return result
+
+def get_inspections(beacon_id):
+    result = []
+
+    select_inspections = 'SELECT * FROM `inspection_logs` WHERE `beacon_id` = %s order by `inspection_startDate` desc'
+
+    for inspection in db.efa(select_inspections, beacon_id):
+        result.append(Inspection(inspection['inspection_id'], inspection['beacon_id'], inspection['inspection_inspector'], inspection['inspection_purpose'],\
+                              inspection['inspection_note'], inspection['inspection_startDate'], inspection['inspection_endDate']))
+    return result
+
+
+
+
 ### user
 def get_all_users_id(): 
     result = []
@@ -71,14 +106,14 @@ def get_all_beacons_with_recent():
     #select_all_beacons_with_recent = 'SELECT * FROM `BEACONS` A LEFT OUTER JOIN (SELECT prediction_id, prediction_time, prediction_score, beacon_id FROM `PREDICTION_LOGS` B WHERE `prediction_time` = (SELECT MAX(`prediction_time`) FROM `PREDICTION_LOGS` C WHERE B.prediction_time = C.prediction_time)) D ON A.beacon_id = D.beacon_id'
 
     select_all_beacons_with_recent =( "SELECT * FROM `BEACONS` A LEFT OUTER JOIN (\
-	SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_score\
-	FROM prediction_logs pl1\
-	INNER JOIN (\
-		    SELECT beacon_id, MAX(prediction_time) AS max_time\
-		    FROM prediction_logs\
-		    GROUP BY beacon_id\
-	    ) pl2 ON pl1.beacon_id = pl2.beacon_id AND pl1.prediction_time = pl2.max_time\
-    ) B on A.beacon_id = B.beacon_id;")
+	        SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_score\
+	        FROM prediction_logs pl1\
+	        INNER JOIN (\
+		        SELECT beacon_id, MAX(prediction_time) AS max_time\
+		        FROM prediction_logs\
+		        GROUP BY beacon_id\
+	        ) pl2 ON pl1.beacon_id = pl2.beacon_id AND pl1.prediction_time = pl2.max_time\
+        ) B on A.beacon_id = B.beacon_id;")
 
     for aTuple in db.efa(select_all_beacons_with_recent):
         print(aTuple)
