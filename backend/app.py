@@ -3,6 +3,7 @@ from batch.command import print_message
 from flask import Flask, render_template, send_from_directory, jsonify,request,session,redirect,app,url_for
 from datetime import timedelta
 from markupsafe import escape
+import json
 app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
@@ -40,7 +41,7 @@ def resource(filename):
 def assets_resource(filename):
     return send_from_directory("../frontend/dist/assets", filename)
 
-@app.route('/beacon/<int:beacon_id>', methods=['GET'])
+@app.route('/beacon/<string:beacon_id>', methods=['GET'])
 def beacon(beacon_id):
     # 특정 항로표지 정보 반환
     aBeacon = get_beacon(beacon_id)
@@ -56,6 +57,42 @@ def beacon(beacon_id):
         'state': aPredict.get_state(),
         'failure_prob': aPredict.score,
     })
+
+@app.route('/beacon/detailInfo', methods=['GET'])
+def beacon_detailInfo():
+    # 특정 항로표지 detail 반환
+    beacon_id = request.args.get('id')
+
+    aBeacon = get_beacon_full(beacon_id)
+    features = get_features(beacon_id)
+    inspections = get_inspections(beacon_id)
+    #aPredict = get_latest_predict(beacon_id)
+
+    data ={}
+
+    data["basicInfo"] = aBeacon.pyData()
+    data["featureInfo"] = {}
+    data["inspectionInfo"] = []
+
+    data["featureInfo"]["beacon"] =[]
+    data["featureInfo"]["rtu"] =[]
+    data["featureInfo"]["landmark"] =[]
+    data["featureInfo"]["solarbattery"] =[]
+    data["featureInfo"]["storagebattery"] = []
+    
+    for feature in features:
+        if(feature.feature_uninstallDate == None):
+            data["featureInfo"][feature.feature_type].insert(0, feature.pyData())
+        else:
+            data["featureInfo"][feature.feature_type].append(feature.pyData())
+    for inspection in inspections:
+        data["inspectionInfo"].append(inspection.pyData())
+    json_str = json.dumps(data, ensure_ascii=False, indent=4, default=str)
+
+    return json_str
+
+
+
 
 @app.route('/beacon/all', methods=['GET'])
 def all_beacon():
