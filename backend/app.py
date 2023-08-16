@@ -9,7 +9,7 @@ app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
 
-CORS(app, resources={r'*': {'origins': 'http://127.0.0.1:5173'}})
+CORS(app, supports_credentials=True, origins="http://127.0.0.1:5173")
 
 # 페이지 라우팅 알고리즘
 @app.route("/", methods=['GET'])
@@ -141,7 +141,7 @@ def command(name):
     else:
         return "명령 처리 실패"
     
-@app.route('/signup/post',methods= ['POST']) #signup / if id exist return false else add user and return true 
+@app.route('/signup/request',methods= ['POST']) #signup / if id exist return false else add user and return true 
 def signupRequest(): 
     params = request.get_json()
     if params['id'] in get_all_users_id() :
@@ -150,25 +150,31 @@ def signupRequest():
     else :
         add_user(params)
         return "true" 
-@app.route('/login/post',methods=['POST']) #login //if id exist session login
+@app.route('/login/request',methods=['POST']) #login //if id exist session login
 def loginRequest():
     resObject = {}
     resObject['id'] = None
     resObject['result'] = 'false'
     params = request.get_json()
+    print("로그인 요청", params)
     if params['id'] in get_all_users_id() :
         if check_user(params['id'],params['password']) == True:
            resObject['id'] = params['id']
            session['id'] =   resObject['id']
            resObject['result'] = 'true'
-    print(session['id'],resObject)
+    print('로그인 요청', session)
     return jsonify(resObject)
 @app.route('/login/check',methods=['GET','POST']) #login check
 def loginCheck() :
-    if 'id' in session :
-        return "true"
-    return "false"  
-@app.route('/logout/get',methods = ['GET']) #logout
+    print('로그인 확인 요청', session)
+    resObject = {}
+    resObject['id'] = None
+    resObject['result'] = 'false'
+    if 'id' in session:
+        resObject['id'] = session['id']
+        resObject['result'] = 'true'
+    return jsonify(resObject)
+@app.route('/logout/request',methods = ['GET']) #logout
 def logout() :
     session.pop('id',None)
     return "true"
