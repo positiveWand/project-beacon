@@ -1,6 +1,7 @@
 from db.dao import *
 from batch.command import print_message
 from flask import Flask, render_template, send_from_directory, jsonify,request,session,redirect,app,url_for
+from flask_cors import CORS
 from datetime import timedelta
 from markupsafe import escape
 import json
@@ -8,6 +9,7 @@ app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
 
+CORS(app, resources={r'*': {'origins': 'http://127.0.0.1:5173'}})
 
 # 페이지 라우팅 알고리즘
 @app.route("/", methods=['GET'])
