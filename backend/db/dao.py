@@ -138,3 +138,11 @@ def delete_favorite_beacon(user_id,beacon_id) :
     delete = 'DELETE FROM `favorites` WHERE `user_id`= %s and `beacon_id` = %s'
     db.ec(delete,(user_id,beacon_id))
     return True
+def check_favorite_beacon(user_id,beacon_id) : 
+    check_favorite = 'SELECT * FROM `favorites` WHERE `user_id` = %s and `beacon_id` = %s'
+    favorite = db.efo(check_favorite,(user_id,beacon_id))
+    if favorite is not None :
+        return True     # is favorite
+    else :     
+        return False    # is not favorite 
+ 

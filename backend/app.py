@@ -170,7 +170,7 @@ def loginCheck() :
 def logout() :
     session.pop('id',None)
     return "true"
-@app.route('/beacon/favorites',methods= ['GET']) # favorite 
+@app.route('/beacon/favorites/all',methods= ['GET']) # favorite 
 def favorite_list() :
     if 'id' in session : 
         return get_all_favorite_beacons(session['id'])
@@ -194,4 +194,11 @@ def delete_favorite():
         return 'true'
     else : 
         return 'false'
-
+@app.route('/beacon/favorites',methods=['GET'])
+def check_favorite():
+    beacon_id = request.args.get('id')
+    user_id = session['id']
+    if check_favorite_beacon(user_id,beacon_id) is True :
+        return 'true' 
+    else :
+        return 'false'
