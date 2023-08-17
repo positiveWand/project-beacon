@@ -5,6 +5,7 @@ from flask_cors import CORS
 from datetime import timedelta
 from markupsafe import escape
 import json
+
 app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute

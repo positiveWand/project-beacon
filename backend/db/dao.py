@@ -1,4 +1,5 @@
 import os
+import io
 from . import dbconnection
 from .dto.beacon import Beacon
 from .dto.feature import Feature
@@ -27,18 +28,6 @@ def get_beacon(beacon_id):
     aBeacon = db.efo(select_beacon, (beacon_id))
     result = Beacon(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'])
 
-
-def get_beacon_image(beacon_id):
-    result = None
-    select_beacon = 'SELECT `beacon_image` FROM `BEACONS` WHERE `beacon_id` = %s'
-
-    aBeacon_image = db.efo(select_beacon, (beacon_id))
-    result = aBeacon_image['beacon_image']
-
-    with open('retrieved_image.jpg', 'wb') as image_file:
-        image_file.write(result)
-
-    return send_file('retrieved_image.jpg', mimetype='image/jpeg')
 
 def get_beacon_full(beacon_id):
     result = None
@@ -86,6 +75,16 @@ def update_images():
             update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
             db.ec(update_query, (image_bytes, filename.split(".")[0]))
     return True
+
+
+def get_beacon_image(beacon_id):
+    result = None
+    select_beacon = 'SELECT `beacon_image` FROM `BEACONS` WHERE `beacon_id` = %s'
+
+    aBeacon_image = db.efo(select_beacon, (beacon_id))
+    result = aBeacon_image['beacon_image']
+
+    return send_file(io.BytesIO(result), mimetype='image/jpeg')
 
 
 ### user
