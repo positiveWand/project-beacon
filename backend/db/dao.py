@@ -63,12 +63,19 @@ def get_inspections(beacon_id):
 #image
 
 def update_images():
-    image_folder = r'C:\Users\PARKBEONGJUN\Desktop\project-beacon\backend\images'
+    # 현재 스크립트의 경로
+    script_path = os.path.abspath(__file__)
+
+    # 상위 폴더의 경로
+    parent_folder_path = os.path.dirname(os.path.dirname(script_path))
+
+    # 상위 폴더의 상위 폴더 내 다른 폴더의 경로
+    other_folder_path = os.path.join(parent_folder_path, "images")
 
     # 폴더 내의 모든 이미지 파일 처리
-    for filename in os.listdir(image_folder):
+    for filename in os.listdir(other_folder_path):
         if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
-            image_path = os.path.join(image_folder, filename)
+            image_path = os.path.join(other_folder_path, filename)
             with open(image_path, 'rb') as image_file:
                     image_bytes = image_file.read()
             print(image_bytes)
