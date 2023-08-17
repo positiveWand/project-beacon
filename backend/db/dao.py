@@ -1,3 +1,4 @@
+import os
 from . import dbconnection
 from .dto.beacon import Beacon
 from .dto.feature import Feature
@@ -6,6 +7,7 @@ from .dto.beaconFull import BeaconFull
 from .dto.coordinate import Coordinate
 from .dto.prediction import Prediction
 from .dto.embedding import Embedding
+from flask import send_file
 
 db = dbconnection.DBConnection("azure-testdb")
 
@@ -24,6 +26,19 @@ def get_beacon(beacon_id):
 
     aBeacon = db.efo(select_beacon, (beacon_id))
     result = Beacon(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'])
+
+
+def get_beacon_image(beacon_id):
+    result = None
+    select_beacon = 'SELECT `beacon_image` FROM `BEACONS` WHERE `beacon_id` = %s'
+
+    aBeacon_image = db.efo(select_beacon, (beacon_id))
+    result = aBeacon_image['beacon_image']
+
+    with open('retrieved_image.jpg', 'wb') as image_file:
+        image_file.write(result)
+
+    return send_file('retrieved_image.jpg', mimetype='image/jpeg')
 
 def get_beacon_full(beacon_id):
     result = None
@@ -56,6 +71,21 @@ def get_inspections(beacon_id):
     return result
 
 
+#image
+
+def update_images():
+    image_folder = r'C:\Users\PARKBEONGJUN\Desktop\project-beacon\backend\images'
+
+    # 폴더 내의 모든 이미지 파일 처리
+    for filename in os.listdir(image_folder):
+        if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
+            image_path = os.path.join(image_folder, filename)
+            with open(image_path, 'rb') as image_file:
+                    image_bytes = image_file.read()
+            print(image_bytes)
+            update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
+            db.ec(update_query, (image_bytes, filename.split(".")[0]))
+    return True
 
 
 ### user

@@ -60,6 +60,23 @@ def beacon(beacon_id):
         'failure_prob': aPredict.score,
     })
 
+@app.route('/beacon/updateImage', methods=['GET'])
+def updateImage():
+    # 로컬 항로표지 이미지 넣기
+    if update_images():
+        return "safe"
+    else:
+        return "out"
+
+@app.route('/beacon/image', methods=['GET'])
+def selectImage():
+    # 특정 항로표지 이미지 반환
+    beacon_id = request.args.get('id')
+    beacon_image = get_beacon_image(beacon_id)
+
+    return beacon_image
+
+
 @app.route('/beacon/detailInfo', methods=['GET'])
 def beacon_detailInfo():
     # 특정 항로표지 detail 반환
@@ -81,6 +98,13 @@ def beacon_detailInfo():
     data["featureInfo"]["landmark"] =[]
     data["featureInfo"]["solarbattery"] =[]
     data["featureInfo"]["storagebattery"] = []
+    data["featureInfo"]["pile"] = []
+    data["featureInfo"]["batterycharge"] = []
+    data["featureInfo"]["light"] = []
+    data["featureInfo"]["racon"] = []
+    data["featureInfo"]["topmark"] = []
+    data["featureInfo"]["buoy"] = []
+    data["featureInfo"]["ais"] = []
     
     for feature in features:
         if(feature.feature_uninstallDate == None):
