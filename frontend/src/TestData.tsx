@@ -1,6 +1,6 @@
 export const testdata = [
     {
-        id: 0,
+        id: "2017LH068",
         name: "항로표지0",
         coordinate: {
             lat: 37.3784357,
@@ -10,7 +10,7 @@ export const testdata = [
         failure_prob: 20,
     },
     {
-        id: 1,
+        id: "2019LH045",
         name: "항로표지1",
         coordinate: {
             lat: 37.3767306,
@@ -20,7 +20,7 @@ export const testdata = [
         failure_prob: 50,
     },
     {
-        id: 2,
+        id: "2010LH067",
         name: "항로표지2",
         coordinate: {
             lat: 37.3639067,
@@ -30,7 +30,7 @@ export const testdata = [
         failure_prob: 90,
     },
     {
-        id: 3,
+        id: "2015LH086",
         name: "항로표지3",
         coordinate: {
             lat: 37.3825279,
@@ -40,7 +40,7 @@ export const testdata = [
         failure_prob: 99,
     },
     {
-        id: 4,
+        id: "2010LB170",
         name: "항로표지4",
         coordinate: {
             lat: 37.3822551,
@@ -50,7 +50,7 @@ export const testdata = [
         failure_prob: 55,
     },
     {
-        id: 5,
+        id: "2012BM019",
         name: "항로표지5",
         coordinate: {
             lat: 37.33368,
@@ -60,7 +60,7 @@ export const testdata = [
         failure_prob: 10,
     },
     {
-        id: 6,
+        id: "2011LH067",
         name: "항로표지6",
         coordinate: {
             lat: 37.3983488,
@@ -70,7 +70,7 @@ export const testdata = [
         failure_prob: 80,
     },
     {
-        id: 7,
+        id: "1981LH023",
         name: "항로표지7",
         coordinate: {
             lat: 37.3568799,
@@ -80,7 +80,7 @@ export const testdata = [
         failure_prob: 60,
     },
     {
-        id: 8,
+        id: "2012LH053",
         name: "항로표지8",
         coordinate: {
             lat: 37.3369557,
@@ -90,3 +90,15 @@ export const testdata = [
         failure_prob: 90,
     },
 ]
+
+export let favorites = {
+    "2017LH068": true,
+    "2019LH045": false,
+    "2010LH067": true,
+    "2015LH086": true,
+    "2010LB170": false,
+    "2012BM019": false,
+    "2011LH067": false,
+    "1981LH023": true,
+    "2012LH053": true,
+}

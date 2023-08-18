@@ -8,14 +8,16 @@ import YELLOW_MARKER_IMG from '/src/assets/searchpage/marker_yellow.png'
 import RED_MARKER_IMG from '/src/assets/searchpage/marker_red.png'
 import InformationWindow from '../InformationWindow.tsx';
 
+import { testdata, favorites } from '../../TestData.tsx'
+
 type BeaconFilter = (aBeacon: BeaconModel) => boolean
 
 class MapStore {
     #map: naver.maps.Map | undefined;
     #beacons: BeaconModel[];
     #visibleBeacons: BeaconModel[];
-    #markers: Map<number, naver.maps.Marker>;
-    #infoWindows: Map<number, naver.maps.InfoWindow>;
+    #markers: Map<string, naver.maps.Marker>;
+    #infoWindows: Map<string, naver.maps.InfoWindow>;
 
     #unionFilters: Map<string, BeaconFilter>;
     #intersectionFilters: Map<string, BeaconFilter>;
@@ -107,32 +109,18 @@ class MapStore {
 
             this.#markers.set(aBeacon.id, aMarker)
 
-            let aInfoWindow = new naver.maps.InfoWindow({
-                content: renderToStaticMarkup(
-                    <InformationWindow model={aBeacon}/>
-                ),
-                borderWidth: 0,
-                backgroundColor: 'transparent',
-            })
+            // let aInfoWindow = new naver.maps.InfoWindow({
+            //     content: renderToStaticMarkup(
+            //         <InformationWindow model={aBeacon}/>
+            //     ),
+            //     borderWidth: 0,
+            //     backgroundColor: 'transparent',
+            // })
 
-            this.#infoWindows.set(aBeacon.id, aInfoWindow)
+            // this.#infoWindows.set(aBeacon.id, aInfoWindow)
 
             naver.maps.Event.addListener(aMarker, 'click', () => {
-                if(aInfoWindow.getMap() || !this.#map) {
-                    aInfoWindow.close()
-                    return
-                }
-                aInfoWindow.open(this.#map, aMarker)
-                let closeButton = document.querySelector('div.infowindow header a');
-                closeButton?.addEventListener('click', () => {
-                    aInfoWindow.close()
-                })
-
-                let detailButton = document.querySelector('div.infowindow > button')
-                detailButton?.addEventListener('click', () => {
-                    location.href = DETAIL_PAGE_URL+'?id='+aBeacon.id
-                })
-
+                this.showInfowindow(aBeacon.id)
             })
         }
 
@@ -146,15 +134,15 @@ class MapStore {
             }
         })
         console.log(this.#markers)
-        this.#infoWindows.forEach((aInfoWindow, id) => {
-            if (!this.#visibleBeacons.find(aBeacon => { return aBeacon.id == id; })) {
-                if(!aInfoWindow) {
-                    return;
-                }
-                aInfoWindow.setMap(null);
-                this.#infoWindows.delete(id);
-            }
-        });
+        // this.#infoWindows.forEach((aInfoWindow, id) => {
+        //     if (!this.#visibleBeacons.find(aBeacon => { return aBeacon.id == id; })) {
+        //         if(!aInfoWindow) {
+        //             return;
+        //         }
+        //         aInfoWindow.setMap(null);
+        //         this.#infoWindows.delete(id);
+        //     }
+        // });
 
         this.#triggerEvent("update", {name: 'update', target: {}});
     }
@@ -173,19 +161,83 @@ class MapStore {
         }
     }
 
-    showInfowindow(id: number) {
+    async showInfowindow(id: string) {
         this.closeAllInfowindow();
+        // let aBeacon = await fetch('/beacon/'+id)
+        let isFavorite = await new Promise<boolean>(resolve => {
+            // fetch('/beacon/favorites?id='+model.id)
+            // .then(result => {
+            //     return result.text();
+            // })
+            // .then(result => {
+            //     if(result == 'true') {
+            //         setIsFavorite(true)
+            //     } else {
+            //         setIsFavorite(false)
+            //     }
+            // })
+            setTimeout(() => {
+                console.log(favorites[id])
+                resolve(favorites[id])
+            }, 500);
+        });
+        let aInfoWindow = new naver.maps.InfoWindow({
+            content: renderToStaticMarkup(
+                <InformationWindow model={this.#beacons.find(element => element.id == id)} isFavorite={isFavorite}/>
+            ),
+            borderWidth: 0,
+            backgroundColor: 'transparent',
+        });
+
+        this.#infoWindows.set(id, aInfoWindow)
+
         const targetMarker = this.#markers.get(id);
         const targetInfowindow = this.#infoWindows.get(id);
         targetInfowindow!.open(this.#map!, targetMarker);
-        let targetElement = document.querySelector("div.infowindow header a");
-        targetElement!.addEventListener("click", () => {
+
+        let filledStar = document.querySelector('div.infowindow a.star-filled') as HTMLElement;
+        let unfilledStar = document.querySelector('div.infowindow a.star-unfilled') as HTMLElement;
+        filledStar.addEventListener('click', () => {
+            // 즐겨찾기 삭제
+            fetch('/beacon/favorites', {method: 'DELETE'})
+            .then(result => {
+                return result.text();
+            })
+            .then(result => {
+                if(result == 'true') {
+                    alert('즐겨찾기 삭제 성공!!')
+                    unfilledStar.hidden = true;
+                    filledStar.hidden = false;
+                } else {
+                    alert('즐겨찾기 삭제 실패!!')
+                }
+            })
+        });
+        unfilledStar.addEventListener('click', () => {
+            // 즐겨찾기 추가
+            fetch('/beacon/favorites', {method: 'POST'})
+            .then(result => {
+                return result.text();
+            })
+            .then(result => {
+                if(result == 'true') {
+                    alert('즐겨찾기 추가 성공!!')
+                    unfilledStar.hidden = false;
+                    filledStar.hidden = true;
+                } else {
+                    alert('즐겨찾기 추가 실패!!')
+                }
+            })
+        });
+
+        let closeButton = document.querySelector("div.infowindow a.close-button");
+        closeButton!.addEventListener("click", () => {
             console.log("info window close button clicked");
             targetInfowindow!.close();
         });
 
-        targetElement = document.querySelector("div.infowindow > button");
-        targetElement!.addEventListener("click", () => {
+        let detailButton = document.querySelector("div.infowindow > button");
+        detailButton!.addEventListener("click", () => {
             console.log("info window detail button clicked");
             console.log(DETAIL_PAGE_URL+"?id=" + id);
             location.href = DETAIL_PAGE_URL+"?id=" + id;

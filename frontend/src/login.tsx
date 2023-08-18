@@ -17,6 +17,7 @@ import * as Route from './route.ts'
 import SubmitInput from './components/SubmitInput.tsx';
 
 import { LoginModel } from './components/utils/UtilType.ts';
+import { useDefaultCursor, useWaitCursor } from './components/utils/UtilFunc.tsx';
 
 const idPattern = "^[a-zA-Z][a-zA-Z0-9]*$";
 const passwordPattern = "^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$";
@@ -49,18 +50,32 @@ function LoginPage() {
             return
         }
 
-        if (loginData.id === 'admin' && loginData.password === 'password!') {
-            // 인증 성공
-            console.log('로그인 성공');
-            setInvalidLogin(false);
-            setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.')
-            // 로그인 후에 리다이렉트 해야함
-        } else {
-            // 인증 실패
-            console.log('로그인 실패');
-            setInvalidLogin(true);
-            setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.')
-        }
+        useWaitCursor();
+        fetch('http://127.0.0.1:5000/login/request', {
+            method: 'POST',
+            body: JSON.stringify({id: loginData.id, password: loginData.password}),
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(result => {
+            return result.json()
+        })
+        .then(result => {
+            if(result['result'] == 'true') {
+                alert('로그인 성공');
+                location.href = Route.MAIN_PAGE_URL;
+            } else {
+                alert('로그인 실패')
+                setInvalidLogin(true);
+                setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.');
+                useDefaultCursor();
+            }
+        })
+        .catch(() => {
+            useDefaultCursor();
+        })
     }
 
     const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {

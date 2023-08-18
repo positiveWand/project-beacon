@@ -57,7 +57,7 @@ export type SignupModel = {
 }
 
 export type BeaconModel = {
-    id: number,
+    id: string,
     name: string,
     coordinate: {
         lat: number,
@@ -69,4 +69,8 @@ export type BeaconModel = {
 
 export type BeaconDetailModel = {
 
+}
+
+export type Session = {
+    id: string
 }

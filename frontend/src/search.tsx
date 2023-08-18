@@ -15,13 +15,15 @@ import MapContainer from './components/MapContainer.tsx'
 import BoxList from './components/BoxList.tsx'
 import ClickableBoxItem from './components/ClickableBoxItem.tsx'
 import Badge from './components/Badge.tsx'
+import UserInfo from './components/UserInfo.tsx'
 import './index.css'
 
 import BEACON_IMG from './assets/beacon.png'
 
 import * as Route from './route.ts'
 import MapStore from './components/utils/MapStore.tsx'
-import {  BeaconModel, MapEventObject, Color } from './components/utils/UtilType.ts'
+import {  BeaconModel, MapEventObject, Color, Session } from './components/utils/UtilType.ts'
+import { useDefaultCursor, useWaitCursor } from './components/utils/UtilFunc.tsx'
 
 import SEARCH_IMG from '/src/assets/searchpage/search.png'
 import { testdata } from './TestData.tsx'
@@ -103,6 +105,7 @@ function useVisibleBeacons(mapStore: MapStore) {
 }
 
 function SearchPage() {
+    const [session, setSession] = useState<Session>();
     const visibleBeacons = useVisibleBeacons(mapStore)
     const [keyword, setKeyword] = useState<string>('')
     const [syncTime, setSyncTime] = useState<string>(dateFormat(new Date()))
@@ -110,13 +113,35 @@ function SearchPage() {
     const [reseting, setReseting] = useState<boolean>(false)
     const [fetching, setFectching] = useState<boolean>(false)
 
+    function checkLogin() {
+        useWaitCursor();
+        fetch('http://127.0.0.1:5000/login/check', {
+            credentials: "include",
+        })
+        .then(result => {
+            return result.json()
+        })
+        .then(result => {
+            if(result['result'] == 'true') {
+                setSession({id: result['id']})
+            } else {
+                setSession(null)
+            }
+            console.log('login check', result)
+            useDefaultCursor();
+        })
+        .catch(() => {
+            useDefaultCursor();
+        })
+    }
+
     function fetchBeacons() {
         // Map Beacons 요청
         setFectching(true);
         // fetch('https://projectbeacon.azurewebsites.net/beacon/all')
         // .then(result => {
         //     console.log(result)
-        //     result.json()
+        //     return result.json()
         // })
         // .then(beacon_list => {
         //     console.log("hi")
@@ -139,6 +164,7 @@ function SearchPage() {
     }
 
     useEffect(() => {
+        checkLogin();
         mapStore.init();
         fetchBeacons();
         return () => {
@@ -219,7 +245,7 @@ function SearchPage() {
     const listItems = visibleBeacons.map((aBeacon: BeaconModel) => {
         const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
             console.log((event.currentTarget.querySelector("div > span") as HTMLElement).innerText);
-            const targetKey = parseInt((event.currentTarget.querySelector("div > span") as HTMLElement).innerText);
+            const targetKey = (event.currentTarget.querySelector("div > span") as HTMLElement).innerText;
             const targetBeacon = mapStore.getBeacons().find((aBeacon: BeaconModel) => aBeacon.id == targetKey);
             mapStore.moveAndZoomTo(targetBeacon.coordinate, 12);
             mapStore.showInfowindow(targetKey);
@@ -246,8 +272,16 @@ function SearchPage() {
                     <NavItemAnchor href={Route.SEARCH_PAGE_URL} selected={true}>탐색</NavItemAnchor>
                 </NavBar>
                 <NavBar className='ml-auto'>
-                    <NavItemButton href={Route.LOGIN_PAGE_URL}>로그인</NavItemButton>
-                    <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
+                    {!session ? (
+                        <>
+                        <NavItemButton href={Route.LOGIN_PAGE_URL}>로그인</NavItemButton>
+                        <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
+                        </>
+                    ) : (
+                        <>
+                        <UserInfo name={session['id']}></UserInfo>
+                        </>
+                    )}
                 </NavBar>
             </Header>
             <Body className='flex flex-col overflow-y-auto flex-1'>

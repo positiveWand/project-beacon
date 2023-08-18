@@ -24,12 +24,12 @@ import * as Route from './route.ts'
 
 function DetailPage() {
     const [beaconName, setBeaconName] = useState<string>('-')
-    const [beaconID, setBeaconID] = useState<number>()
+    const [beaconID, setBeaconID] = useState<string>()
     const [beaconCoord, setBeaconCoord] = useState<Coordinate>()
     const [prob, setProb] = useState<number>(0)
 
     function fetchBeaconInfo(beaconID: string) {
-        const targetBeacon = testdata[parseInt(beaconID)];
+        const targetBeacon = testdata.find(element => element.id == beaconID);
         console.log(targetBeacon);
 
         setBeaconName(targetBeacon.name);
