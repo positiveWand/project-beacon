@@ -1,5 +1,6 @@
 import {MyComponentProp} from "./utils/UtilType";
 import * as Route from '../route.ts'
+import { useDefaultCursor, useWaitCursor } from "./utils/UtilFunc.tsx";
 
 interface Prop extends MyComponentProp {
     name: string
@@ -7,7 +8,7 @@ interface Prop extends MyComponentProp {
 
 function UserInfo({name, children}: Prop) {
     let handleClick = () => {
-        document.querySelector('body').style.cursor = 'wait'
+        useWaitCursor();
         fetch('http://127.0.0.1:5000/logout/request', {
             credentials: "include",
         })
@@ -19,8 +20,11 @@ function UserInfo({name, children}: Prop) {
             } else {
                 alert('로그아웃 실패')
             }
-            document.querySelector('body').style.removeProperty('cursor')
+            useDefaultCursor();
             location.href = Route.MAIN_PAGE_URL;
+        })
+        .catch(() => {
+            useDefaultCursor();
         })
     }
 
