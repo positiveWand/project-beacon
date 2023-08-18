@@ -109,16 +109,6 @@ class MapStore {
 
             this.#markers.set(aBeacon.id, aMarker)
 
-            // let aInfoWindow = new naver.maps.InfoWindow({
-            //     content: renderToStaticMarkup(
-            //         <InformationWindow model={aBeacon}/>
-            //     ),
-            //     borderWidth: 0,
-            //     backgroundColor: 'transparent',
-            // })
-
-            // this.#infoWindows.set(aBeacon.id, aInfoWindow)
-
             naver.maps.Event.addListener(aMarker, 'click', () => {
                 this.showInfowindow(aBeacon.id)
             })
@@ -134,15 +124,6 @@ class MapStore {
             }
         })
         console.log(this.#markers)
-        // this.#infoWindows.forEach((aInfoWindow, id) => {
-        //     if (!this.#visibleBeacons.find(aBeacon => { return aBeacon.id == id; })) {
-        //         if(!aInfoWindow) {
-        //             return;
-        //         }
-        //         aInfoWindow.setMap(null);
-        //         this.#infoWindows.delete(id);
-        //     }
-        // });
 
         this.#triggerEvent("update", {name: 'update', target: {}});
     }
@@ -165,17 +146,6 @@ class MapStore {
         this.closeAllInfowindow();
         // let aBeacon = await fetch('/beacon/'+id)
         let isFavorite = await new Promise<boolean>(resolve => {
-            // fetch('/beacon/favorites?id='+model.id)
-            // .then(result => {
-            //     return result.text();
-            // })
-            // .then(result => {
-            //     if(result == 'true') {
-            //         setIsFavorite(true)
-            //     } else {
-            //         setIsFavorite(false)
-            //     }
-            // })
             setTimeout(() => {
                 console.log(favorites[id])
                 resolve(favorites[id])
