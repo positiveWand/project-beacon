@@ -1,22 +1,19 @@
+import {useState, MouseEventHandler} from 'react'
 import{ MyComponentProp} from './utils/UtilType'
 import ClassNames from './utils/ClassNames'
-import { MouseEventHandler } from 'react'
-import SectionBox from './SectionBox'
 import PageNavbar from './PageNavbar'
-import { useState } from 'react'
-
 interface Prop extends MyComponentProp {
+    columns: string[],
     size: number,
-    columns?: string[],
     records: {
         [attr: string]: any
     }[]
 }
 
-function PagedRecordInfoBox({size, columns, records, className}: Prop) {
-    let [page, setPage] = useState<number>(1)
-    let classes = new ClassNames(className)
-    classes.add('')
+function PagedRecordTable({columns, size, records, className}: Prop) {
+    let [page, setPage] = useState<number>(1);
+    let classes = new ClassNames(className);
+    classes.add('');
 
     const handleChange: MouseEventHandler<HTMLButtonElement> = (event) => {
         // console.log(event.currentTarget.innerHTML)
@@ -29,25 +26,37 @@ function PagedRecordInfoBox({size, columns, records, className}: Prop) {
             setPage(targetPage)
         }
     }
+
     return (
         <div className={classes.toString()}>
-            <table className='w-full my-auto border-collapse'>
+            <table className='w-full border-collapse mb-4'>
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>content</th>
+                        {
+                            columns.map((aColumn) => {
+                                return (
+                                    <th>
+                                        {aColumn}
+                                    </th>
+                                );
+                            })
+                        }
                     </tr>
                 </thead>
                 <tbody>
                     {
                         records?.slice((page-1) * size, page * size)?.map((aRecord) => {
-                            // console.log(aRecord)
                             return (
                                 <tr>
-                                    <td>{aRecord['id']}</td>
-                                    <td>{aRecord['content']}</td>
+                                    {
+                                        columns.map((aColumn) => {
+                                            return (
+                                                <td>{aRecord[aColumn]}</td>
+                                            );
+                                        })
+                                    }
                                 </tr>
-                            )
+                            );
                         })
                     }
                 </tbody>
@@ -57,4 +66,4 @@ function PagedRecordInfoBox({size, columns, records, className}: Prop) {
     )
 }
 
-export default PagedRecordInfoBox
+export default PagedRecordTable

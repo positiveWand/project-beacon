@@ -10,11 +10,12 @@ import GridBox from './components/GridBox.tsx';
 import GridItem from './components/GridItems.tsx';
 import GauageChart from './components/GauageChart.tsx';
 import TextInfoBox from './components/TextInfoBox.tsx';
-import ScrollableRecordInfoBox from './components/ScrollableRecordInfoBox.tsx';
-import PagedRecordInfoBox from './components/PagedRecordInfoBox.tsx';
 import LineGraph from './components/LineGraph.tsx';
 import TabMenu from './components/TabMenu.tsx';
 import TabItem from './components/TabItem.tsx';
+import NormalRecordTable from './components/NormalRecordTable.tsx';
+import PagedRecordTable from './components/PagedRecordTable.tsx';
+import ScrollableRecordTable from './components/ScrollableRecordTable.tsx';
 import './index.css'
 
 import { testdata } from './TestData.tsx';
@@ -61,15 +62,18 @@ function DetailPage() {
         fetchBeaconInfo(receivedObject['id']);
     }, []);
 
-    let test:{id: number, content: string}[] = []
-    for (let i = 0; i < 50; i++) {
+    let test = []
+    for (let i = 0; i < 49; i++) {
         test.push(
             {
-                id: i,
-                content: "blah " + i
+                column1: '첫번째 칼럼 ' + i,
+                column2: "두번째 칼럼 " + i,
+                column3: '세번째 칼럼 ' + i,
+                column4: '네번째 칼럼 ' + i,
             }
         )
     }
+    let testcols = [...Object.keys(test[0])]
     return (
         <div className='h-screen flex flex-col'>
             <Header className='p-4 bg-blue-500 flex items-center select-none'>
@@ -83,13 +87,13 @@ function DetailPage() {
                 <Heading className='bg-blue-500 text-white mr-auto'>장비 구성</Heading>
                 <TabMenu className='w-full my-4'>
                     <TabItem title='장비1'>
-                        one
+                        <NormalRecordTable columns={testcols} records={test} className='w-full'></NormalRecordTable>
                     </TabItem>
                     <TabItem title='장비2'>
-                        <ScrollableRecordInfoBox maxHeight='10rem' className='w-full'></ScrollableRecordInfoBox>
+                        <PagedRecordTable columns={testcols} records={test} size={5}></PagedRecordTable>
                     </TabItem>
                     <TabItem title='장비3'>
-                        <PagedRecordInfoBox size={5} records={test} className='w-full'></PagedRecordInfoBox>
+                        <ScrollableRecordTable columns={testcols} records={test} maxHeight='10rem'></ScrollableRecordTable>
                     </TabItem>
                 </TabMenu>
                 <Heading className='bg-blue-500 text-white mr-auto mb-4'>분석 정보</Heading>
