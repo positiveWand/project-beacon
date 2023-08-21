@@ -5,7 +5,7 @@ import * as Constant from  './utils/UtilConstant';
 
 interface Prop extends MyComponentProp {
     checked: boolean,
-    color: Color,
+    color: Color | 'bright-yellow',
     name: string,
     value: string,
     onChange: (checked: boolean, name: string) => void
@@ -54,6 +54,16 @@ function ToggleButton({ checked, color, value, name, onChange, className}: Prop)
             } else {
                 classes.add(Constant.TRANSPARENT_BACKGROUND)
                 classes.add(Constant.RED_TEXT)
+            }
+            break;
+        case 'bright-yellow':
+            classes.add('border border-yellow-400')
+            if (checked) {
+                classes.add('bg-yellow-400')
+                classes.add(Constant.WHITE_TEXT)
+            } else {
+                classes.add(Constant.TRANSPARENT_BACKGROUND)
+                classes.add('text-yellow-400')
             }
             break;
     }

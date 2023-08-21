@@ -91,14 +91,10 @@ export const testdata = [
     },
 ]
 
-export let favorites = {
-    "2017LH068": true,
-    "2019LH045": false,
-    "2010LH067": true,
-    "2015LH086": true,
-    "2010LB170": false,
-    "2012BM019": false,
-    "2011LH067": false,
-    "1981LH023": true,
-    "2012LH053": true,
-}
+export let testfavorites = [
+    "2017LH068",
+    "2010LH067",
+    "2015LH086",
+    "1981LH023",
+    "2012LH053",
+]

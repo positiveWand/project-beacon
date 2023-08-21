@@ -10,10 +10,10 @@ interface Prop extends MyComponentProp {
 
 function PageNavbar({pageMax, currentPage, onChange, className, children}: Prop) {
     let classes = new ClassNames(className)
-    classes.add('')
+    classes.add('select-none')
 
-    const buttonStyle = new ClassNames('bg-gray-400 text-lg p-2 rounded mx-1 font-bold text-white')
-    const selectedStyle = new ClassNames('bg-gray-400 text-lg p-2 rounded mx-1 font-bold text-black') 
+    const buttonStyle = new ClassNames('border border-gray-400 text-lg p-2 rounded mx-1 font-bold text-black')
+    const selectedStyle = new ClassNames('bg-gray-400 text-lg p-2 rounded mx-1 font-bold text-white') 
 
     console.log(pageMax)
     let navList = Array(Math.min(pageMax+2, 9))

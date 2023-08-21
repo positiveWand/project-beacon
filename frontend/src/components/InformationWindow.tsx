@@ -3,11 +3,10 @@ import CROSS_IMG from "/src/assets/searchpage/close.png";
 import {MyComponentProp, BeaconModel} from "./utils/UtilType";
 import ClassNames from "./utils/ClassNames";
 import StarIcon from "./icons/StarIcon";
-import { favorites } from "../TestData";
 
 interface Prop extends MyComponentProp {
     model: BeaconModel
-    isFavorite: boolean
+    isFavorite?: boolean
 }
 
 export default function InformationWindow({model, isFavorite}: Prop) {
@@ -16,12 +15,18 @@ export default function InformationWindow({model, isFavorite}: Prop) {
             <header className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                     <h2 className="text-3xl font-bold mr-1">{model.name}</h2>
-                    <a href="#" hidden={isFavorite} className="star-filled">
-                        <StarIcon width="35px" height="35px" filled={true}/>
-                    </a>
-                    <a href="#" hidden={!isFavorite} className="star-unfilled">
-                        <StarIcon width="35px" height="35px" filled={false}/>
-                    </a>
+                    {
+                        isFavorite != undefined ?
+                        <>
+                            <a href="#" hidden={!isFavorite} className="star-filled">
+                                <StarIcon width="35px" height="35px" filled={true}/>
+                            </a>
+                            <a href="#" hidden={isFavorite} className="star-unfilled">
+                                <StarIcon width="35px" height="35px" filled={false}/>
+                            </a>
+                        </>
+                        : null
+                    }
                 </div>
                 <a href="#" className="close-button">
                     <img src={CROSS_IMG} alt="닫기 버튼" width={25} height={25}/>

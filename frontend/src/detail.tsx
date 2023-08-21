@@ -13,6 +13,8 @@ import TextInfoBox from './components/TextInfoBox.tsx';
 import ScrollableRecordInfoBox from './components/ScrollableRecordInfoBox.tsx';
 import PagedRecordInfoBox from './components/PagedRecordInfoBox.tsx';
 import LineGraph from './components/LineGraph.tsx';
+import TabMenu from './components/TabMenu.tsx';
+import TabItem from './components/TabItem.tsx';
 import './index.css'
 
 import { testdata } from './TestData.tsx';
@@ -79,8 +81,17 @@ function DetailPage() {
                 <Heading className='bg-blue-500 text-white mr-auto'>기본 정보</Heading>
                 <DetailInfoBox className='w-full my-4'></DetailInfoBox>
                 <Heading className='bg-blue-500 text-white mr-auto'>장비 구성</Heading>
-                <ScrollableRecordInfoBox maxHeight='10rem' className='w-full'></ScrollableRecordInfoBox>
-                <PagedRecordInfoBox size={5} records={test} className='w-full'></PagedRecordInfoBox>
+                <TabMenu className='w-full my-4'>
+                    <TabItem title='장비1'>
+                        one
+                    </TabItem>
+                    <TabItem title='장비2'>
+                        <ScrollableRecordInfoBox maxHeight='10rem' className='w-full'></ScrollableRecordInfoBox>
+                    </TabItem>
+                    <TabItem title='장비3'>
+                        <PagedRecordInfoBox size={5} records={test} className='w-full'></PagedRecordInfoBox>
+                    </TabItem>
+                </TabMenu>
                 <Heading className='bg-blue-500 text-white mr-auto mb-4'>분석 정보</Heading>
                 <GridBox cols={3} className='gap-5 w-full'>
                     <GridItem colSpan={1} className='flex flex-col border-2 rounded-md border-gray-400 p-3 bg-gray-200'>

@@ -26,7 +26,7 @@ import {  BeaconModel, MapEventObject, Color, Session } from './components/utils
 import { useDefaultCursor, useWaitCursor } from './components/utils/UtilFunc.tsx'
 
 import SEARCH_IMG from '/src/assets/searchpage/search.png'
-import { testdata } from './TestData.tsx'
+import { testfavorites, testdata } from './TestData.tsx'
 
 const mapStore = new MapStore();
 type ToggleState = {
@@ -34,6 +34,7 @@ type ToggleState = {
     low: boolean,
     medium: boolean,
     high: boolean,
+    favorites: boolean,
     [attr: string]: boolean
 }
 
@@ -109,7 +110,7 @@ function SearchPage() {
     const visibleBeacons = useVisibleBeacons(mapStore)
     const [keyword, setKeyword] = useState<string>('')
     const [syncTime, setSyncTime] = useState<string>(dateFormat(new Date()))
-    const [toggleState, setToggleState] = useState<ToggleState>({unknown: true, low: true, medium: true, high: true})
+    const [toggleState, setToggleState] = useState<ToggleState>({unknown: true, low: true, medium: true, high: true, favorites: false})
     const [reseting, setReseting] = useState<boolean>(false)
     const [fetching, setFectching] = useState<boolean>(false)
 
@@ -124,6 +125,7 @@ function SearchPage() {
         .then(result => {
             if(result['result'] == 'true') {
                 setSession({id: result['id']})
+                mapStore.setSession({id: result['id']})
             } else {
                 setSession(null)
             }
@@ -151,21 +153,34 @@ function SearchPage() {
         //     );
         //     setFectching(false);
         // });
-
-        return new Promise<BeaconModel[]>(resolve => {
+        let bp = new Promise<BeaconModel[]>(resolve => {
             setTimeout(() => {
                 resolve(testdata as BeaconModel[])
             }, 2000);
         }).then(beacon_list => {
             console.log(beacon_list)
             mapStore.setBeacons(beacon_list)
-            setFectching(false)
         });
+
+        let fp = new Promise<string[]>(resolve => {
+            setTimeout(() => {
+                resolve(testfavorites as string[])
+            }, 2000);
+        }).then(favorites_list => {
+            console.log(favorites_list)
+            mapStore.setFavorites(favorites_list)
+        });
+
+        Promise.all([bp, fp])
+        .then(() => {
+            setSyncTime(dateFormat(new Date()));
+            setFectching(false);
+        })
     }
 
     useEffect(() => {
-        checkLogin();
         mapStore.init();
+        checkLogin();
         fetchBeacons();
         return () => {
             mapStore.destroy();
@@ -199,6 +214,9 @@ function SearchPage() {
                 case 'high':
                     mapStore.addUnionFilter('high', aBeacon => aBeacon.state == 'high')
                     break;
+                case 'favorites':
+                    mapStore.addIntersectionFilter('favorites', aBeacon => mapStore.isFavorite(aBeacon.id))
+                    break;
             }
         } else {
             switch (name) {
@@ -214,6 +232,9 @@ function SearchPage() {
                 case 'high':
                     mapStore.removeUnionFilter("high");
                     break;
+                case 'favorites':
+                    mapStore.removeIntersectionFilter('favorites')
+                    break;
             }
         }
         toggleState[name] = checked
@@ -225,21 +246,18 @@ function SearchPage() {
             setReseting(true)
             mapStore.initFilters()
             setReseting(false)
-            for (const key in toggleState) {
-                toggleState[key] = true
-            }
+            toggleState['unknown'] = true
+            toggleState['low'] = true
+            toggleState['medium'] = true
+            toggleState['high'] = true
+            toggleState['favorites'] = false
             setToggleState(JSON.parse(JSON.stringify(toggleState)))
             resolve('resolved')
         });
     }
     const handleUpdate = (event: MouseEvent<HTMLButtonElement>) => {
-        new Promise(resolve => {
-            setFectching(true)
-            fetchBeacons().then(() => {
-                setSyncTime(dateFormat(new Date()));
-                setFectching(false)
-            })
-        });
+        setFectching(true);
+        fetchBeacons();
     }
 
     const listItems = visibleBeacons.map((aBeacon: BeaconModel) => {
@@ -294,49 +312,66 @@ function SearchPage() {
                     <div className='flex items-center p-4 border-b-2 border-b-gray-300 col-span-8 justify-between select-none'>
                         <div className=''>
                             <ToggleButton 
-                            checked={toggleState['unknown']}
-                            color='gray'
-                            name='unknown'
-                            value='알 수 없음'
-                            onChange={handleToggleChange}
-                            className='px-3 py-2 mr-2 text-lg rounded font-bold'/>
+                                checked={toggleState['unknown']}
+                                color='gray'
+                                name='unknown'
+                                value='알 수 없음'
+                                onChange={handleToggleChange}
+                                className='px-3 py-2 mr-2 text-lg rounded font-bold'
+                            />
                             <ToggleButton 
-                            checked={toggleState['low']} 
-                            color='green' 
-                            value='낮음' 
-                            name='low'
-                            onChange={handleToggleChange} 
-                            className='px-3 py-2 mr-2 text-lg rounded font-bold'/>
+                                checked={toggleState['low']} 
+                                color='green' 
+                                value='낮음' 
+                                name='low'
+                                onChange={handleToggleChange} 
+                                className='px-3 py-2 mr-2 text-lg rounded font-bold'
+                            />
                             <ToggleButton 
-                            checked={toggleState['medium']} 
-                            color='yellow' 
-                            name='medium'
-                            value='중간'
-                            onChange={handleToggleChange} 
-                            className='px-3 py-2 mr-2 text-lg rounded font-bold'/>
+                                checked={toggleState['medium']} 
+                                color='yellow' 
+                                name='medium'
+                                value='중간'
+                                onChange={handleToggleChange} 
+                                className='px-3 py-2 mr-2 text-lg rounded font-bold'
+                            />
                             <ToggleButton 
-                            checked={toggleState['high']} 
-                            color='red' 
-                            name='high'
-                            value='높음' 
-                            onChange={handleToggleChange} 
-                            className='px-3 py-2 mr-2 text-lg rounded font-bold'/>
+                                checked={toggleState['high']} 
+                                color='red' 
+                                name='high'
+                                value='높음' 
+                                onChange={handleToggleChange} 
+                                className='px-3 py-2 mr-2 text-lg rounded font-bold'
+                            />
+                            {
+                                session ? 
+                                    <ToggleButton 
+                                    checked={toggleState['favorites']} 
+                                    color='bright-yellow' 
+                                    name='favorites'
+                                    value='즐겨찾기' 
+                                    onChange={handleToggleChange} 
+                                    className='px-3 py-2 mr-2 text-lg rounded font-bold'
+                                /> : null
+                            }
                             <WaitingButton 
-                            defaultText='초기화' 
-                            waiting={reseting}
-                            setWaiting={setReseting}
-                            waitingText='초기화 중' 
-                            onClick={handleReset} 
-                            className='bg-blue-500 hover:bg-blue-600 text-white text-lg px-3 py-2 rounded'/>
+                                defaultText='초기화' 
+                                waiting={reseting}
+                                setWaiting={setReseting}
+                                waitingText='초기화 중' 
+                                onClick={handleReset} 
+                                className='bg-blue-500 hover:bg-blue-600 text-white text-lg px-3 py-2 rounded'
+                            />
                         </div>
                         <div className=''>
                             <WaitingButton
-                            defaultText='업데이트' 
-                            waiting={fetching} 
-                            setWaiting={setFectching} 
-                            waitingText='업데이트 중' 
-                            onClick={handleUpdate} 
-                            className='bg-blue-500 hover:bg-blue-600 text-white text-lg px-3 py-2 rounded mr-2'/>
+                                defaultText='업데이트' 
+                                waiting={fetching} 
+                                setWaiting={setFectching} 
+                                waitingText='업데이트 중' 
+                                onClick={handleUpdate} 
+                                className='bg-blue-500 hover:bg-blue-600 text-white text-lg px-3 py-2 rounded mr-2'
+                            />
                             <span className='text-lg'>업데이트 시간: {syncTime}</span>
                         </div>
                     </div>
