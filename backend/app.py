@@ -5,6 +5,7 @@ from flask_cors import CORS
 from datetime import timedelta
 from markupsafe import escape
 import json
+
 app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
@@ -60,6 +61,23 @@ def beacon(beacon_id):
         'failure_prob': aPredict.score,
     })
 
+@app.route('/beacon/updateImage', methods=['GET'])
+def updateImage():
+    # 로컬 항로표지 이미지 넣기
+    if update_images():
+        return "HTTP OK"
+    else:
+        return "ERROR"
+
+@app.route('/beacon/image', methods=['GET'])
+def selectImage():
+    # 특정 항로표지 이미지 반환
+    beacon_id = request.args.get('id')
+    beacon_image = get_beacon_image(beacon_id)
+
+    return beacon_image
+
+
 @app.route('/beacon/detailInfo', methods=['GET'])
 def beacon_detailInfo():
     # 특정 항로표지 detail 반환
@@ -81,6 +99,13 @@ def beacon_detailInfo():
     data["featureInfo"]["landmark"] =[]
     data["featureInfo"]["solarbattery"] =[]
     data["featureInfo"]["storagebattery"] = []
+    data["featureInfo"]["pile"] = []
+    data["featureInfo"]["batterycharge"] = []
+    data["featureInfo"]["light"] = []
+    data["featureInfo"]["racon"] = []
+    data["featureInfo"]["topmark"] = []
+    data["featureInfo"]["buoy"] = []
+    data["featureInfo"]["ais"] = []
     
     for feature in features:
         if(feature.feature_uninstallDate == None):
@@ -210,3 +235,31 @@ def check_favorite():
         return 'true' 
     else :
         return 'false'
+    
+
+
+@app.route('/beacon/new', methods=['POST'])
+def insertNewBeacon():
+    params = request.get_json()
+    geo = params["geometry"]
+    geoN , geoE = map(str, geo.split(","))
+    geoNClock = list(map(float, geoN.split()[1].split("-")))
+    geoNTen = round(geoNClock[0]+geoNClock[1]/60+geoNClock[2]/3600, 7)
+    geoEClock = list(map(float, geoE.split()[1].split("-")))
+    geoETen = round(geoEClock[0]+geoEClock[1]/60+geoEClock[2]/3600, 7)
+    information = json.loads(params["information"])
+    beacon_request =  BeaconFull(params["markCode"], geoNTen,geoETen, params["markName"],
+                                params["markType"],params["markGroupCode"],params["purposeCode"],
+                                   params["officeCode"],params["installDate"],
+                                   information["colour"],information["lightcolour"],
+                                   information["lightCharacteristic"],information["signalPeriod"])
+    print(geoNTen, geoETen)
+    add_beacon(beacon_request)
+    return 'true'
+
+@app.route('/inspection/new', methods=['POST'])
+def insertNewInspection():
+    params = request.get_json()
+    for param in params:
+        add_inspection(param)
+    return "true"

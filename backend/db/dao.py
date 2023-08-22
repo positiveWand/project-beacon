@@ -1,3 +1,5 @@
+import os
+import io
 from . import dbconnection
 from .dto.beacon import Beacon
 from .dto.feature import Feature
@@ -6,6 +8,7 @@ from .dto.beaconFull import BeaconFull
 from .dto.coordinate import Coordinate
 from .dto.prediction import Prediction
 from .dto.embedding import Embedding
+from flask import send_file
 
 db = dbconnection.DBConnection("azure-testdb")
 
@@ -24,6 +27,7 @@ def get_beacon(beacon_id):
 
     aBeacon = db.efo(select_beacon, (beacon_id))
     result = Beacon(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'])
+
 
 def get_beacon_full(beacon_id):
     result = None
@@ -52,10 +56,42 @@ def get_inspections(beacon_id):
 
     for inspection in db.efa(select_inspections, beacon_id):
         result.append(Inspection(inspection['inspection_id'], inspection['beacon_id'], inspection['inspection_inspector'], inspection['inspection_purpose'],\
-                              inspection['inspection_note'], inspection['inspection_startDate'], inspection['inspection_endDate']))
+                                inspection['inspection_content'],inspection['inspection_note'], inspection['inspection_startDate'], inspection['inspection_endDate']))
     return result
 
 
+#image
+
+def update_images():
+    # 현재 스크립트의 경로
+    script_path = os.path.abspath(__file__)
+
+    # 상위 폴더의 경로
+    parent_folder_path = os.path.dirname(os.path.dirname(script_path))
+
+    # 상위 폴더의 상위 폴더 내 다른 폴더의 경로
+    other_folder_path = os.path.join(parent_folder_path, "images")
+
+    # 폴더 내의 모든 이미지 파일 처리
+    for filename in os.listdir(other_folder_path):
+        if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
+            image_path = os.path.join(other_folder_path, filename)
+            with open(image_path, 'rb') as image_file:
+                    image_bytes = image_file.read()
+            print(image_bytes)
+            update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
+            db.ec(update_query, (image_bytes, filename.split(".")[0]))
+    return True
+
+
+def get_beacon_image(beacon_id):
+    result = None
+    select_beacon = 'SELECT `beacon_image` FROM `BEACONS` WHERE `beacon_id` = %s'
+
+    aBeacon_image = db.efo(select_beacon, (beacon_id))
+    result = aBeacon_image['beacon_image']
+
+    return send_file(io.BytesIO(result), mimetype='image/jpeg')
 
 
 ### user
@@ -146,3 +182,26 @@ def check_favorite_beacon(user_id,beacon_id) :
     else :     
         return False    # is not favorite 
  
+
+def add_beacon(beacon):
+    add = 'INSERT INTO `BEACONS` (beacon_id, beacon_name, beacon_type, beacon_lat, beacon_lng,\
+        beacon_group, beacon_purpose, beacon_office, beacon_installDate, beacon_color,\
+            beacon_lightColor, beacon_lightCharacteristic, beacon_lightSignalPeriod)\
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)' 
+    print(beacon.beacon_id)
+    db.ec(add, (beacon.beacon_id, beacon.beacon_name, beacon.beacon_type, beacon.beacon_lat,
+            beacon.beacon_lng, beacon.beacon_group, beacon.beacon_purpose, beacon.beacon_office,
+            beacon.beacon_installDate, beacon.beacon_color, beacon.beacon_lightColor,
+            beacon.beacon_lightCharacteristic, beacon.beacon_lightSignalPeriod))
+    
+    return True
+
+
+def add_inspection(inspection):
+    add = "INSERT INTO `inspection_logs` (inspection_id, beacon_id, inspection_inspector, inspection_purpose,\
+          inspection_content, inspection_note, inspection_startDate, inspection_endDate)\
+            values(%s,%s,%s,%s,%s,%s,%s,%s)"
+    db.ec(add, (inspection["inspection_id"],inspection["beacon_id"],inspection["inspection_inspector"],
+                inspection["inspection_purpose"],inspection["inspection_content"],inspection["inspection_note"],\
+                    inspection["inspection_startDate"],inspection["inspection_endDate"],))
+    return True
