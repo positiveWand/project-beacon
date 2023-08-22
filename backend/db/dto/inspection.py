@@ -8,6 +8,7 @@ class Inspection(DataObject):
         self.beacon_id = beacon_id
         self.inspection_inspector = inspection_inspector
         self.inspection_purpose = inspection_purpose
+        self.inspection_content = inspection_content
         self.inspection_note = inspection_note
         self.inspection_startDate = inspection_startDate
         self.inspection_endDate = inspection_endDate
@@ -18,6 +19,7 @@ class Inspection(DataObject):
             "beacon_id": self.beacon_id,
             "inspection_inspector": self.inspection_inspector,
             "inspection_purpose": self.inspection_purpose,
+            "inspection_content": self.inspection_content,
             "inspection_note": self.inspection_note,
             "inspection_startDate": self.inspection_startDate,
             "inspection_endDate": self.inspection_endDate

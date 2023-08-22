@@ -56,7 +56,7 @@ def get_inspections(beacon_id):
 
     for inspection in db.efa(select_inspections, beacon_id):
         result.append(Inspection(inspection['inspection_id'], inspection['beacon_id'], inspection['inspection_inspector'], inspection['inspection_purpose'],\
-                              inspection['inspection_note'], inspection['inspection_startDate'], inspection['inspection_endDate']))
+                                inspection['inspection_content'],inspection['inspection_note'], inspection['inspection_startDate'], inspection['inspection_endDate']))
     return result
 
 
@@ -182,3 +182,26 @@ def check_favorite_beacon(user_id,beacon_id) :
     else :     
         return False    # is not favorite 
  
+
+def add_beacon(beacon):
+    add = 'INSERT INTO `BEACONS` (beacon_id, beacon_name, beacon_type, beacon_lat, beacon_lng,\
+        beacon_group, beacon_purpose, beacon_office, beacon_installDate, beacon_color,\
+            beacon_lightColor, beacon_lightCharacteristic, beacon_lightSignalPeriod)\
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)' 
+    print(beacon.beacon_id)
+    db.ec(add, (beacon.beacon_id, beacon.beacon_name, beacon.beacon_type, beacon.beacon_lat,
+            beacon.beacon_lng, beacon.beacon_group, beacon.beacon_purpose, beacon.beacon_office,
+            beacon.beacon_installDate, beacon.beacon_color, beacon.beacon_lightColor,
+            beacon.beacon_lightCharacteristic, beacon.beacon_lightSignalPeriod))
+    
+    return True
+
+
+def add_inspection(inspection):
+    add = "INSERT INTO `inspection_logs` (inspection_id, beacon_id, inspection_inspector, inspection_purpose,\
+          inspection_content, inspection_note, inspection_startDate, inspection_endDate)\
+            values(%s,%s,%s,%s,%s,%s,%s,%s)"
+    db.ec(add, (inspection["inspection_id"],inspection["beacon_id"],inspection["inspection_inspector"],
+                inspection["inspection_purpose"],inspection["inspection_content"],inspection["inspection_note"],\
+                    inspection["inspection_startDate"],inspection["inspection_endDate"],))
+    return True

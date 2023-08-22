@@ -65,9 +65,9 @@ def beacon(beacon_id):
 def updateImage():
     # 로컬 항로표지 이미지 넣기
     if update_images():
-        return "safe"
+        return "HTTP OK"
     else:
-        return "out"
+        return "ERROR"
 
 @app.route('/beacon/image', methods=['GET'])
 def selectImage():
@@ -235,3 +235,31 @@ def check_favorite():
         return 'true' 
     else :
         return 'false'
+    
+
+
+@app.route('/beacon/new', methods=['POST'])
+def insertNewBeacon():
+    params = request.get_json()
+    geo = params["geometry"]
+    geoN , geoE = map(str, geo.split(","))
+    geoNClock = list(map(float, geoN.split()[1].split("-")))
+    geoNTen = round(geoNClock[0]+geoNClock[1]/60+geoNClock[2]/3600, 7)
+    geoEClock = list(map(float, geoE.split()[1].split("-")))
+    geoETen = round(geoEClock[0]+geoEClock[1]/60+geoEClock[2]/3600, 7)
+    information = json.loads(params["information"])
+    beacon_request =  BeaconFull(params["markCode"], geoNTen,geoETen, params["markName"],
+                                params["markType"],params["markGroupCode"],params["purposeCode"],
+                                   params["officeCode"],params["installDate"],
+                                   information["colour"],information["lightcolour"],
+                                   information["lightCharacteristic"],information["signalPeriod"])
+    print(geoNTen, geoETen)
+    add_beacon(beacon_request)
+    return 'true'
+
+@app.route('/inspection/new', methods=['POST'])
+def insertNewInspection():
+    params = request.get_json()
+    for param in params:
+        add_inspection(param)
+    return "true"
