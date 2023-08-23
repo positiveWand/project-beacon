@@ -45,6 +45,14 @@ function ScrollableRecordTable({columns, maxHeight, records, className}: Prop) {
                             );
                         })
                     }
+                    {
+                        records.length == 0 ?
+                        <tr>
+                            <td colSpan={columns.length}>
+                                <b>자료 없음</b>
+                            </td>
+                        </tr> : null
+                    }
                 </tbody>
             </table>
         </ScrollableSectionBox>

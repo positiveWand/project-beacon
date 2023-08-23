@@ -16,7 +16,7 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
     classes.add('');
 
     let fixedRecords = [...records]
-    for(let i = 0; i < size - records.length % size; i++) {
+    for(let i = 0; i < size - records.length % size && records.length != 0; i++) {
         fixedRecords.push({blank: true})
     }
 
@@ -70,9 +70,17 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
                             );
                         })
                     }
+                    {
+                        records.length == 0 ?
+                        <tr>
+                            <td colSpan={columns.length}>
+                                <b>자료 없음</b>
+                            </td>
+                        </tr> : null
+                    }
                 </tbody>
             </table>
-            <PageNavbar pageMax={Math.ceil(records.length / size)} currentPage={page} onChange={handleChange}></PageNavbar>
+            <PageNavbar pageMax={Math.max(Math.ceil(records.length / size), 1)} currentPage={page} onChange={handleChange}></PageNavbar>
         </div>
     )
 }
