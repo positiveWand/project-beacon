@@ -1,10 +1,9 @@
 # STEP 1
-import pymysql
+from pymysqlpool.pool import Pool
 
 class DBConnection():
     def __init__(self, target="local"):
         # [주의] ssl_ca 경로 상 한국어 있으면 안됨
-        conn = None
 
         if target == "local":
             self.host = "localhost"
@@ -27,29 +26,37 @@ class DBConnection():
             self.port = 3306
             self.database = "beacon"
             self.ssl_disabled = True
-    
-    def start_conn(self):
-        self.conn = pymysql.connect(host=self.host, user=self.user, password=self.password, port=self.port, database=self.database, ssl_disabled=self.ssl_disabled, charset='utf8')
-        self.cursor = self.conn.cursor(pymysql.cursors.DictCursor)
-    def close_conn(self):
-        self.conn.close()
+        
+        self.connPool = Pool(host=self.host, port=self.port, user=self.user, password=self.password, db=self.database, charset='utf8')
+        self.connPool.init()
     
     def efo(self, sql, data = ()):
-        self.start_conn()
-        self.cursor.execute(sql, data)
-        aRow = self.cursor.fetchone()
-        self.close_conn()
+        conn = self.connPool.get_conn()
+        cursor = conn.cursor()
+        cursor.execute(sql, data)
+        aRow = cursor.fetchone()
+        self.connPool.release(conn)
         return aRow
 
     def efa(self, sql, data = ()):
-        self.start_conn()
-        self.cursor.execute(sql, data)
-        rows = self.cursor.fetchall()
-        self.close_conn()
+        # self.start_conn()
+        # self.cursor.execute(sql, data)
+        # rows = self.cursor.fetchall()
+        # self.close_conn()
+        conn = self.connPool.get_conn()
+        cursor = conn.cursor()
+        cursor.execute(sql, data)
+        rows = cursor.fetchall()
+        self.connPool.release(conn)
         return rows
     
     def ec(self, sql, data = ()):
-        self.start_conn()
-        self.cursor.execute(sql, data)
-        self.conn.commit()
-        self.close_conn()
+        # self.start_conn()
+        # self.cursor.execute(sql, data)
+        # self.conn.commit()
+        # self.close_conn()
+        conn = self.connPool.get_conn()
+        cursor = conn.cursor()
+        cursor.execute(sql, data)
+        cursor.commit()
+        self.connPool.release(conn)
