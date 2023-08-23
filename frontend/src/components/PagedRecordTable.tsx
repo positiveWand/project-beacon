@@ -15,6 +15,11 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
     let classes = new ClassNames(className);
     classes.add('');
 
+    let fixedRecords = [...records]
+    for(let i = 0; i < size - records.length % size; i++) {
+        fixedRecords.push({blank: true})
+    }
+
     const handleChange: MouseEventHandler<HTMLButtonElement> = (event) => {
         // console.log(event.currentTarget.innerHTML)
         if(event.currentTarget.innerHTML == '&lt;') {
@@ -29,7 +34,7 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
 
     return (
         <div className={classes.toString()}>
-            <table className='w-full border-collapse mb-4'>
+            <table className='w-full border-collapse mb-4 border-t-2 border-t-gray-400'>
                 <thead>
                     <tr>
                         {
@@ -45,14 +50,20 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
                 </thead>
                 <tbody>
                     {
-                        records?.slice((page-1) * size, page * size)?.map((aRecord) => {
+                        fixedRecords?.slice((page-1) * size, page * size)?.map((aRecord) => {
                             return (
                                 <tr>
                                     {
                                         columns.map((aColumn) => {
-                                            return (
-                                                <td>{aRecord[aColumn]}</td>
-                                            );
+                                            if(!aRecord.blank) {
+                                                return (
+                                                    <td>{aRecord[aColumn]}</td>
+                                                );
+                                            } else {
+                                                return (
+                                                    <td>&nbsp;</td>
+                                                );
+                                            }
                                         })
                                     }
                                 </tr>

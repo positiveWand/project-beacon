@@ -13,7 +13,7 @@ function NormalRecordTable({columns, records, className}: Prop) {
 
     return (
         <div className={classes.toString()}>
-            <table className='w-full border-collapse'>
+            <table className='w-full border-collapse border-t-2 border-t-gray-400'>
                 <thead>
                     <tr>
                         {

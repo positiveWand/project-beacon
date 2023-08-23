@@ -15,7 +15,7 @@ function ScrollableRecordTable({columns, maxHeight, records, className}: Prop) {
 
     return (
         <ScrollableSectionBox maxHeight={maxHeight} className={classes.toString()}>
-            <table className='w-full border-collapse'>
+            <table className='w-full border-collapse border-t-2 border-t-gray-400'>
                 <thead className='sticky top-0'>
                     <tr>
                         {

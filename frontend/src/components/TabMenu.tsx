@@ -28,12 +28,12 @@ function TabMenu({className, children}: Prop) {
         <div className={classes.toString()}>
             <ul className='flex'>
                 {tabItems.map((element, index) => {
-                    let itemStyle = new ClassNames('text-white text-2xl font-bold p-2 hover:cursor-pointer');
+                    let tabStyle = new ClassNames('text-white text-xl font-bold p-2 hover:cursor-pointer rounded-t mr-1');
 
                     if(index == currentTab) {
-                        itemStyle.add('bg-blue-500');
+                        tabStyle.add('bg-blue-500');
                     } else {
-                        itemStyle.add('bg-blue-300');
+                        tabStyle.add('bg-blue-300');
                     }
 
                     if(index == 0) {
@@ -43,7 +43,7 @@ function TabMenu({className, children}: Prop) {
                     }
                     return (
                         <li
-                            className={itemStyle.toString()}
+                            className={tabStyle.toString()}
                             onClick={() => handleClick(index)}
                         >
                             {element.title}
@@ -52,7 +52,7 @@ function TabMenu({className, children}: Prop) {
                 })}
             </ul>
             <div>
-                {tabItems[currentTab].content}
+                {tabItems[currentTab]?.content}
             </div>
         </div>
     )
