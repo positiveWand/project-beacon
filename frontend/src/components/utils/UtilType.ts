@@ -57,7 +57,7 @@ export type SignupModel = {
 }
 
 export type BeaconModel = {
-    id: number,
+    id: string,
     name: string,
     coordinate: {
         lat: number,
@@ -67,6 +67,58 @@ export type BeaconModel = {
     failure_prob: number
 }
 
-export type BeaconDetailModel = {
+export type Session = {
+    id: string
+}
 
+export type FeatureModel = {
+    feature_id: string,
+    feature_installDate: string,
+    feature_uninstallDate?: string
+}
+
+export type InspectionModel = {
+    inspection_id: string,
+    inspection_inspector: string,
+    inspection_purpose: string,
+    inspection_content: string,
+    inspection_note: string,
+    inspection_startDate: string,
+    inspection_endDate: string
+}
+
+export type SignalModel = {
+    [index: string]: 'true' | 'false' | null | undefined
+}
+
+export type BasicInfoModel = {
+    beacon_id: string,
+    beacon_name: string,
+    beacon_type: string,
+    beacon_lat: number,
+    beacon_lng: number,
+    beacon_group: string,
+    beacon_purpose: string,
+    beacon_office: string,
+    beacon_installDate: string,
+    beacon_color: string,
+    beacon_lightColor: string,
+    beacon_lightCharacteristic: string,
+    beacon_lightSignalPeriod: string
+}
+
+export type BeaconDetailModel = {
+    basicInfo: BasicInfoModel,
+     featureInfo: {
+        rtu?: FeatureModel[],
+        solarbattery?: FeatureModel[],
+        batterycharge?: FeatureModel[],
+        light?: FeatureModel[],
+        storagebattery?: FeatureModel[],
+        ais?: FeatureModel[],
+        racon?: FeatureModel[]
+     },
+     inspectionInfo: InspectionModel[],
+     signalInfo: SignalModel,
+     predictionInfo: any
 }

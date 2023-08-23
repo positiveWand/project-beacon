@@ -17,6 +17,7 @@ import * as Route from './route.ts'
 import SubmitInput from './components/SubmitInput.tsx';
 
 import { LoginModel } from './components/utils/UtilType.ts';
+import { useDefaultCursor, useWaitCursor } from './components/utils/UtilFunc.tsx';
 
 const idPattern = "^[a-zA-Z][a-zA-Z0-9]*$";
 const passwordPattern = "^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$";
@@ -49,18 +50,32 @@ function LoginPage() {
             return
         }
 
-        if (loginData.id === 'admin' && loginData.password === 'password!') {
-            // 인증 성공
-            console.log('로그인 성공');
-            setInvalidLogin(false);
-            setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.')
-            // 로그인 후에 리다이렉트 해야함
-        } else {
-            // 인증 실패
-            console.log('로그인 실패');
-            setInvalidLogin(true);
-            setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.')
-        }
+        useWaitCursor();
+        fetch('http://127.0.0.1:5000/login/request', {
+            method: 'POST',
+            body: JSON.stringify({id: loginData.id, password: loginData.password}),
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(result => {
+            return result.json()
+        })
+        .then(result => {
+            if(result['result'] == 'true') {
+                alert('로그인 성공');
+                location.href = Route.MAIN_PAGE_URL;
+            } else {
+                alert('로그인 실패')
+                setInvalidLogin(true);
+                setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.');
+                useDefaultCursor();
+            }
+        })
+        .catch(() => {
+            useDefaultCursor();
+        })
     }
 
     const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -88,7 +103,7 @@ function LoginPage() {
             </NavBar>
             </Header>
             <Body className='px-8 py-6 flex justify-center'>
-                <Form label='로그인' invalid={invalidLogin} invalidMessage={formMessage} onSubmit={handleSubmit} className='border-gray-300 border-2 rounded-lg p-6 mt-6 flex flex-col w-1/4'>
+                <Form label='로그인' invalid={invalidLogin} invalidMessage={formMessage} onSubmit={handleSubmit} className='border-gray-300 border-2 rounded-lg p-6 mt-6 flex flex-col max-w-md flex-1'>
                     <TextInput label='아이디' type='text' name='id' required={true} invalid={invalidId} invalidMessage='영문, 숫자만 가능합니다!' useChange={onInputChange} placeholder='아이디 입력...' className='mb-6' inputStyle='block w-full text-xl p-2 mb-2'/>
                     <TextInput label='비밀번호' type='password' name='password' required={true} invalid={invalidPassword} invalidMessage='8자리 이상이면서 영문, 숫자, 특수문자를 반드시 포함해야합니다!' useChange={onInputChange} placeholder='비밀번호 입력...' inputStyle='block w-full text-xl p-2 mb-2' />
                     <SubmitInput value='로그인' className='bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold p-3 rounded mt-8 active:bg-blue-800'/>
