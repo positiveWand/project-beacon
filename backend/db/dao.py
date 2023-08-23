@@ -9,6 +9,7 @@ from .dto.coordinate import Coordinate
 from .dto.prediction import Prediction
 from .dto.embedding import Embedding
 from flask import send_file
+import numpy as np
 
 db = dbconnection.DBConnection("azure-testdb")
 
@@ -62,27 +63,40 @@ def get_inspections(beacon_id):
 
 #image
 
-def update_images():
-    # 현재 스크립트의 경로
-    script_path = os.path.abspath(__file__)
+def update_images(beacon_id, beacon_image):
+    # # 현재 스크립트의 경로
+    # script_path = os.path.abspath(__file__)
 
-    # 상위 폴더의 경로
-    parent_folder_path = os.path.dirname(os.path.dirname(script_path))
+    # # 상위 폴더의 경로
+    # parent_folder_path = os.path.dirname(os.path.dirname(script_path))
 
-    # 상위 폴더의 상위 폴더 내 다른 폴더의 경로
-    other_folder_path = os.path.join(parent_folder_path, "images")
+    # # 상위 폴더의 상위 폴더 내 다른 폴더의 경로
+    # other_folder_path = os.path.join(parent_folder_path, "images")
 
-    # 폴더 내의 모든 이미지 파일 처리
-    for filename in os.listdir(other_folder_path):
-        if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
-            image_path = os.path.join(other_folder_path, filename)
-            with open(image_path, 'rb') as image_file:
-                    image_bytes = image_file.read()
-            print(image_bytes)
-            update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
-            db.ec(update_query, (image_bytes, filename.split(".")[0]))
+    # # 폴더 내의 모든 이미지 파일 처리
+    # for filename in os.listdir(other_folder_path):
+    #     if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
+    #         image_path = os.path.join(other_folder_path, filename)
+    #         with open(image_path, 'rb') as image_file:
+    #                 image_bytes = image_file.read()
+    #         print(image_bytes)
+    #         update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
+    #         db.ec(update_query, (image_bytes, filename.split(".")[0]))
+    # return True
+    print('dao update image called')
+    update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
+    db.ec(update_query, (beacon_image, beacon_id))
     return True
 
+def update_embeddings(beacon_id, beacon_embedding):
+    print(beacon_id, type(beacon_embedding))
+    embedding_tensor = np.load(beacon_embedding)
+    
+    delete_query = 'DELETE FROM `BEACON_EMBEDDINGS` WHERE `beacon_id` = %s'
+    db.ec(delete_query, beacon_id)
+    insert_query = 'INSERT INTO `BEACON_EMBEDDINGS` (beacon_id) VALUES (%s, %s)'
+    db.ec(insert_query, (beacon_id, embedding_tensor.tobytes()))
+    return True
 
 def get_beacon_image(beacon_id):
     result = None
@@ -122,7 +136,7 @@ def get_latest_predict(beacon_id):
 
     aPredict = db.efo(select_latest_predict, (beacon_id))
     if aPredict is not None:
-        result = Prediction(aPredict['prediction_id'], aPredict['prediction_time'], aPredict['prediction_score'])
+        result = Prediction(aPredict['prediction_id'], aPredict['prediction_time'], aPredict['prediction_content'])
     else:
         result = Prediction()
 
@@ -142,7 +156,7 @@ def get_all_beacons_with_recent():
     #select_all_beacons_with_recent = 'SELECT * FROM `BEACONS` A LEFT OUTER JOIN (SELECT prediction_id, prediction_time, prediction_score, beacon_id FROM `PREDICTION_LOGS` B WHERE `prediction_time` = (SELECT MAX(`prediction_time`) FROM `PREDICTION_LOGS` C WHERE B.prediction_time = C.prediction_time)) D ON A.beacon_id = D.beacon_id'
 
     select_all_beacons_with_recent =( "SELECT * FROM `BEACONS` A LEFT OUTER JOIN (\
-	        SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_score\
+	        SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_content\
 	        FROM prediction_logs pl1\
 	        INNER JOIN (\
 		        SELECT beacon_id, MAX(prediction_time) AS max_time\
@@ -152,9 +166,9 @@ def get_all_beacons_with_recent():
         ) B on A.beacon_id = B.beacon_id;")
 
     for aTuple in db.efa(select_all_beacons_with_recent):
-        print(aTuple)
-        aPrediction = Prediction(aTuple['prediction_id'], aTuple['prediction_time'], aTuple['prediction_score'])
-        result.append(Beacon(aTuple['beacon_id'], aTuple['beacon_lat'], aTuple['beacon_lng'], aTuple['beacon_name'], aPrediction.get_state(), aPrediction.score))
+        # print(aTuple)
+        aPrediction = Prediction(aTuple['prediction_id'], aTuple['prediction_time'], aTuple['prediction_content'])
+        result.append(Beacon(aTuple['beacon_id'], aTuple['beacon_lat'], aTuple['beacon_lng'], aTuple['beacon_name'], aPrediction.get_state(), aPrediction.content))
 
     return result
 

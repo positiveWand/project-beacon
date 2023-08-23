@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>업로드</title>
+</head>
+<body>
+    <h1>업로드</h1>
+    <section>
+        <h2>이미지 업로드</h2>
+        <form action="/beacon/updateImage" id="beaconImageUpload" method="post" enctype="multipart/form-data">
+            <select name="beacon_id" id="" required>
+            </select>
+            <br><br>
+            <input type="file" name="beacon_image" id="" required accept="image/jpeg">
+            <br><br>
+            <button type="submit">업로드</button>
+        </form>
+    </section>
+    <section>
+        <h2>임베딩 업로드</h2>
+        <form action="/beacon/updateEmbedding" id="beaconEmbeddingUpload" method="post" enctype="multipart/form-data">
+            <select name="beacon_id" id="" required>
+            </select>
+            <br><br>
+            <input type="file" name="beacon_embedding" id="" required accept=".npy">
+            <br><br>
+            <button type="submit">업로드</button>
+        </form>
+    </section>
+    <script>
+        fetch('/beacon/all')
+        .then(result => {
+            return result.json()
+        })
+        .then(result => {
+            for(let aBeacon of result) {
+                let newOption = document.createElement('option')
+                newOption.setAttribute('value', aBeacon.id)
+                newOption.textContent = aBeacon.id
+
+                document.querySelector('#beaconImageUpload select').appendChild(newOption)
+
+                newOption = document.createElement('option')
+                newOption.setAttribute('value', aBeacon.id)
+                newOption.textContent = aBeacon.id
+
+                document.querySelector('#beaconEmbeddingUpload select').appendChild(newOption)
+            }
+
+            console.log('got it')
+        })
+    </script>
+</body>
+</html>

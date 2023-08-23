@@ -3,7 +3,6 @@ from batch.command import print_message
 from flask import Flask, render_template, send_from_directory, jsonify,request,session,redirect,app,url_for
 from flask_cors import CORS
 from datetime import timedelta
-from markupsafe import escape
 import json
 
 app = Flask(__name__, template_folder="../frontend/dist")
@@ -36,6 +35,10 @@ def searchPage():
 def detailPage():
     # 상세페이지 라우팅
     return render_template('/route/detail/index.html')
+@app.route('/upload', methods=['GET'])
+def uploadPage():
+    # 메인페이지 라우팅
+    return send_file('./upload/upload.html', mimetype='text/html')
 @app.route('/<path:filename>', methods=['GET'])
 def resource(filename):
     print("resource", filename)
@@ -60,14 +63,6 @@ def beacon(beacon_id):
         'state': aPredict.get_state(),
         'failure_prob': aPredict.score,
     })
-
-@app.route('/beacon/updateImage', methods=['GET'])
-def updateImage():
-    # 로컬 항로표지 이미지 넣기
-    if update_images():
-        return "HTTP OK"
-    else:
-        return "ERROR"
 
 @app.route('/beacon/image', methods=['GET'])
 def selectImage():
@@ -235,8 +230,21 @@ def check_favorite():
         return 'true' 
     else :
         return 'false'
-    
-
+  
+@app.route('/beacon/updateImage', methods=['POST'])
+def updateImage():
+    print('update image API')
+    if update_images(request.form['beacon_id'], request.files['beacon_image'].read()):
+        return "UPLOAD IMAGE GOOD"
+    else:
+        return "UPLOAD IMAGE ERROR"
+@app.route('/beacon/updateEmbedding', methods=['POST'])
+def updateEmbedding():
+    print('update embedding API')
+    if update_embeddings(request.form['beacon_id'], request.files['beacon_embedding']):
+        return "UPLOAD EMBEDDING GOOD"
+    else:
+        return "UPLOAD EMBEDDING ERROR"
 
 @app.route('/beacon/new', methods=['POST'])
 def insertNewBeacon():
