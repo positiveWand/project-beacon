@@ -33,7 +33,7 @@ function FeatureInfo({ model, className }: Prop) {
             이력번호: index + 1,
             코드: aFeature.feature_id,
             설치일자: aFeature.feature_installDate,
-            철거일자: aFeature.feature_uninstallDate
+            철거일자: aFeature.feature_uninstallDate ? aFeature.feature_uninstallDate : '현재 설치'
         }
     })
 

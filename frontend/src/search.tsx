@@ -116,7 +116,7 @@ function SearchPage() {
 
     function checkLogin() {
         useWaitCursor();
-        fetch('http://127.0.0.1:5000/login/check', {
+        return fetch('/login/check', {
             credentials: "include",
         })
         .then(result => {
@@ -139,39 +139,51 @@ function SearchPage() {
 
     function fetchBeacons() {
         // Map Beacons 요청
-        setFectching(true);
-        // fetch('https://projectbeacon.azurewebsites.net/beacon/all')
-        // .then(result => {
-        //     console.log(result)
-        //     return result.json()
-        // })
-        // .then(beacon_list => {
-        //     console.log("hi")
+        // let beaconPromise = new Promise<BeaconModel[]>(resolve => {
+        //     setTimeout(() => {
+        //         resolve(testdata as BeaconModel[])
+        //     }, 2000);
+        // }).then(beacon_list => {
         //     console.log(beacon_list)
-        //     mapStore.setBeacons(
-        //         beacon_list as BeaconModel[]
-        //     );
-        //     setFectching(false);
+        //     mapStore.setBeacons(beacon_list)
         // });
-        let bp = new Promise<BeaconModel[]>(resolve => {
-            setTimeout(() => {
-                resolve(testdata as BeaconModel[])
-            }, 2000);
-        }).then(beacon_list => {
+
+        // let favoritePromise = new Promise<string[]>(resolve => {
+        //     setTimeout(() => {
+        //         resolve(testfavorites as string[])
+        //     }, 2000);
+        // }).then(favorites_list => {
+        //     console.log(favorites_list)
+        //     mapStore.setFavorites(favorites_list)
+        // });
+
+        setFectching(true);
+
+        let beaconPromise = fetch('/beacon/all')
+        .then(result => {
+            console.log(result)
+            return result.json()
+        })
+        .then(beacon_list => {
             console.log(beacon_list)
-            mapStore.setBeacons(beacon_list)
+            mapStore.setBeacons(
+                beacon_list as BeaconModel[]
+            );
         });
 
-        let fp = new Promise<string[]>(resolve => {
-            setTimeout(() => {
-                resolve(testfavorites as string[])
-            }, 2000);
-        }).then(favorites_list => {
+        let favoritePromise = fetch('/beacon/favorites/all')
+        .then(result => {
+            console.log(result)
+            return result.json()
+        })
+        .then(favorites_list => {
             console.log(favorites_list)
-            mapStore.setFavorites(favorites_list)
+            if(favorites_list) {
+                mapStore.setFavorites(favorites_list)
+            }
         });
 
-        Promise.all([bp, fp])
+        return Promise.all([beaconPromise, favoritePromise])
         .then(() => {
             setSyncTime(dateFormat(new Date()));
             setFectching(false);
@@ -180,8 +192,10 @@ function SearchPage() {
 
     useEffect(() => {
         mapStore.init();
-        checkLogin();
-        fetchBeacons();
+        checkLogin()
+        .then(result => {
+            fetchBeacons()
+        })
         return () => {
             mapStore.destroy();
         }
@@ -203,7 +217,7 @@ function SearchPage() {
         if(checked) {
             switch (name) {
                 case 'unknown':
-                    mapStore.addUnionFilter('unknown', aBeacon => aBeacon.state == undefined)
+                    mapStore.addUnionFilter('unknown', aBeacon => aBeacon.state == undefined || aBeacon.state == null)
                     break;
                 case 'low':
                     mapStore.addUnionFilter('low', aBeacon => aBeacon.state == 'low')

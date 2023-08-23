@@ -4,7 +4,7 @@ export interface MyComponentProp {
 }
 
 export type Color = "gray" | "green" | "yellow" | "red"
-export type BeaconState = undefined | 'low' | 'medium' | 'high'
+export type BeaconState = undefined | null | 'unknown' | 'low' | 'medium' | 'high'
 
 export type MapEvent = 'update'
 export type MapEventObject = {
@@ -119,6 +119,4 @@ export type BeaconDetailModel = {
         racon?: FeatureModel[]
      },
      inspectionInfo: InspectionModel[],
-     signalInfo: SignalModel,
-     predictionInfo: any
 }

@@ -13,7 +13,8 @@ function SignalInfo({ model, className }: Prop) {
     classes.add('flex')
 
     if(!model) {
-        return '자료 없음'
+        classes.add('flex justify-center py-2')
+        return <b className={classes.toString()}>자료 없음</b>
     }
 
     return (

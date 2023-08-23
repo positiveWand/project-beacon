@@ -91,6 +91,7 @@ class MapStore {
         console.log(this.#visibleBeacons)
 
         for(let aBeacon of this.#visibleBeacons) {
+            console.log(aBeacon)
             if(this.#markers.get(aBeacon.id)) {
                 continue
             }
@@ -106,7 +107,7 @@ class MapStore {
                 case 'low':
                     img_url = GREEN_MARKER_IMG
                     break;
-                case undefined:
+                default:
                     img_url = GRAY_MARKER_IMG
                     break;
             }
@@ -161,12 +162,20 @@ class MapStore {
         console.log('session',this.#session)
         if(this.#session) {
             console.log('logged in')
-            let isFavorite = await new Promise<boolean>(resolve => {
-                setTimeout(() => {
-                    console.log(id, this.#favorites)
-                    resolve(this.#favorites.find(element => element == id) != undefined)
-                }, 500);
-            });
+            let isFavorite = await fetch('/beacon/favorites?id='+id, {
+                method: 'GET',
+                credentials: "include",
+            })
+            .then(result => {
+                return result.text();
+            })
+            .then(result => {
+                if(result == 'true') {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
             aInfoWindow = new naver.maps.InfoWindow({
                 content: renderToStaticMarkup(
                     <InformationWindow model={this.#beacons.find(element => element.id == id)} isFavorite={isFavorite}/>
@@ -195,43 +204,61 @@ class MapStore {
             let unfilledStar = document.querySelector('div.infowindow a.star-unfilled') as HTMLElement;
             filledStar.addEventListener('click', () => {
                 // 즐겨찾기 삭제
-                // fetch('/beacon/favorites', {method: 'DELETE'})
-                // .then(result => {
-                //     return result.text();
-                // })
-                // .then(result => {
-                //     if(result == 'true') {
-                //         alert('즐겨찾기 삭제 성공!!')
-                //         unfilledStar.hidden = false;
-                //         filledStar.hidden = true;
-                //     } else {
-                //         alert('즐겨찾기 삭제 실패!!')
-                //     }
-                // })
-                alert('즐겨찾기 삭제 성공!!')
-                this.#favorites = this.#favorites.filter(element => element != id)
-                unfilledStar.hidden = false;
-                filledStar.hidden = true;
+                fetch('/beacon/favorites', {
+                    method: 'DELETE',
+                    body: JSON.stringify({beacon_id: id}),
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then(result => {
+                    return result.text();
+                })
+                .then(result => {
+                    console.log(result)
+                    if(result == 'true') {
+                        alert('즐겨찾기 삭제 성공!!')
+                        this.#favorites = this.#favorites.filter(element => element != id)
+                        unfilledStar.hidden = false;
+                        filledStar.hidden = true;
+                    } else {
+                        alert('즐겨찾기 삭제 실패!!')
+                    }
+                })
+                // alert('즐겨찾기 삭제 성공!!')
+                // this.#favorites = this.#favorites.filter(element => element != id)
+                // unfilledStar.hidden = false;
+                // filledStar.hidden = true;
             });
             unfilledStar.addEventListener('click', () => {
                 // 즐겨찾기 추가
-                // fetch('/beacon/favorites', {method: 'POST'})
-                // .then(result => {
-                //     return result.text();
-                // })
-                // .then(result => {
-                //     if(result == 'true') {
-                //         alert('즐겨찾기 추가 성공!!')
-                //         unfilledStar.hidden = true;
-                //         filledStar.hidden = false;
-                //     } else {
-                //         alert('즐겨찾기 추가 실패!!')
-                //     }
-                // })
-                alert('즐겨찾기 추가 성공!!')
-                this.#favorites = [...this.#favorites, id]
-                unfilledStar.hidden = true;
-                filledStar.hidden = false;
+                fetch('/beacon/favorites', {
+                    method: 'POST',
+                    body: JSON.stringify({beacon_id: id}),
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then(result => {
+                    return result.text();
+                })
+                .then(result => {
+                    console.log(result)
+                    if(result == 'true') {
+                        alert('즐겨찾기 추가 성공!!')
+                        this.#favorites = [...this.#favorites, id]
+                        unfilledStar.hidden = true;
+                        filledStar.hidden = false;
+                    } else {
+                        alert('즐겨찾기 추가 실패!!')
+                    }
+                })
+                // alert('즐겨찾기 추가 성공!!')
+                // this.#favorites = [...this.#favorites, id]
+                // unfilledStar.hidden = true;
+                // filledStar.hidden = false;
             });
         }
 
@@ -274,8 +301,8 @@ class MapStore {
     }
     initFilters() {
         this.#unionFilters = new Map()
-        this.addUnionFilter('undefined', (aBeacon: BeaconModel) => {
-            return aBeacon.state == undefined;
+        this.addUnionFilter('unknown', (aBeacon: BeaconModel) => {
+            return aBeacon.state == undefined || aBeacon.state == null;
         })
         this.addUnionFilter('low', (aBeacon: BeaconModel) => {
             return aBeacon.state == 'low';

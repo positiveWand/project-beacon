@@ -21,7 +21,7 @@ import SignalInfo from './components/SignalInfo.tsx';
 import './index.css'
 
 import { testdata, testdetails } from './TestData.tsx';
-import { BeaconDetailModel, Coordinate } from './components/utils/UtilType.ts';
+import { BeaconDetailModel, Coordinate, SignalModel } from './components/utils/UtilType.ts';
 
 import UNDO_IMG from './assets/undo.png'
 
@@ -29,6 +29,7 @@ import * as Route from './route.ts'
 import BasicInfo from './components/BasicInfo.tsx';
 
 function DetailPage() {
+    const [beaconID, setBeaconID] = useState<string>();
     const [detailModel, setDetailModel] = useState<BeaconDetailModel>({
         basicInfo: {
             beacon_id: '-',
@@ -47,32 +48,55 @@ function DetailPage() {
         },
         featureInfo: {},
         inspectionInfo: [],
-        signalInfo: {},
-        predictionInfo: {}
     })
+    const [signalModel, setSignalModel] = useState<SignalModel>({});
     const [prob, setProb] = useState<number>(0)
 
     function fetchBeaconInfo(beaconID: string) {
-        const targetBeacon = testdata.find(element => element.id == beaconID);
-        console.log(targetBeacon);
-
-        setProb(targetBeacon.failure_prob);
-        // fetch('/beacon/'+beaconID)
-        // .then(res => res.json())
-        // .then(targetBeacon => {
-        //     setBeaconName(targetBeacon.name);
-        //     setBeaconID(targetBeacon.id);
-        //     setBeaconCoord({lat: targetBeacon.coordinate.lat, lng: targetBeacon.coordinate.lng});
-        //     setProb(targetBeacon.failure_prob);
+        setProb(30);
+        fetch('/beacon/detailInfo?id='+beaconID, {
+            method: 'GET',
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(result => {
+            setDetailModel(result)
+            console.log(result)
+        })
+        // new Promise<BeaconDetailModel>(resolve => {
+        //     setTimeout(() => {
+        //         resolve(testdetails[0] as BeaconDetailModel)
+        //     }, 1000);
+        // }).then(target => {
+        //     console.log(target)
+        //     setDetailModel(target)
         // });
-        new Promise<BeaconDetailModel>(resolve => {
-            setTimeout(() => {
-                resolve(testdetails[0] as BeaconDetailModel)
-            }, 1000);
-        }).then(target => {
-            console.log(target)
-            setDetailModel(target)
-        });
+    }
+    function fetchSignalInfo(beaconID: string) {
+        fetch('/beacon/signalInfo?id='+beaconID, {
+            method: 'GET',
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(result => {
+            setDetailModel(result)
+            console.log(result)
+        })
+    }
+    function fetchPredictionInfo(beaconID: string) {
+        setProb(30);
+        fetch('/beacon/predictionInfo?id='+beaconID, {
+            method: 'GET',
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(result => {
+            setDetailModel(result)
+            console.log(result)
+        })
     }
 
     useEffect(()=>{
@@ -84,22 +108,12 @@ function DetailPage() {
             return;
         });
         // console.log(receivedObject);
-
+        setBeaconID(receivedObject['id']);
         fetchBeaconInfo(receivedObject['id']);
+        fetchSignalInfo(receivedObject['id']);
+        fetchPredictionInfo(receivedObject['id']);
     }, []);
 
-    let test = []
-    for (let i = 0; i < 49; i++) {
-        test.push(
-            {
-                column1: '첫번째 칼럼 ' + i,
-                column2: "두번째 칼럼 " + i,
-                column3: '세번째 칼럼 ' + i,
-                column4: '네번째 칼럼 ' + i,
-            }
-        )
-    }
-    let testcols = [...Object.keys(test[0])]
     return (
         <div className='h-screen flex flex-col'>
             <Header className='p-4 bg-blue-500 flex items-center select-none'>
@@ -109,7 +123,7 @@ function DetailPage() {
             </Header>
             <Body className='px-10 py-6 flex flex-col items-center'>
                 <Heading level={1} className='bg-blue-500 text-white mr-auto'>기본 정보</Heading>
-                <BasicInfo className='w-full my-4' model={detailModel.basicInfo}></BasicInfo>
+                <BasicInfo imgURL={'/beacon/image?id='+beaconID} className='w-full my-4' model={detailModel.basicInfo}></BasicInfo>
                 <Heading level={1} className='bg-blue-500 text-white mr-auto'>장비 정보</Heading>
                 <TabMenu className='w-full my-4'>
                     {
@@ -137,6 +151,9 @@ function DetailPage() {
                                 case 'racon':
                                     itemTitle = '레이콘'
                                     break;
+                            }
+                            if(itemTitle == '장비' || detailModel.featureInfo[aFeature].length == 0) {
+                                return
                             }
                             return (
                                 <TabItem title={itemTitle} key={aFeature}>

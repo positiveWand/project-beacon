@@ -4,10 +4,11 @@ import SectionBox from './SectionBox'
 import Heading from './Heading'
 
 interface Prop extends MyComponentProp {
+    imgURL: string
     model: BasicInfoModel
 }
 
-function BasicInfo({ model, className }: Prop) {
+function BasicInfo({ imgURL, model, className }: Prop) {
     let classes = new ClassNames(className)
     // classes.add('border-y-2 border-gray-400')
     classes.add('pb-4')
@@ -17,11 +18,11 @@ function BasicInfo({ model, className }: Prop) {
         <SectionBox className={classes.toString()}>
             <div className='flex-1'>
                 <Heading level={2}>이미지</Heading>
-                <img src="https://digiday.com/wp-content/uploads/sites/3/2014/01/shutterstock_141738085.jpg?resize=1000,579" alt="항로표지 이미지" className='max-w-lg'/>
+                <img src={imgURL} alt="항로표지 이미지" className='max-w-lg max-h-xl'/>
             </div>
             <div className='flex-1'>
                 <Heading level={2}>관리 정보</Heading>
-                <table className='w-full h-5/6 border-collapse border-t-2 border-t-gray-400'>
+                <table className='w-full border-collapse border-t-2 border-t-gray-400'>
                     <tbody>
                         <tr>
                             <th>코드</th>

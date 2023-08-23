@@ -16,6 +16,7 @@ import beaconLogo from './assets/beacon.png'
 
 import * as Route from './route.ts'
 import { SignupModel } from './components/utils/UtilType.ts';
+import { useDefaultCursor, useWaitCursor } from './components/utils/UtilFunc.tsx';
 
 const idPattern = "^[a-zA-Z][a-zA-Z0-9]*$";
 const passwordPattern = "^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$";
@@ -62,7 +63,35 @@ function SignupPage() {
         }
 
         setInvalidSignup(false)
-        setFormMessage('회원가입 성공')
+        setFormMessage('회원가입 요청 중')
+        useWaitCursor()
+
+        fetch('/signup/request', {
+            method: 'POST',
+            body: JSON.stringify({id: signupData.id, password: signupData.password, email: signupData.email}),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(result => {
+            return result.text()
+        })
+        .then(result => {
+            if(result == 'true') {
+                alert('회원가입 성공');
+                location.href = Route.LOGIN_PAGE_URL;
+            } else {
+                console.log(result)
+                alert('회원가입 실패')
+                setInvalidSignup(true);
+                setFormMessage('중복된 아이디가 있거나 서버에 문제가 있습니다.');
+                useDefaultCursor();
+            }
+        })
+        .catch(() => {
+            useDefaultCursor();
+        })
+
     }
 
     const onInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {

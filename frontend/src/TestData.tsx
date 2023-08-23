@@ -768,17 +768,5 @@ export const testdetails: BeaconDetailModel[] = [
                 inspection_endDate: '2023-06-16'
             },
         ],
-        signalInfo: {
-           rtu: 'true',
-           solarbattery: 'true',
-           batterycharge: 'true',
-           light: 'false',
-           storagebattery: 'true',
-           ais: 'true',
-           racon: null
-        },
-        predictionInfo: {
-           failure_prob: 50
-        }
      }
 ]
