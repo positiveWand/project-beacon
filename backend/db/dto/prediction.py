@@ -1,17 +1,18 @@
 from .dataobject import DataObject
 
 class Prediction(DataObject):
-    def __init__(self, id = None, time = None, content = None) -> None:
+    def __init__(self, id = None, type = None, time = None, content = None) -> None:
         self.id = id
+        self.type = type
         self.time = time
         self.content = content
 
     def get_state(self):
-        if type(self.content) is not int:
+        if self.type != 'simple_probability':
             return None
-        if self.content < 33:
+        if int(self.content) < 33:
             return 'low'
-        elif self.content < 66:
+        elif int(self.content) < 66:
             return 'medium'
         else:
             return 'high'

@@ -103,7 +103,8 @@ def get_beacon_image(beacon_id):
     select_beacon = 'SELECT `beacon_image` FROM `BEACONS` WHERE `beacon_id` = %s'
 
     aBeacon_image = db.efo(select_beacon, (beacon_id))
-    result = aBeacon_image['beacon_image']
+    if aBeacon_image is not None:
+        result = aBeacon_image['beacon_image']
 
     return send_file(io.BytesIO(result), mimetype='image/jpeg')
 
@@ -136,7 +137,7 @@ def get_latest_predict(beacon_id):
 
     aPredict = db.efo(select_latest_predict, (beacon_id))
     if aPredict is not None:
-        result = Prediction(aPredict['prediction_id'], aPredict['prediction_time'], aPredict['prediction_content'])
+        result = Prediction(id = aPredict['prediction_id'], time = aPredict['prediction_time'], content = aPredict['prediction_content'])
     else:
         result = Prediction()
 
@@ -147,7 +148,7 @@ def get_all_predict(beacon_id):
     select_all_predict = 'SELECT * FROM `PREDICTION_LOGS` WHERE `prediction_id` = %s ORDER BY `prediction_time` DESC LIMIT 1'
 
     for aPredict in db.efa(select_all_predict, (beacon_id)):
-        result.append(Prediction(aPredict['prediction_id'], aPredict['prediction_time'], aPredict['prediction_score']))
+        result.append(Prediction(id = aPredict['prediction_id'], time = aPredict['prediction_time'], content = aPredict['prediction_content']))
 
     return result
 
@@ -156,7 +157,7 @@ def get_all_beacons_with_recent():
     #select_all_beacons_with_recent = 'SELECT * FROM `BEACONS` A LEFT OUTER JOIN (SELECT prediction_id, prediction_time, prediction_score, beacon_id FROM `PREDICTION_LOGS` B WHERE `prediction_time` = (SELECT MAX(`prediction_time`) FROM `PREDICTION_LOGS` C WHERE B.prediction_time = C.prediction_time)) D ON A.beacon_id = D.beacon_id'
 
     select_all_beacons_with_recent =( "SELECT * FROM `BEACONS` A LEFT OUTER JOIN (\
-	        SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_content\
+	        SELECT pl1.beacon_id, pl1.prediction_id ,pl1.prediction_time, pl1.prediction_content, pl1.prediction_type\
 	        FROM prediction_logs pl1\
 	        INNER JOIN (\
 		        SELECT beacon_id, MAX(prediction_time) AS max_time\
@@ -167,7 +168,8 @@ def get_all_beacons_with_recent():
 
     for aTuple in db.efa(select_all_beacons_with_recent):
         # print(aTuple)
-        aPrediction = Prediction(aTuple['prediction_id'], aTuple['prediction_time'], aTuple['prediction_content'])
+        aPrediction = Prediction(id = aTuple['prediction_id'], time = aTuple['prediction_time'], content = aTuple['prediction_content'], type = aTuple['prediction_type'])
+        # print(aPrediction.type, aTuple['prediction_content'], aPrediction.content, aPrediction.get_state())
         result.append(Beacon(aTuple['beacon_id'], aTuple['beacon_lat'], aTuple['beacon_lng'], aTuple['beacon_name'], aPrediction.get_state(), aPrediction.content))
 
     return result

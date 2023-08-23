@@ -109,9 +109,8 @@ def beacon_detailInfo():
             data["featureInfo"][feature.feature_type].append(feature.pyData())
     for inspection in inspections:
         data["inspectionInfo"].append(inspection.pyData())
-    json_str = json.dumps(data, ensure_ascii=False, indent=4, default=str)
 
-    return json_str
+    return jsonify(data)
 
 
 
@@ -202,7 +201,7 @@ def logout() :
 def favorite_list() :
     if 'id' in session : 
         return get_all_favorite_beacons(session['id'])
-    return None
+    return jsonify(None)
 @app.route('/beacon/favorites',methods=['POST'])
 def add_favorite():
     resObject = {}

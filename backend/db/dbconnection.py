@@ -58,5 +58,5 @@ class DBConnection():
         conn = self.connPool.get_conn()
         cursor = conn.cursor()
         cursor.execute(sql, data)
-        cursor.commit()
+        conn.commit()
         self.connPool.release(conn)
