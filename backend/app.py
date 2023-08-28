@@ -64,6 +64,9 @@ def beacon(beacon_id):
         'failure_prob': aPredict.score,
     })
 
+
+
+
 @app.route('/beacon/image', methods=['GET'])
 def selectImage():
     # 특정 항로표지 이미지 반환
@@ -89,17 +92,12 @@ def beacon_detailInfo():
     data["featureInfo"] = {}
     data["inspectionInfo"] = []
 
-    data["featureInfo"]["beacon"] =[]
-    data["featureInfo"]["rtu"] =[]
-    data["featureInfo"]["landmark"] =[]
+    data["featureInfo"]["light"] =[]
     data["featureInfo"]["solarbattery"] =[]
-    data["featureInfo"]["storagebattery"] = []
-    data["featureInfo"]["pile"] = []
-    data["featureInfo"]["batterycharge"] = []
-    data["featureInfo"]["light"] = []
+    data["featureInfo"]["batterycharge"] =[]
+    data["featureInfo"]["storagebattery"] =[]
     data["featureInfo"]["racon"] = []
-    data["featureInfo"]["topmark"] = []
-    data["featureInfo"]["buoy"] = []
+    data["featureInfo"]["rtu"] = []
     data["featureInfo"]["ais"] = []
     
     for feature in features:
@@ -270,3 +268,40 @@ def insertNewInspection():
     for param in params:
         add_inspection(param)
     return "true"
+
+
+@app.route('/beacon/signalInfo', methods=['GET'])
+def getSignification():
+    beacon_id = request.args.get('id')
+    features = get_features(beacon_id)
+    aBeacon = get_beacon_full(beacon_id)
+
+    obejct = {
+        'light': None,
+        'solarbattery': None,
+        'batterycharge': None,
+        'storagebattery': None,
+        'racon': None,
+        'rtu': None,
+        'ais': None,
+    }
+    for feature in features:
+        if(feature.feature_uninstallDate == None):
+            obejct[feature.feature_type] = True
+        else:
+            obejct[feature.feature_type] = False
+
+    return obejct
+
+
+@app.route('/beacon/predictionInfo', methods=['GET'])
+def getPrediction():
+    beacon_id = request.args.get('id')
+    predictions = get_all_predict('beacon_id')
+    obejct = {
+        'prediction_id' : None
+    }
+    if predictions:
+        return obejct
+    else:
+        return "FALSE"

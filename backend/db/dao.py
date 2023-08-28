@@ -35,6 +35,7 @@ def get_beacon_full(beacon_id):
     select_beacon = 'SELECT * FROM `BEACONS` WHERE `beacon_id` = %s'
 
     aBeacon = db.efo(select_beacon, (beacon_id))
+    #print(aBeacon)
     result = BeaconFull(aBeacon['beacon_id'], aBeacon['beacon_lat'], aBeacon['beacon_lng'], aBeacon['beacon_name'] , aBeacon['beacon_type'], aBeacon['beacon_group'], \
                         aBeacon['beacon_purpose'], aBeacon['beacon_office'], aBeacon['beacon_installDate'], aBeacon['beacon_color'] ,\
                             aBeacon['beacon_lightColor'] , aBeacon['beacon_lightCharacteristic'] , aBeacon['beacon_lightSignalPeriod'])
