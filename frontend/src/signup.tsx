@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, FormEventHandler, ChangeEventHandler } from "react";
+import { useState, useEffect, FormEventHandler, ChangeEventHandler } from "react";
 import ReactDOM from 'react-dom/client'
 import Header from './components/Header.tsx'
 import MainLogo from './components/MainLogo'
@@ -10,6 +10,7 @@ import Body from './components/Body.tsx'
 import Form from './components/Form.tsx'
 import TextInput from './components/TextInput.tsx'
 import SubmitInput from './components/SubmitInput.tsx'
+import { Session } from './components/utils/UtilType.ts';
 import './index.css'
 
 import beaconLogo from './assets/beacon.png'
@@ -30,6 +31,30 @@ function SignupPage() {
     const [invalidRepassword, setInvalidRepassword] = useState<boolean>();
     const [signupData, setSignupData] = useState<SignupModel>({id: '', email: '', password: '', repassword: ''});
     const [formMessage, setFormMessage] = useState<string>('아이디 또는 비밀번호가 잘못되었습니다.')
+
+    function checkLogin() {
+        useWaitCursor();
+        return fetch('/login/check', {
+            credentials: "include",
+        })
+        .then(result => {
+            return result.json()
+        })
+        .then(result => {
+            if(result['result'] == 'true') {
+                alert("이미 로그인되어 있는 상태입니다.");
+                location.href = Route.MAIN_PAGE_URL;
+            }
+            useDefaultCursor();
+        })
+        .catch(() => {
+            useDefaultCursor();
+        })
+    }
+
+    useEffect(() => {
+        checkLogin()
+    }, []);
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
         console.log('submit')
