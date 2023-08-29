@@ -14,6 +14,6 @@ class Feature(DataObject):
             "feature_id": self.feature_id,
             "beacon_id": self.beacon_id,
             "feature_type": self.feature_type,
-            "feature_installDate": self.feature_installDate,
-            "featureUninstallDate": self.feature_uninstallDate
+            "feature_installDate": self.feature_installDate.strftime("%Y-%m-%d") if self.feature_installDate != None else None,
+            "featureUninstallDate": self.feature_uninstallDate.strftime("%Y-%m-%d") if self.feature_uninstallDate != None else None
         }

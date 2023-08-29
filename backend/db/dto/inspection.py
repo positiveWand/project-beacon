@@ -21,6 +21,6 @@ class Inspection(DataObject):
             "inspection_purpose": self.inspection_purpose,
             "inspection_content": self.inspection_content,
             "inspection_note": self.inspection_note,
-            "inspection_startDate": self.inspection_startDate,
-            "inspection_endDate": self.inspection_endDate
+            "inspection_startDate": self.inspection_startDate.strftime("%Y-%m-%d") if self.inspection_startDate != None else None,
+            "inspection_endDate": self.inspection_endDate.strftime("%Y-%m-%d") if self.inspection_endDate != None else None
         }
