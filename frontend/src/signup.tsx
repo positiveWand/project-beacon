@@ -149,8 +149,8 @@ function SignupPage() {
                     <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
                 </NavBar>
             </Header>
-            <Body className='px-8 py-6 flex justify-center'>
-                <Form label='회원가입' invalid={invalidSignup} invalidMessage={formMessage} onSubmit={handleSubmit} className='border-gray-300 border-2 rounded-lg p-6 mt-6 flex flex-col max-w-md flex-1'>
+            <Body className='py-6 flex flex-1 justify-center items-start bg-slate-50'>
+                <Form label='회원가입' invalid={invalidSignup} invalidMessage={formMessage} onSubmit={handleSubmit} className='border rounded shadow-md bg-slate-100 p-6 mt-6 flex flex-col max-w-md flex-1'>
                     <TextInput label='아이디' type='text' name='id' required={true} invalid={invalidId} invalidMessage='영문, 숫자만 가능합니다!' placeholder='영문, 숫자만 가능' useChange={onInputChange} className='mb-6' inputStyle='block w-full text-xl p-2 mb-2'/>
                     <TextInput label='이메일' type='email' name='email' required={true} invalid={invalidEmail} invalidMessage='이메일을 올바른 형식으로 입력해야합니다.' placeholder='your@example.com' useChange={onInputChange} className='mb-6' inputStyle='block w-full text-xl p-2 mb-2'/>
                     <TextInput label='비밀번호' type='password' name='password' required={true} invalid={invalidPassword} invalidMessage='8자리 이상이면서 영문, 숫자, 특수문자를 반드시 포함해야합니다!' placeholder='8자리 이상 영문, 숫자, 특수문자 포함' useChange={onInputChange} inputStyle='block w-full text-xl p-2 mb-2'/>

@@ -126,8 +126,8 @@ function LoginPage() {
                 <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
             </NavBar>
             </Header>
-            <Body className='px-8 py-6 flex justify-center'>
-                <Form label='로그인' invalid={invalidLogin} invalidMessage={formMessage} onSubmit={handleSubmit} className='border-gray-300 border-2 rounded-lg p-6 mt-6 flex flex-col max-w-md flex-1'>
+            <Body className='py-6 flex justify-center items-start bg-slate-50 flex-1'>
+                <Form label='로그인' invalid={invalidLogin} invalidMessage={formMessage} onSubmit={handleSubmit} className='border rounded-md shadow-md bg-slate-100 p-6 mt-6 flex flex-col max-w-md flex-1'>
                     <TextInput label='아이디' type='text' name='id' required={true} invalid={invalidId} invalidMessage='영문, 숫자만 가능합니다!' useChange={onInputChange} placeholder='아이디 입력...' className='mb-6' inputStyle='block w-full text-xl p-2 mb-2'/>
                     <TextInput label='비밀번호' type='password' name='password' required={true} invalid={invalidPassword} invalidMessage='8자리 이상이면서 영문, 숫자, 특수문자를 반드시 포함해야합니다!' useChange={onInputChange} placeholder='비밀번호 입력...' inputStyle='block w-full text-xl p-2 mb-2' />
                     <SubmitInput value='로그인' className='bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold p-3 rounded mt-8 active:bg-blue-800'/>
