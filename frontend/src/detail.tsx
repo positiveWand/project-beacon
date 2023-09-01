@@ -81,7 +81,7 @@ function DetailPage() {
             return result.json();
         })
         .then(result => {
-            setDetailModel(result)
+            setSignalModel(result)
             console.log(result)
         })
     }
@@ -94,7 +94,7 @@ function DetailPage() {
             return result.json();
         })
         .then(result => {
-            setDetailModel(result)
+            // setDetailModel(result)
             console.log(result)
         })
     }
