@@ -24,6 +24,12 @@ function TabMenu({className, children}: Prop) {
             content: element
         });
     })
+
+    if(tabItems.length == 0) {
+        classes.add('w-full shadow-md rounded-md bg-slate-100 border flex justify-center py-2')
+        return <b className={classes.toString()}>자료 없음</b>
+    }
+
     return (
         <div className={classes.toString()}>
             <ul className='flex'>

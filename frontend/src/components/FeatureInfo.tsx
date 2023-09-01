@@ -12,7 +12,6 @@ interface Prop extends MyComponentProp {
 
 function FeatureInfo({ model, className }: Prop) {
     let classes = new ClassNames(className)
-    classes.add('border-y-2 border-gray-400')
     classes.add('flex-col')
 
     if(!model) {

@@ -34,7 +34,7 @@ function PagedRecordTable({columns, size, records, className}: Prop) {
 
     return (
         <div className={classes.toString()}>
-            <table className='w-full border-collapse mb-4 border-t-2 border-t-gray-400'>
+            <table className='w-full border-collapse mb-4'>
                 <thead>
                     <tr>
                         {

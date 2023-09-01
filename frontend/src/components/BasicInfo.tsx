@@ -10,19 +10,18 @@ interface Prop extends MyComponentProp {
 
 function BasicInfo({ imgURL, model, className }: Prop) {
     let classes = new ClassNames(className)
-    // classes.add('border-y-2 border-gray-400')
-    classes.add('pb-4')
     classes.add('flex')
 
     return (
         <SectionBox className={classes.toString()}>
             <div className='flex-1'>
                 <Heading level={2}>이미지</Heading>
-                <img src={imgURL} alt="항로표지 이미지" className='max-w-lg max-h-xl'/>
+                <img src={imgURL} alt="항로표지 이미지" className='h-80'/>
             </div>
             <div className='flex-1'>
                 <Heading level={2}>관리 정보</Heading>
-                <table className='w-full border-collapse border-t-2 border-t-gray-400'>
+                <div className='border rounded-md shadow-md p-3 bg-slate-100'>
+                <table className='w-full border-collapse'>
                     <tbody>
                         <tr>
                             <th>코드</th>
@@ -66,6 +65,7 @@ function BasicInfo({ imgURL, model, className }: Prop) {
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </SectionBox>
     )

@@ -109,11 +109,12 @@ function DetailPage() {
                     <img src={UNDO_IMG} alt="탐색 페이지로 돌아가기" width={25}/>
                 </a>
             </Header>
-            <Body className='px-10 py-6 flex flex-col items-center'>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto'>기본 정보</Heading>
-                <BasicInfo imgURL={'/beacon/image?id='+beaconID} className='w-full my-4' model={detailModel.basicInfo}></BasicInfo>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto'>장비 정보</Heading>
-                <TabMenu className='w-full my-4'>
+            <Body className='px-10 py-6 flex flex-col items-center bg-slate-50'>
+                <Heading level={1} className='bg-blue-500 text-white mr-auto mb-2'>기본 정보</Heading>
+                <BasicInfo imgURL={Route.API_BASE_URL+'/beacon/image?id='+beaconID} className='w-full' model={detailModel.basicInfo}></BasicInfo>
+
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>장비 정보</Heading>
+                <TabMenu className='w-full'>
                     {
                         Object.keys(detailModel.featureInfo).map((aFeature) => {
                             let itemTitle = '장비'
@@ -145,32 +146,35 @@ function DetailPage() {
                             }
                             return (
                                 <TabItem title={itemTitle} key={aFeature}>
-                                    <FeatureInfo model={detailModel.featureInfo[aFeature]} className='pb-3'></FeatureInfo>
+                                    <FeatureInfo model={detailModel.featureInfo[aFeature]} className='p-3 shadow-md bg-slate-100 rounded-md rounded-ss-none border'></FeatureInfo>
                                 </TabItem>
                             );
                         })
                     }
                 </TabMenu>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto'>정비 이력</Heading>
-                <InspectionInfo model={detailModel['inspectionInfo']} className='w-full pb-3 my-4'></InspectionInfo>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto'>신호 수신 현황</Heading>
-                <SignalInfo className='w-full my-6' model={detailModel['signalInfo']}></SignalInfo>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto mb-4'>분석 정보</Heading>
+
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>정비 이력</Heading>
+                <InspectionInfo model={detailModel['inspectionInfo']} className='w-full p-3 shadow-md bg-slate-100 rounded-md border'></InspectionInfo>
+
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>신호 수신 현황</Heading>
+                <SignalInfo className='w-full shadow-md rounded-md bg-slate-100 border' model={detailModel['signalInfo']}></SignalInfo>
+
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>분석 정보</Heading>
                 <GridBox cols={3} className='gap-5 w-full'>
-                    <GridItem colSpan={1} className='flex flex-col border-2 rounded-md border-gray-400 p-3 bg-slate-200'>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 확률</h2>
                         <GauageChart threshold={[0, 50, 66, 100]} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={prob} height='170px' className='mx-auto'/>
                         <p className='text-2xl font-bold text-center'>고장 의심</p>
                     </GridItem>
-                    <GridItem colSpan={1} className='flex flex-col border-2 rounded-md border-gray-400 p-3 bg-slate-200'>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
                         <TextInfoBox className='my-auto'>안녕하세요</TextInfoBox>
                     </GridItem>
-                    <GridItem colSpan={1} className='flex flex-col border-2 rounded-md border-gray-400 p-3 bg-slate-200'>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 유형</h2>
                         <TextInfoBox className='my-auto'>꾸준한 이상치 증가</TextInfoBox>
                     </GridItem>
-                    <GridItem colSpan={3} className='flex flex-col border-2 rounded-md border-gray-400 p-3 bg-slate-200'>
+                    <GridItem colSpan={3} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 확률 추세선</h2>
                         <LineGraph height='300px' className='w-full'></LineGraph>
                     </GridItem>
