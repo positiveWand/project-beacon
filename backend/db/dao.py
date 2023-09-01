@@ -11,7 +11,7 @@ from .dto.embedding import Embedding
 from flask import send_file
 import numpy as np
 
-db = dbconnection.DBConnection("azure-testdb")
+db = dbconnection.DBConnection("azure-cnudb")
 
 def get_all_beacons():
     result = []
@@ -222,3 +222,50 @@ def add_inspection(inspection):
                 inspection["inspection_purpose"],inspection["inspection_content"],inspection["inspection_note"],\
                     inspection["inspection_startDate"],inspection["inspection_endDate"],))
     return True
+
+def get_sensor_data(beacon_id, target_column, start, end):
+    datetime_format = '%Y-%m-%dT%H:%M:%S'
+    if end is not None:
+        query = f'SELECT date_format(regist_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as regist_time, {target_column} FROM sensor_data WHERE beacon_id = %s and (DATE_FORMAT(regist_time, %s) BETWEEN %s AND %s) ORDER BY regist_time'
+        print(query)
+        result = db.efa(query, (beacon_id, datetime_format, start, end))
+        print(result)
+        return result
+    else:
+        query = f'SELECT date_format(regist_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as regist_time, {target_column} FROM sensor_data WHERE beacon_id = %s and (DATE_FORMAT(regist_time, %s) >= %s) ORDER BY regist_time'
+        print(query)
+        result = db.efa(query, (beacon_id, datetime_format, start))
+        print(result)
+        return result
+    
+def get_predict_latest(beacon_id):
+    result  = []
+    select_predict_latest = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE `prediction_id` IN (SELECT MAX(prediction_id) FROM `prediction_logs` GROUP BY beacon_id) and beacon_id = %s'
+    apredict = db.efa(select_predict_latest,beacon_id)
+    print(apredict)
+    return apredict 
+
+def get_prediction_by_range(beacon_id, target_type, start, end):
+    datetime_format = '%Y-%m-%dT%H:%M:%S'
+    if end is not None:
+        query = f'SELECT date_format(prediction_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND (DATE_FORMAT(prediction_time, %s) BETWEEN %s AND %s) AND prediction_type = %s ORDER BY prediction_time'
+        print(query)
+        result = db.efa(query, (beacon_id, datetime_format, start, end, target_type))
+        print(result)
+        return result
+    else:
+        query = f'SELECT date_format(prediction_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND (DATE_FORMAT(prediction_time, %s) >= %s) AND prediction_type = %s ORDER BY prediction_time'
+        print(query)
+        result = db.efa(query, (beacon_id, datetime_format, start, target_type))
+        print(result)
+        return result
+
+
+def test(type_list):
+    types = ''
+    for aType in type_list:
+        types = types + '"' + aType + '",'
+    types = types[:-1]
+    query = f'SELECT * FROM prediction_logs WHERE prediction_type in ({types})'
+    print(query)
+    return db.efa(query, ())

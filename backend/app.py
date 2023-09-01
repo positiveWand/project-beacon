@@ -274,7 +274,6 @@ def insertNewInspection():
 def getSignification():
     beacon_id = request.args.get('id')
     features = get_features(beacon_id)
-    aBeacon = get_beacon_full(beacon_id)
 
     obejct = {
         'light': None,
@@ -297,11 +296,66 @@ def getSignification():
 @app.route('/beacon/predictionInfo', methods=['GET'])
 def getPrediction():
     beacon_id = request.args.get('id')
-    predictions = get_all_predict('beacon_id')
+    predictions = get_all_predict(beacon_id)
     obejct = {
         'prediction_id' : None
     }
     if predictions:
-        return obejct
+        return jsonify(obejct)
     else:
-        return "FALSE"
+        return jsonify({})
+
+@app.route('/beacon/predictionInfo/latest', methods=['GET'])
+def getPredictionLog_latest():
+    beacon_id = request.args.get('id')
+    body = request.get_json()
+    if body['type'] is None or len(body['type']) == 0:
+        return 'Need Type Specified', 400
+    if body['start'] is None:
+        return 'Need Start Datetime Specified', 400
+    predictions = get_predict_latest(beacon_id)
+    resObj = {}
+
+    for aPrediction in predictions :
+        if aPrediction['prediction_type'] in body['type']:
+            resObj[aPrediction['prediction_type']] = aPrediction['prediction_content']
+    return jsonify(resObj)
+
+@app.route('/beacon/predictionInfo/range', methods=['GET'])
+def getPredctionRange():
+    beacon_id = request.args.get('id')
+    body = request.get_json()
+    if body['type'] is None or len(body['type']) == 0:
+        return 'Need Type Specified', 400
+    if body['start'] is None:
+        return 'Need Start Datetime Specified', 400
+    resObj = {}
+
+    for aType in body['type']:
+        typeList = []
+        data = get_prediction_by_range(beacon_id, aType, body['start'], body['end'])
+        for aData in data:
+            typeList.append({'time': aData['prediction_time'], 'content': aData['prediction_content']})
+
+        resObj[aType] = typeList
+
+    return jsonify(resObj)
+
+@app.route('/beacon/sensor', methods=['GET'])
+def getSensorData():
+    beacon_id = request.args.get('id')
+    body = request.get_json()
+    if body['column'] is None:
+        return 'Need Column Specified', 400
+    if body['start'] is None:
+        return 'Need Start Datetime Specified', 400
+
+    data = get_sensor_data(beacon_id, body['column'], body['start'], body['end'])
+    resObj = []
+    for aData in data:
+        resObj.append({'time': aData['regist_time'], 'value': aData[body['column']]})
+
+    return jsonify(resObj)
+
+if __name__ == "__main__":
+    app.run()
