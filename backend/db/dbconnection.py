@@ -1,5 +1,5 @@
 # STEP 1
-from pymysqlpool.pool import Pool
+from .pool import Pool
 
 class DBConnection():
     def __init__(self, target="local"):
@@ -16,6 +16,14 @@ class DBConnection():
             self.user = "captain"
             self.password = "Beaconzzang!"
             self.port = 3306
+            self.database = "test_db"
+            self.ssl_disabled = True
+
+        elif target == "azure-cnudb":
+            self.host = "projectbeacon-db.mysql.database.azure.com"
+            self.user = "captain"
+            self.password = "Beaconzzang!"
+            self.port = 3306
             self.database = "cnu_db"
             self.ssl_disabled = True
 
@@ -27,36 +35,59 @@ class DBConnection():
             self.database = "beacon"
             self.ssl_disabled = True
         
-        self.connPool = Pool(host=self.host, port=self.port, user=self.user, password=self.password, db=self.database, charset='utf8')
+        self.initPool()
+
+    def initPool(self):
+        self.connPool = Pool(host=self.host, port=self.port, user=self.user, password=self.password, db=self.database, charset='utf8', max_size=10)
         self.connPool.init()
     
-    def efo(self, sql, data = ()):
-        conn = self.connPool.get_conn()
-        cursor = conn.cursor()
-        cursor.execute(sql, data)
-        aRow = cursor.fetchone()
-        self.connPool.release(conn)
-        return aRow
-
-    def efa(self, sql, data = ()):
-        # self.start_conn()
-        # self.cursor.execute(sql, data)
-        # rows = self.cursor.fetchall()
-        # self.close_conn()
-        conn = self.connPool.get_conn()
-        cursor = conn.cursor()
-        cursor.execute(sql, data)
-        rows = cursor.fetchall()
-        self.connPool.release(conn)
-        return rows
+    def destoryPool(self):
+        self.connPool.destroy()
+        self.connPool = None
     
-    def ec(self, sql, data = ()):
-        # self.start_conn()
-        # self.cursor.execute(sql, data)
-        # self.conn.commit()
-        # self.close_conn()
-        conn = self.connPool.get_conn()
-        cursor = conn.cursor()
-        cursor.execute(sql, data)
-        conn.commit()
-        self.connPool.release(conn)
+    def efo(self, sql, data = (), count=0):
+        try:
+            conn = self.connPool.get_conn()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            aRow = cursor.fetchone()
+            self.connPool.release(conn)
+            return aRow
+        except:
+            if(count < 5):
+                self.destoryPool()
+                self.initPool()
+                self.efo(sql, data, count+1)
+            else:
+                raise "DB Connection Error"
+
+    def efa(self, sql, data = (), count=0):
+        try:
+            conn = self.connPool.get_conn()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            rows = cursor.fetchall()
+            self.connPool.release(conn)
+            return rows
+        except:
+            if(count < 5):
+                self.destoryPool()
+                self.initPool()
+                self.efa(sql, data, count+1)
+            else:
+                raise "DB Connection Error"
+    
+    def ec(self, sql, data = (), count=0):
+        try:
+            conn = self.connPool.get_conn()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            conn.commit()
+            self.connPool.release(conn)
+        except:
+            if(count < 5):
+                self.destoryPool()
+                self.initPool()
+                self.ec(sql, data, count+1)
+            else:
+                raise "DB Connection Error"
