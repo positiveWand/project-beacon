@@ -31,7 +31,7 @@ function LoginPage() {
 
     function checkLogin() {
         useWaitCursor();
-        return fetch('/login/check', {
+        return fetch(Route.API_BASE_URL+'/login/check', {
             credentials: "include",
         })
         .then(result => {
@@ -75,7 +75,7 @@ function LoginPage() {
         }
 
         useWaitCursor();
-        fetch('http://127.0.0.1:5000/login/request', {
+        fetch(Route.API_BASE_URL+'/login/request', {
             method: 'POST',
             body: JSON.stringify({id: loginData.id, password: loginData.password}),
             credentials: "include",

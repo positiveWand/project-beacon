@@ -21,7 +21,7 @@ function MainPage() {
     
     useEffect(() => {
         useWaitCursor();
-        fetch('http://127.0.0.1:5000/login/check', {
+        fetch(Route.API_BASE_URL+'/login/check', {
             credentials: "include",
         })
         .then(result => {

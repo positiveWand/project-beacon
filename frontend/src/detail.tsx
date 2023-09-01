@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import Header from './components/Header.tsx'
 import Body from './components/Body.tsx'
 import Heading from './components/Heading.tsx';
-import ScrollableSectionBox from './components/ScrollableSectionBox.tsx';
 import GridBox from './components/GridBox.tsx';
 import GridItem from './components/GridItems.tsx';
 import GauageChart from './components/GauageChart.tsx';
@@ -12,9 +11,6 @@ import TextInfoBox from './components/TextInfoBox.tsx';
 import LineGraph from './components/LineGraph.tsx';
 import TabMenu from './components/TabMenu.tsx';
 import TabItem from './components/TabItem.tsx';
-import NormalRecordTable from './components/NormalRecordTable.tsx';
-import PagedRecordTable from './components/PagedRecordTable.tsx';
-import ScrollableRecordTable from './components/ScrollableRecordTable.tsx';
 import FeatureInfo from './components/FeatureInfo.tsx';
 import InspectionInfo from './components/InspectionInfo.tsx';
 import SignalInfo from './components/SignalInfo.tsx';
@@ -54,7 +50,7 @@ function DetailPage() {
 
     function fetchBeaconInfo(beaconID: string) {
         setProb(30);
-        fetch('/beacon/detailInfo?id='+beaconID, {
+        fetch(Route.API_BASE_URL+'/beacon/detailInfo?id='+beaconID, {
             method: 'GET',
         })
         .then(result => {
@@ -64,17 +60,9 @@ function DetailPage() {
             setDetailModel(result)
             console.log(result)
         })
-        // new Promise<BeaconDetailModel>(resolve => {
-        //     setTimeout(() => {
-        //         resolve(testdetails[0] as BeaconDetailModel)
-        //     }, 1000);
-        // }).then(target => {
-        //     console.log(target)
-        //     setDetailModel(target)
-        // });
     }
     function fetchSignalInfo(beaconID: string) {
-        fetch('/beacon/signalInfo?id='+beaconID, {
+        fetch(Route.API_BASE_URL+'/beacon/signalInfo?id='+beaconID, {
             method: 'GET',
         })
         .then(result => {
@@ -87,7 +75,7 @@ function DetailPage() {
     }
     function fetchPredictionInfo(beaconID: string) {
         setProb(30);
-        fetch('/beacon/predictionInfo?id='+beaconID, {
+        fetch(Route.API_BASE_URL+'/beacon/predictionInfo?id='+beaconID, {
             method: 'GET',
         })
         .then(result => {

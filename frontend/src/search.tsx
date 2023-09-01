@@ -116,7 +116,7 @@ function SearchPage() {
 
     function checkLogin() {
         useWaitCursor();
-        return fetch('/login/check', {
+        return fetch(Route.API_BASE_URL+'/login/check', {
             credentials: "include",
         })
         .then(result => {
@@ -159,7 +159,7 @@ function SearchPage() {
 
         setFectching(true);
 
-        let beaconPromise = fetch('/beacon/all')
+        let beaconPromise = fetch(Route.API_BASE_URL+'/beacon/all')
         .then(result => {
             console.log(result)
             return result.json()
@@ -171,7 +171,7 @@ function SearchPage() {
             );
         });
 
-        let favoritePromise = fetch('/beacon/favorites/all')
+        let favoritePromise = fetch(Route.API_BASE_URL+'/beacon/favorites/all')
         .then(result => {
             console.log(result)
             return result.json()

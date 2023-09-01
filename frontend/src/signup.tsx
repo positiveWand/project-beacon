@@ -34,7 +34,7 @@ function SignupPage() {
 
     function checkLogin() {
         useWaitCursor();
-        return fetch('/login/check', {
+        return fetch(Route.API_BASE_URL+'/login/check', {
             credentials: "include",
         })
         .then(result => {
@@ -91,7 +91,7 @@ function SignupPage() {
         setFormMessage('회원가입 요청 중')
         useWaitCursor()
 
-        fetch('/signup/request', {
+        fetch(Route.API_BASE_URL+'/signup/request', {
             method: 'POST',
             body: JSON.stringify({id: signupData.id, password: signupData.password, email: signupData.email}),
             headers: {
