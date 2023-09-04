@@ -85,9 +85,4 @@ class DBConnection():
             conn.commit()
             self.connPool.release(conn)
         except:
-            if(count < 5):
-                self.destoryPool()
-                self.initPool()
-                self.ec(sql, data, count+1)
-            else:
-                raise "DB Connection Error"
+            raise "DB Connection Error"

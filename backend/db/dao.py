@@ -166,12 +166,14 @@ def get_all_beacons_with_recent():
 		        GROUP BY beacon_id\
 	        ) pl2 ON pl1.beacon_id = pl2.beacon_id AND pl1.prediction_time = pl2.max_time\
         ) B on A.beacon_id = B.beacon_id;")
-
-    for aTuple in db.efa(select_all_beacons_with_recent):
-        # print(aTuple)
-        aPrediction = Prediction(id = aTuple['prediction_id'], time = aTuple['prediction_time'], content = aTuple['prediction_content'], type = aTuple['prediction_type'])
-        # print(aPrediction.type, aTuple['prediction_content'], aPrediction.content, aPrediction.get_state())
-        result.append(Beacon(aTuple['beacon_id'], aTuple['beacon_lat'], aTuple['beacon_lng'], aTuple['beacon_name'], aPrediction.get_state(), aPrediction.content))
+    
+    query_result = db.efa(select_all_beacons_with_recent)
+    if query_result is not None:
+        for aTuple in db.efa(select_all_beacons_with_recent):
+            # print(aTuple)
+            aPrediction = Prediction(id = aTuple['prediction_id'], time = aTuple['prediction_time'], content = aTuple['prediction_content'], type = aTuple['prediction_type'])
+            # print(aPrediction.type, aTuple['prediction_content'], aPrediction.content, aPrediction.get_state())
+            result.append(Beacon(aTuple['beacon_id'], aTuple['beacon_lat'], aTuple['beacon_lng'], aTuple['beacon_name'], aPrediction.get_state(), aPrediction.content))
 
     return result
 
@@ -180,17 +182,27 @@ def get_all_favorite_beacons(user_id):
     print(user_id)
     select_all_favorite_beacons = 'SELECT `beacon_id` FROM `favorites` WHERE `user_id` = %s' 
 
-    for afavorite in db.efa(select_all_favorite_beacons,(user_id)):
-        result.append(afavorite['beacon_id'])
+    query_result = db.efa(select_all_favorite_beacons,(user_id))
+
+    if query_result is not None:
+        for afavorite in query_result:
+            result.append(afavorite['beacon_id'])
+
     return result
 def add_favorite_beacon(user_id,beacon_id):
-    add = 'INSERT INTO `favorites` (user_id,beacon_id) values(%s,%s)' 
-    db.ec(add, (user_id, beacon_id))
-    return True
+    add_favorite = 'INSERT INTO `favorites` (user_id,beacon_id) values(%s,%s)'
+    try:
+        db.ec(add_favorite, (user_id, beacon_id))
+        return True
+    except:
+        return False
 def delete_favorite_beacon(user_id,beacon_id) : 
-    delete = 'DELETE FROM `favorites` WHERE `user_id`= %s and `beacon_id` = %s'
-    db.ec(delete,(user_id,beacon_id))
-    return True
+    delete_favorite = 'DELETE FROM `favorites` WHERE `user_id`= %s and `beacon_id` = %s'
+    try:
+        db.ec(delete_favorite,(user_id,beacon_id))
+        return True
+    except:
+        return False
 def check_favorite_beacon(user_id,beacon_id) : 
     check_favorite = 'SELECT * FROM `favorites` WHERE `user_id` = %s and `beacon_id` = %s'
     favorite = db.efo(check_favorite,(user_id,beacon_id))
@@ -204,24 +216,28 @@ def add_beacon(beacon):
     add = 'INSERT INTO `BEACONS` (beacon_id, beacon_name, beacon_type, beacon_lat, beacon_lng,\
         beacon_group, beacon_purpose, beacon_office, beacon_installDate, beacon_color,\
             beacon_lightColor, beacon_lightCharacteristic, beacon_lightSignalPeriod)\
-                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)' 
-    print(beacon.beacon_id)
-    db.ec(add, (beacon.beacon_id, beacon.beacon_name, beacon.beacon_type, beacon.beacon_lat,
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+    try:
+        db.ec(add, (beacon.beacon_id, beacon.beacon_name, beacon.beacon_type, beacon.beacon_lat,
             beacon.beacon_lng, beacon.beacon_group, beacon.beacon_purpose, beacon.beacon_office,
             beacon.beacon_installDate, beacon.beacon_color, beacon.beacon_lightColor,
             beacon.beacon_lightCharacteristic, beacon.beacon_lightSignalPeriod))
-    
-    return True
+        return True
+    except:
+        return False
 
 
 def add_inspection(inspection):
     add = "INSERT INTO `inspection_logs` (inspection_id, beacon_id, inspection_inspector, inspection_purpose,\
           inspection_content, inspection_note, inspection_startDate, inspection_endDate)\
             values(%s,%s,%s,%s,%s,%s,%s,%s)"
-    db.ec(add, (inspection["inspection_id"],inspection["beacon_id"],inspection["inspection_inspector"],
+    try:
+        db.ec(add, (inspection["inspection_id"],inspection["beacon_id"],inspection["inspection_inspector"],
                 inspection["inspection_purpose"],inspection["inspection_content"],inspection["inspection_note"],\
                     inspection["inspection_startDate"],inspection["inspection_endDate"],))
-    return True
+        return True
+    except:
+        return False
 
 def get_sensor_data(beacon_id, target_column, start, end):
     datetime_format = '%Y-%m-%dT%H:%M:%S'
