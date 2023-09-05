@@ -93,10 +93,8 @@ def update_embeddings(beacon_id, beacon_embedding):
     print(beacon_id, type(beacon_embedding))
     embedding_tensor = np.load(beacon_embedding)
     
-    delete_query = 'DELETE FROM `BEACON_EMBEDDINGS` WHERE `beacon_id` = %s'
-    db.ec(delete_query, beacon_id)
-    insert_query = 'INSERT INTO `BEACON_EMBEDDINGS` (beacon_id) VALUES (%s, %s)'
-    db.ec(insert_query, (beacon_id, embedding_tensor.tobytes()))
+    update_query = 'UPDATE `BEACONS` SET beacon_embedding = %s WHERE beacon_id = %s'
+    db.ec(update_query, (embedding_tensor.tobytes(), beacon_id))
     return True
 
 def get_beacon_image(beacon_id):
