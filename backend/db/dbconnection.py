@@ -81,8 +81,9 @@ class DBConnection():
         try:
             conn = self.connPool.get_conn()
             cursor = conn.cursor()
-            cursor.execute(sql, data)
+            rows = cursor.execute(sql, data)
             conn.commit()
             self.connPool.release(conn)
+            return rows
         except:
             raise "DB Connection Error"

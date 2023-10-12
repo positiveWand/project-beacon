@@ -1,5 +1,6 @@
 Flask==2.2.3
 Flask-Cors
+Flask-APScheduler
 cryptography==40.0.1
 PyMySQL==1.0.3
 pandas>=1.4.4

@@ -65,37 +65,23 @@ def get_inspections(beacon_id):
 #image
 
 def update_images(beacon_id, beacon_image):
-    # # 현재 스크립트의 경로
-    # script_path = os.path.abspath(__file__)
-
-    # # 상위 폴더의 경로
-    # parent_folder_path = os.path.dirname(os.path.dirname(script_path))
-
-    # # 상위 폴더의 상위 폴더 내 다른 폴더의 경로
-    # other_folder_path = os.path.join(parent_folder_path, "images")
-
-    # # 폴더 내의 모든 이미지 파일 처리
-    # for filename in os.listdir(other_folder_path):
-    #     if filename.endswith(".jpg"):  # 혹은 다른 이미지 확장자로 변경
-    #         image_path = os.path.join(other_folder_path, filename)
-    #         with open(image_path, 'rb') as image_file:
-    #                 image_bytes = image_file.read()
-    #         print(image_bytes)
-    #         update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
-    #         db.ec(update_query, (image_bytes, filename.split(".")[0]))
-    # return True
-    print('dao update image called')
     update_query = "UPDATE `BEACONS` SET `beacon_image` = %s WHERE `beacon_id` = %s"
-    db.ec(update_query, (beacon_image, beacon_id))
-    return True
+    try:
+        db.ec(update_query, (beacon_image, beacon_id))
+        return True
+    except:
+        return False
 
 def update_embeddings(beacon_id, beacon_embedding):
     print(beacon_id, type(beacon_embedding))
     embedding_tensor = np.load(beacon_embedding)
     
     update_query = 'UPDATE `BEACONS` SET beacon_embedding = %s WHERE beacon_id = %s'
-    db.ec(update_query, (embedding_tensor.tobytes(), beacon_id))
-    return True
+    try:
+        db.ec(update_query, (embedding_tensor.tobytes(), beacon_id))
+        return True
+    except:
+        return False
 
 def get_beacon_image(beacon_id):
     result = None
@@ -124,10 +110,12 @@ def check_user(user_id,user_password):
     else :
         return False  
 def add_user(user):
-    add = 'INSERT INTO `Beacon_user` (user_id,user_password,user_email) values(%s,%s,%s)' 
-    db.ec(add, (user['id'], user['password'], user['email']))
-    return True
-### user 
+    add = 'INSERT INTO `Beacon_user` (user_id,user_password,user_email) values(%s,%s,%s)'
+    try:
+        db.ec(add, (user['id'], user['password'], user['email']))
+        return True
+    except:
+        return False
 
 
 def get_latest_predict(beacon_id):
@@ -237,22 +225,27 @@ def add_inspection(inspection):
     except:
         return False
 
-def get_sensor_data(beacon_id, target_column, start, end):
-    datetime_format = '%Y-%m-%dT%H:%M:%S'
+def get_sensor_data(beacon_id, start, end):
+    query = 'SELECT * FROM sensor_data WHERE beacon_id = %s and (regist_time BETWEEN STR_TO_DATE(%s, {datetime_format}) AND STR_TO_DATE(%s, {datetime_format})) ORDER BY regist_time'
+    result = db.efa(query)
+    return result
+
+def get_target_sensor_data(beacon_id, target_column, start, end):
+    datetime_format = '%Y-%m-%dT%H:%i:%s'
     if end is not None:
-        query = f'SELECT date_format(regist_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as regist_time, {target_column} FROM sensor_data WHERE beacon_id = %s and (DATE_FORMAT(regist_time, %s) BETWEEN %s AND %s) ORDER BY regist_time'
+        query = f'SELECT {target_column} FROM sensor_data WHERE beacon_id = %s and (regist_time BETWEEN STR_TO_DATE(%s, {datetime_format}) AND STR_TO_DATE(%s, {datetime_format})) ORDER BY regist_time'
         print(query)
         result = db.efa(query, (beacon_id, datetime_format, start, end))
         print(result)
         return result
     else:
-        query = f'SELECT date_format(regist_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as regist_time, {target_column} FROM sensor_data WHERE beacon_id = %s and (DATE_FORMAT(regist_time, %s) >= %s) ORDER BY regist_time'
+        query = f'SELECT {target_column} FROM sensor_data WHERE beacon_id = %s and (regist_time >= STR_TO_DATE(%s, {datetime_format})) ORDER BY regist_time'
         print(query)
         result = db.efa(query, (beacon_id, datetime_format, start))
         print(result)
         return result
     
-def get_predict_latest(beacon_id):
+def get_prediction_latest(beacon_id):
     result  = []
     select_predict_latest = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE `prediction_id` IN (SELECT MAX(prediction_id) FROM `prediction_logs` GROUP BY beacon_id) and beacon_id = %s'
     apredict = db.efa(select_predict_latest,beacon_id)
@@ -274,6 +267,42 @@ def get_prediction_by_range(beacon_id, target_type, start, end):
         print(result)
         return result
 
+def add_prediction(beacon_id, type, time, content):
+    add = 'INSERT'
+    try:
+        db.ec(add, ())
+        return True
+    except:
+        return False
+
+def get_embedding(beacon_id):
+    query = 'SELECT beacon_embedding FROM `BEACONS` WHERE beacon_id = %s'
+    result = db.efo(query, (beacon_id))
+    return result
+
+def get_monitor_data(beacon_id):
+    query = 'SELECT * FROM `MONITOR_DATA` WHERE beacon_id = %s'
+    result = db.efo(query, (beacon_id))
+    print(result)
+    return result
+
+def update_monitor_data(beacon_id, latest_sd_id, signal_state):
+    update_query = 'UPDATE `MONITOR_DATA` SET latest_sd_id = %s, signal_state = %s WHERE beacon_id = %s'
+    insert_query = 'INSERT INTO `MONITOR_DATA(beacon_id, latest_sd_id, signal_state) VALUES (%s, %s, %s)`'
+    try:
+        result = db.ec(update_query, (latest_sd_id, signal_state, beacon_id))
+        if result == 0:
+            db.ec(insert_query, (beacon_id, latest_sd_id, signal_state))
+        return True
+    except:
+        return False
+    
+def get_latest_sensor_data(beacon_id):
+    query = 'SELECT * FROM `SENSOR_DATA` WHERE beacon_id = %s AND regist_time = (SELECT MAX(regist_time) FROM `SENSOR_DATA`)'
+
+    latest = db.efo(query, (beacon_id))
+
+    return latest
 
 def test(type_list):
     types = ''

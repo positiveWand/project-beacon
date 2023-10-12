@@ -1,15 +1,26 @@
 from db.dao import *
-from batch.command import print_message
+from batch.tasks import test_job, init_batch
 from flask import Flask, render_template, send_from_directory, jsonify,request,session,redirect,app,url_for
 from flask_cors import CORS
+from flask_apscheduler import APScheduler
 from datetime import timedelta
 import json
 
 app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10 minute
+app.config["SCEDULER_API_ENABLED"] = True
 
+# CORS 허용
 CORS(app, supports_credentials=True, origins="http://127.0.0.1:5173")
+
+# 스케줄러 시작하기
+scheduler = APScheduler()
+init_batch()
+scheduler.api_enabled = True
+scheduler.init_app(app)
+scheduler.start()
+scheduler.add_job(id='test_job', func=test_job, trigger='interval', seconds=5)
 
 # 페이지 라우팅 알고리즘
 @app.route("/", methods=['GET'])
@@ -147,7 +158,8 @@ def command(name):
     # 배치프로그램용
     result = False
     if name == 'pm':
-        result = print_message()
+        # result = print_message()
+        pass
     elif name == 'something':
         pass
     else:
@@ -313,7 +325,7 @@ def getPredictionLog_latest():
         return 'Need Type Specified', 400
     if body['start'] is None:
         return 'Need Start Datetime Specified', 400
-    predictions = get_predict_latest(beacon_id)
+    predictions = get_prediction_latest(beacon_id)
     resObj = {}
 
     for aPrediction in predictions :
@@ -350,7 +362,7 @@ def getSensorData():
     if body['start'] is None:
         return 'Need Start Datetime Specified', 400
 
-    data = get_sensor_data(beacon_id, body['column'], body['start'], body['end'])
+    data = get_target_sensor_data(beacon_id, body['column'], body['start'], body['end'])
     resObj = []
     for aData in data:
         resObj.append({'time': aData['regist_time'], 'value': aData[body['column']]})
