@@ -1,5 +1,5 @@
 Werkzeug==2.2.2
-Flask==2.3.3
+Flask==2.2.3
 Flask-Cors
 Flask-APScheduler
 cryptography==40.0.1
