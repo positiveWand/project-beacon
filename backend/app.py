@@ -4,7 +4,7 @@ from db.dao.dao import DAO_Universal
 # from batch.tasks import test_job, init_batch
 from flask import Flask
 from flask_cors import CORS
-from flask_apscheduler import APScheduler
+# from flask_apscheduler import APScheduler
 from datetime import timedelta
 
 from resource_api import *
