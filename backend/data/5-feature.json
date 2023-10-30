@@ -1,0 +1,149 @@
+{
+    "light": [
+        {
+            "feature_id": "1997LTE1302",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "1997-03-01",
+            "uninstallDate": "2005-03-11"
+        },
+        {
+            "feature_id": "2002LTE1303",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2002-09-01",
+            "uninstallDate": "2007-03-01"
+        },
+        {
+            "feature_id": "2005LTE1304",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2005-03-11",
+            "uninstallDate": "2010-08-24"
+        },
+        {
+            "feature_id": "2007LTE1305",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2007-03-23",
+            "uninstallDate": "2015-03-23"
+        },
+        {
+            "feature_id": "2015LTE1306",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2010-09-20",
+            "uninstallDate": "2015-03-20"
+        },
+        {
+            "feature_id": "2015LTE1307",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2015-09-15",
+            "uninstallDate": "2016-03-10"
+        },
+        {
+            "feature_id": "2015LTE1308",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2015-09-11",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2020LTE1310",
+            "beacon_id": "1997LC013",
+            "type": "light",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "solarbattery": [
+    ],
+    "batterycharge": [
+    ],
+    "storagebattery": [
+        {
+            "feature_id": "1997BTE1302",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "1997-11-11",
+            "uninstallDate": "2009-10-21"
+        },
+        {
+            "feature_id": "2009BTE1306",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "2009-10-21",
+            "uninstallDate": "2011-05-04"
+        },
+        {
+            "feature_id": "2017BTE1307",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "2011-05-04",
+            "uninstallDate": "2015-07-13"
+        },
+        {
+            "feature_id": "2015BTE1308",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "2015-07-13",
+            "uninstallDate": "2018-08-11"
+        },
+        {
+            "feature_id": "2018BTE1309",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "2018-08-11",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2019BTE1310",
+            "beacon_id": "1997LC013",
+            "type": "storagebattery",
+            "installDate": "2019-09-01",
+            "uninstallDate": ""
+        }
+    ],
+    "ais": [
+        {
+            "feature_id": "1990AIS1301",
+            "beacon_id": "1997LC013",
+            "type": "ais",
+            "installDate": "1990-09-01",
+            "uninstallDate": "2005-05-12"
+        },
+        {
+            "feature_id": "2005AIS1309",
+            "beacon_id": "1997LC013",
+            "type": "ais",
+            "installDate": "2005-05-12",
+            "uninstallDate": "2015-03-05"
+        },
+        {
+            "feature_id": "2015AIS1310",
+            "beacon_id": "1997LC013",
+            "type": "ais",
+            "installDate": "2015-03-05",
+            "uninstallDate": ""
+        }
+    ],
+    "rtu": [
+        {
+            "feature_id": "1997RTU1301",
+            "beacon_id": "1997LC013",
+            "type": "rtu",
+            "installDate": "1997-09-01",
+            "uninstallDate": "2010-03-05"
+        },
+        {
+            "feature_id": "2010RTU1310",
+            "beacon_id": "1997LC013",
+            "type": "rtu",
+            "installDate": "2010-03-05",
+            "uninstallDate": ""
+        }
+    ],
+    "racon": [
+    ]
+}

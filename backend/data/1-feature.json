@@ -1,0 +1,506 @@
+{
+    "light": [
+        {
+            "feature_id": "1990LTE0801",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "1990-09-01",
+            "uninstallDate": "2000-03-01"
+        },
+        {
+            "feature_id": "2000LTE0802",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2000-03-01",
+            "uninstallDate": "2005-03-11"
+        },
+        {
+            "feature_id": "2002LTE0803",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2002-09-01",
+            "uninstallDate": "2007-03-01"
+        },
+        {
+            "feature_id": "2005LTE0804",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2005-03-11",
+            "uninstallDate": "2010-08-24"
+        },
+        {
+            "feature_id": "2007LTE0805",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2007-03-23",
+            "uninstallDate": "2015-03-23"
+        },
+        {
+            "feature_id": "2015LTE0806",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2010-09-20",
+            "uninstallDate": "2015-03-20"
+        },
+        {
+            "feature_id": "2015LTE0807",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2015-09-15",
+            "uninstallDate": "2016-03-10"
+        },
+        {
+            "feature_id": "2015LTE0808",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2015-09-11",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2016LTE0809",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2016-09-24",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2020LTE0810",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "solarbattery": [
+        {
+            "feature_id": "1990SCE0801",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "1990-09-01",
+            "uninstallDate": "2000-03-11"
+        },
+        {
+            "feature_id": "2000SCE0802",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2000-03-21",
+            "uninstallDate": "2002-05-10"
+        },
+        {
+            "feature_id": "2002SCE0803",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2002-05-10",
+            "uninstallDate": "2005-11-12"
+        },
+        {
+            "feature_id": "2005SCE0804",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2005-11-12",
+            "uninstallDate": "2007-01-22"
+        },
+        {
+            "feature_id": "2007SCE0805",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2007-01-22",
+            "uninstallDate": "2010-10-21"
+        },
+        {
+            "feature_id": "2010SCE0806",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2010-10-21",
+            "uninstallDate": "2012-09-01"
+        },
+        {
+            "feature_id": "2012SCE0807",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2012-09-01",
+            "uninstallDate": "2015-05-09"
+        },
+        {
+            "feature_id": "2015SCE0808",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2015-05-09",
+            "uninstallDate": "2020-03-12"
+        },
+        {
+            "feature_id": "2020SCE0809",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2020-03-12",
+            "uninstallDate": "2021-08-11"
+        },
+        {
+            "feature_id": "2021SCE0810",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2021-08-11",
+            "uninstallDate": ""
+        }
+    ],
+    "batterycharge": [
+        {
+            "feature_id": "1990BCE0801",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "1990-01-01",
+            "uninstallDate": "1999-11-22"
+        },
+        {
+            "feature_id": "1999BCE0802",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "1999-11-22",
+            "uninstallDate": "2001-04-17"
+        },
+        {
+            "feature_id": "2001BCE0803",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2001-04-17",
+            "uninstallDate": "2005-11-27"
+        },
+        {
+            "feature_id": "2005BCE0804",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2005-11-27",
+            "uninstallDate": "2007-12-24"
+        },
+        {
+            "feature_id": "2007BCE0805",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2007-12-24",
+            "uninstallDate": "2010-05-02"
+        },
+        {
+            "feature_id": "2010BCE0806",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2010-05-02",
+            "uninstallDate": "2012-06-06"
+        },
+        {
+            "feature_id": "2006BCE0807",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2012-06-06",
+            "uninstallDate": "2015-03-01"
+        },
+        {
+            "feature_id": "2015BCE0808",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2015-03-01",
+            "uninstallDate": "2018-06-20"
+        },
+        {
+            "feature_id": "2018BCE0809",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2018-06-20",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2018BCE0810",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2023-09-01",
+            "uninstallDate": ""
+        }
+    ],
+    "storagebattery": [
+        {
+            "feature_id": "1990BTE0801",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "1990-09-01",
+            "uninstallDate": "1998-11-11"
+        },
+        {
+            "feature_id": "1998BTE0802",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "1998-11-11",
+            "uninstallDate": "2002-04-23"
+        },
+        {
+            "feature_id": "2002BTE0803",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2002-04-23",
+            "uninstallDate": "2004-05-03"
+        },
+        {
+            "feature_id": "2004BTE0804",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2004-05-03",
+            "uninstallDate": "2006-07-04"
+        },
+        {
+            "feature_id": "2006BTE0805",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2006-07-04",
+            "uninstallDate": "2009-10-21"
+        },
+        {
+            "feature_id": "2009BTE0806",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2009-10-21",
+            "uninstallDate": "2011-05-04"
+        },
+        {
+            "feature_id": "2017BTE0807",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2011-05-04",
+            "uninstallDate": "2015-07-13"
+        },
+        {
+            "feature_id": "2015BTE0808",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2015-07-13",
+            "uninstallDate": "2018-08-11"
+        },
+        {
+            "feature_id": "2018BTE0809",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2018-08-11",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2019BTE0810",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2019-09-01",
+            "uninstallDate": ""
+        }
+    ],
+    "ais": [
+        {
+            "feature_id": "1990AIS0801",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "1990-09-01",
+            "uninstallDate": "1993-05-12"
+        },
+        {
+            "feature_id": "1993AIS0802",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "1993-05-12",
+            "uninstallDate": "1997-09-23"
+        },
+        {
+            "feature_id": "1997AIS0803",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "1997-09-23",
+            "uninstallDate": "1999-10-01"
+        },
+        {
+            "feature_id": "1999AIS0804",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "1999-10-01",
+            "uninstallDate": "2004-05-04"
+        },
+        {
+            "feature_id": "2004AIS0805",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2004-05-04",
+            "uninstallDate": "2007-08-12"
+        },
+        {
+            "feature_id": "2007AIS0806",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2007-08-12",
+            "uninstallDate": "2010-07-11"
+        },
+        {
+            "feature_id": "2010AIS0807",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2010-07-11",
+            "uninstallDate": "2012-09-21"
+        },
+        {
+            "feature_id": "2012AIS0808",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2012-09-21",
+            "uninstallDate": "2015-03-04"
+        },
+        {
+            "feature_id": "2015AIS0809",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2015-03-04",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2015AIS0810",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2015-03-05",
+            "uninstallDate": ""
+        }
+    ],
+    "rtu": [
+        {
+            "feature_id": "1990RTU0801",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "1990-09-01",
+            "uninstallDate": "1996-03-05"
+        },
+        {
+            "feature_id": "1996RTU0802",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "1996-03-05",
+            "uninstallDate": "2000-11-20"
+        },
+        {
+            "feature_id": "2000RTU0803",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2000-11-20",
+            "uninstallDate": "2002-02-11"
+        },
+        {
+            "feature_id": "2002RTU0804",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2002-02-11",
+            "uninstallDate": "2007-09-11"
+        },
+        {
+            "feature_id": "2007RTU0805",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2007-09-11",
+            "uninstallDate": "2010-04-03"
+        },
+        {
+            "feature_id": "2010RTU0806",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2007-09-01",
+            "uninstallDate": "2010-04-03"
+        },
+        {
+            "feature_id": "2010RTU0807",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2010-04-03",
+            "uninstallDate": "2012-05-23"
+        },
+        {
+            "feature_id": "2012RTU0808",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2012-05-23",
+            "uninstallDate": "2015-09-01"
+        },
+        {
+            "feature_id": "2015RTU0809",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2015-09-01",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2016RTU0810",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2016-03-21",
+            "uninstallDate": ""
+        }
+    ],
+    "racon": [
+        {
+            "feature_id": "1990RBE0801",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "1990-09-01",
+            "uninstallDate": "1992-03-22"
+        },
+        {
+            "feature_id": "1992RBE0802",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "1992-06-25",
+            "uninstallDate": "1997-04-21"
+        },
+        {
+            "feature_id": "1997RBE0803",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "1997-04-22",
+            "uninstallDate": "2003-04-25"
+        },
+        {
+            "feature_id": "2003RBE0804",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2003-04-25",
+            "uninstallDate": "2008-10-11"
+        },
+        {
+            "feature_id": "2008RBE0805",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2008-10-11",
+            "uninstallDate": "2011-09-21"
+        },
+        {
+            "feature_id": "2011RBE0806",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2011-09-21",
+            "uninstallDate": "2015-10-10"
+        },
+        {
+            "feature_id": "2015RBE0807",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2015-10-10",
+            "uninstallDate": "2016-02-22"
+        },
+        {
+            "feature_id": "2016RBE0808",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2016-02-22",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2016RBE0809",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2016-02-22",
+            "uninstallDate": ""
+        },
+        {
+            "feature_id": "2017RBE0810",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2017-10-15",
+            "uninstallDate": ""
+        }
+    ]
+}

@@ -300,7 +300,7 @@ function SearchPage() {
             <Header className='p-4 bg-blue-500 flex items-center'>
                 <MainLogo logoLink={Route.MAIN_PAGE_URL} imgSrc={BEACON_IMG} text='B.M.S'/>
                 <NavBar className='ml-6'>
-                    <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor>
+                    {/* <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor> */}
                     <NavItemAnchor href={Route.SEARCH_PAGE_URL} selected={true}>탐색</NavItemAnchor>
                 </NavBar>
                 <NavBar className='ml-auto'>

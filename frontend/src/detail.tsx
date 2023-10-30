@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ReactDOM from 'react-dom/client'
 import Header from './components/Header.tsx'
 import Body from './components/Body.tsx'
@@ -14,6 +14,7 @@ import TabItem from './components/TabItem.tsx';
 import FeatureInfo from './components/FeatureInfo.tsx';
 import InspectionInfo from './components/InspectionInfo.tsx';
 import SignalInfo from './components/SignalInfo.tsx';
+import ScrollableRecordTable from './components/ScrollableRecordTable.tsx';
 import './index.css'
 
 import { testdata, testdetails } from './TestData.tsx';
@@ -24,7 +25,27 @@ import UNDO_IMG from './assets/undo.png'
 import * as Route from './route.ts'
 import BasicInfo from './components/BasicInfo.tsx';
 
+function useInterval(callback, delay) {
+    const savedCallback = useRef<Function>(); // 최근에 들어온 callback을 저장할 ref를 하나 만든다.
+  
+    useEffect(() => {
+        savedCallback.current = callback; // callback이 바뀔 때마다 ref를 업데이트 해준다.
+    }, [callback]);
+  
+    useEffect(() => {
+        function tick() {
+            savedCallback.current(); // tick이 실행되면 callback 함수를 실행시킨다.
+        }
+        if (delay !== null) { // 만약 delay가 null이 아니라면 
+            let id = setInterval(tick, delay); // delay에 맞추어 interval을 새로 실행시킨다.
+            return () => clearInterval(id); // unmount될 때 clearInterval을 해준다.
+        }
+    }, [delay]); // delay가 바뀔 때마다 새로 실행된다.
+}
+
 function DetailPage() {
+    const [backgroundColor, setBackgroundColor] = useState<string>('bg-slate-50');
+    const [alert, setAlert] = useState(false);
     const [beaconID, setBeaconID] = useState<string>();
     const [detailModel, setDetailModel] = useState<BeaconDetailModel>({
         basicInfo: {
@@ -75,6 +96,9 @@ function DetailPage() {
     }
     function fetchPredictionInfo(beaconID: string) {
         setProb(30);
+        setTimeout(() => {
+            setAlert(true);
+        }, 6000);
         fetch(Route.API_BASE_URL+'/beacon/predictionInfo?id='+beaconID, {
             method: 'GET',
         })
@@ -102,15 +126,53 @@ function DetailPage() {
         fetchPredictionInfo(receivedObject['id']);
     }, []);
 
+    useInterval(() => {
+        if(alert && backgroundColor == 'bg-slate-50') {
+            setBackgroundColor('bg-red-400')
+        } else {
+            setBackgroundColor('bg-slate-50')
+        }
+    }, 1000);
+
     return (
         <div className='h-screen flex flex-col'>
-            <Header className='p-4 bg-blue-500 flex items-center select-none'>
+            <Header className='p-4 bg-blue-500 flex items-center select-none justify-between'>
                 <a href={Route.SEARCH_PAGE_URL} className='bg-white hover:bg-gray-300 rounded p-2'>
                     <img src={UNDO_IMG} alt="탐색 페이지로 돌아가기" width={25}/>
                 </a>
+                <span className='text-white font-bold text-xl'>
+                    {detailModel.basicInfo.beacon_id}-{detailModel.basicInfo.beacon_name}-{detailModel.basicInfo.beacon_office}
+                </span>
+                <span></span>
             </Header>
-            <Body className='px-10 py-6 flex flex-col items-center bg-slate-50'>
-                <Heading level={1} className='bg-blue-500 text-white mr-auto mb-2'>기본 정보</Heading>
+            <Body className={'px-10 py-6 flex flex-col items-center ' + backgroundColor}>
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>분석 정보</Heading>
+                <GridBox cols={3} className='gap-5 w-full'>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                        <h2 className='text-center text-3xl font-bold'>고장 확률</h2>
+                        <GauageChart threshold={[0, 50, 66, 100]} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={prob} height='170px' className='mx-auto'/>
+                        <p className='text-2xl font-bold text-center'>고장 의심</p>
+                    </GridItem>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                        <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
+                        <ScrollableRecordTable
+                            className='mt-3'
+                            columns={['순위', '장비']}
+                            records={[{순위: '1', 장비: '등명기'}, {순위: '2', 장비: '축전기'}, {순위: '3', 장비: '태양열판'}, {순위: '4', 장비: '전원'}, {순위: '5', 장비: '임의의 장비'}]}
+                            maxHeight='14rem'
+                        />
+                    </GridItem>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                        <h2 className='text-center text-3xl font-bold'>고장 유형</h2>
+                        <TextInfoBox className='my-auto'>꾸준한 이상치 증가</TextInfoBox>
+                    </GridItem>
+                    <GridItem colSpan={3} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                        <h2 className='text-center text-3xl font-bold'>고장 확률 추세선</h2>
+                        <LineGraph height='300px' className='w-full'></LineGraph>
+                    </GridItem>
+                </GridBox>
+
+                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>기본 정보</Heading>
                 <BasicInfo imgURL={Route.API_BASE_URL+'/beacon/image?id='+beaconID} className='w-full' model={detailModel.basicInfo}></BasicInfo>
 
                 <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>장비 정보</Heading>
@@ -156,29 +218,8 @@ function DetailPage() {
                 <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>정비 이력</Heading>
                 <InspectionInfo model={detailModel['inspectionInfo']} className='w-full p-3 shadow-md bg-slate-100 rounded-md border'></InspectionInfo>
 
-                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>신호 수신 현황</Heading>
-                <SignalInfo className='w-full shadow-md rounded-md bg-slate-100 border' model={detailModel['signalInfo']}></SignalInfo>
-
-                <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>분석 정보</Heading>
-                <GridBox cols={3} className='gap-5 w-full'>
-                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
-                        <h2 className='text-center text-3xl font-bold'>고장 확률</h2>
-                        <GauageChart threshold={[0, 50, 66, 100]} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={prob} height='170px' className='mx-auto'/>
-                        <p className='text-2xl font-bold text-center'>고장 의심</p>
-                    </GridItem>
-                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
-                        <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
-                        <TextInfoBox className='my-auto'>안녕하세요</TextInfoBox>
-                    </GridItem>
-                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
-                        <h2 className='text-center text-3xl font-bold'>고장 유형</h2>
-                        <TextInfoBox className='my-auto'>꾸준한 이상치 증가</TextInfoBox>
-                    </GridItem>
-                    <GridItem colSpan={3} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
-                        <h2 className='text-center text-3xl font-bold'>고장 확률 추세선</h2>
-                        <LineGraph height='300px' className='w-full'></LineGraph>
-                    </GridItem>
-                </GridBox>
+                {/* <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>신호 수신 현황</Heading>
+                <SignalInfo className='w-full shadow-md rounded-md bg-slate-100 border' model={detailModel['signalInfo']}></SignalInfo> */}
             </Body>
         </div>
     )

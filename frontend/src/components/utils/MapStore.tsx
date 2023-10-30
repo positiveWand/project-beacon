@@ -39,10 +39,10 @@ class MapStore {
     }
 
     init() {
-        let defaultCenter = new naver.maps.LatLng(37.3784357, 126.594079)
+        let defaultCenter = new naver.maps.LatLng(33.3804067, 126.5582004)
         const options = {
             center: defaultCenter,
-            zoom: 12,
+            zoom: 10,
             zoomControl: true,
             zoomControlOptions: {
                 position: naver.maps.Position.TOP_RIGHT
@@ -170,6 +170,7 @@ class MapStore {
                 return result.text();
             })
             .then(result => {
+                console.log("favorites: " +  result)
                 if(result == 'true') {
                     return true;
                 } else {

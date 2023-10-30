@@ -1,26 +1,51 @@
-from .dataobject import DataObject
+from .data_model import DataModel
+import datetime
 
-class Inspection(DataObject):
-    def __init__(self, inspection_id = None, beacon_id = None, inspection_inspector = None, inspection_purpose = None, inspection_content = None,\
-                 inspection_note = None, inspection_startDate = None, inspection_endDate = None):
-        # super().__init__()
-        self.inspection_id = inspection_id
-        self.beacon_id = beacon_id
-        self.inspection_inspector = inspection_inspector
-        self.inspection_purpose = inspection_purpose
-        self.inspection_content = inspection_content
-        self.inspection_note = inspection_note
-        self.inspection_startDate = inspection_startDate
-        self.inspection_endDate = inspection_endDate
+class Inspection(DataModel):
+    dateformat = '%Y-%m-%d'
+    attr_map = {
+        'inspection_id': 'id',
+        'beacon_id': 'beacon',
+        'inspection_inspector': 'inspector',
+        'inspection_purpose': 'purpose',
+        'inspection_content': 'content',
+        'inspection_note': 'note',
+        'inspection_startDate': 'start_date',
+        'inspection_endDate': 'end_date'
+    }
 
-    def pyData(self):
-        return{
-            "inspection_id": self.inspection_id,
-            "beacon_id": self.beacon_id,
-            "inspection_inspector": self.inspection_inspector,
-            "inspection_purpose": self.inspection_purpose,
-            "inspection_content": self.inspection_content,
-            "inspection_note": self.inspection_note,
-            "inspection_startDate": self.inspection_startDate.strftime("%Y-%m-%d") if self.inspection_startDate != None else None,
-            "inspection_endDate": self.inspection_endDate.strftime("%Y-%m-%d") if self.inspection_endDate != None else None
-        }
+    def __init__(self,
+                 id: str,
+                 beacon: str,
+                 inspector: str,
+                 purpose: str,
+                 content: str,
+                 note: str,
+                 start_date: datetime.datetime,
+                 end_date: datetime.datetime):
+        self.id = id
+        self.beacon = beacon
+        self.inspector = inspector
+        self.purpose = purpose
+        self.content = content
+        self.note = note
+        self.start_date = start_date
+        self.end_date = end_date
+
+        self.attr_map = Inspection.attr_map
+        self.dateformat = Inspection.dateformat
+    
+    def __init__(self, dictionary: dict):
+        for aKey in self.attr_map.keys():
+            dictionary.setdefault(aKey, None)
+        self.id = dictionary['inspection_id']
+        self.beacon = dictionary['beacon_id']
+        self.inspector = dictionary['inspection_inspector']
+        self.purpose = dictionary['inspection_purpose']
+        self.content = dictionary['inspection_content']
+        self.note = dictionary['inspection_note']
+        self.start_date = dictionary['inspection_startDate']
+        self.end_date = dictionary['inspection_endDate']
+
+        self.attr_map = Inspection.attr_map
+        self.dateformat = Inspection.dateformat

@@ -1,0 +1,65 @@
+{
+    "light": [
+        {
+            "feature_id": "2017LTE2715",
+            "beacon_id": "1990LC008",
+            "type": "light",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "solarbattery": [
+        {
+            "feature_id": "2012SCE4314",
+            "beacon_id": "1990LC008",
+            "type": "solarbattery",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "batterycharge": [
+        {
+            "feature_id": "2012BCE1576",
+            "beacon_id": "1990LC008",
+            "type": "batterycharge",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "storagebattery": [
+        {
+            "feature_id": "2017BTE6427",
+            "beacon_id": "1990LC008",
+            "type": "storagebattery",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "ais": [
+        {
+            "feature_id": "2022AIS424",
+            "beacon_id": "1990LC008",
+            "type": "ais",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "rtu": [
+        {
+            "feature_id": "2022RTU424",
+            "beacon_id": "1990LC008",
+            "type": "rtu",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ],
+    "racon": [
+        {
+            "feature_id": "2019RBE024",
+            "beacon_id": "1990LC008",
+            "type": "racon",
+            "installDate": "2023-09-01",
+            "uninstallDate": "2023-09-01"
+        }
+    ]
+}
