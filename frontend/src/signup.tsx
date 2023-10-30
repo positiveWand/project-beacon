@@ -103,11 +103,11 @@ function SignupPage() {
         })
         .then(result => {
             if(result == 'true') {
-                alert('회원가입 성공');
+                // alert('회원가입 성공');
                 location.href = Route.LOGIN_PAGE_URL;
             } else {
                 console.log(result)
-                alert('회원가입 실패')
+                // alert('회원가입 실패')
                 setInvalidSignup(true);
                 setFormMessage('중복된 아이디가 있거나 서버에 문제가 있습니다.');
                 useDefaultCursor();
@@ -141,7 +141,7 @@ function SignupPage() {
             <Header className='p-4 bg-blue-500 flex items-center'>
                 <MainLogo logoLink={Route.MAIN_PAGE_URL} imgSrc={beaconLogo} text='B.M.S'/>
                 <NavBar className='ml-6'>
-                    <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor>
+                    {/* <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor> */}
                     <NavItemAnchor href={Route.SEARCH_PAGE_URL} selected={false}>탐색</NavItemAnchor>
                 </NavBar>
                 <NavBar className='ml-auto'>

@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import{ BasicInfoModel, MyComponentProp} from './utils/UtilType'
 import ClassNames from './utils/ClassNames'
 import SectionBox from './SectionBox'
 import Heading from './Heading'
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 interface Prop extends MyComponentProp {
     imgURL: string
@@ -9,14 +12,51 @@ interface Prop extends MyComponentProp {
 }
 
 function BasicInfo({ imgURL, model, className }: Prop) {
+    const [open, setOpen] = useState(false);
+    const [weather, setWeather] = useState(null);
+
     let classes = new ClassNames(className)
     classes.add('flex')
 
+    useEffect(() => {
+        const fetchWeather = async () => {
+            const apiKey = 'fb12024bc85a368adf85c553d153df91';
+            const city = 'Daejeon';
+            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${model.beacon_lat}&lon=${model.beacon_lng}&appid=${apiKey}&lang=kr`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (response.ok) {
+                    setWeather(data);
+                } else {
+                console.log('날씨 정보를 가져오는 데 실패했습니다:', data.message);
+                }
+            } catch (error) {
+                console.log('날씨 정보를 가져오는 데 실패했습니다:', error);
+            }
+        };
+
+        fetchWeather();
+    }, [model])
+
     return (
         <SectionBox className={classes.toString()}>
-            <div className='flex-1'>
-                <Heading level={2}>이미지</Heading>
-                <img src={imgURL} alt="항로표지 이미지" className='h-80'/>
+            <Lightbox
+                open={open}
+                close={() => setOpen(false)}
+                slides={[
+                    {src: imgURL}
+                ]}
+            />
+            <div className='flex-1 mr-5 flex flex-col'>
+                <Heading level={2}>날씨 정보</Heading>
+                <div className="border rounded-md shadow-md p-3 bg-slate-50 flex-1 flex flex-col items-center justify-center">
+                    <div className="font-bold text-4xl">{weather ? weather.weather[0].main : "-"}</div>
+                    <img src={weather ? "https://openweathermap.org/img/wn/"+weather.weather[0].icon+"@4x.png" : ""} alt="날씨 아이콘" className="w-52"/>
+                    <p className="text-xl">온도: {weather ? Math.round(weather.main.temp - 273.15) : "-"}°C</p> 
+                    <p className="text-xl">습도: {weather ? weather.main.humidity : "-"}%</p> 
+                </div>
             </div>
             <div className='flex-1'>
                 <Heading level={2}>관리 정보</Heading>
@@ -30,6 +70,10 @@ function BasicInfo({ imgURL, model, className }: Prop) {
                         <tr>
                             <th>표지명</th>
                             <td colSpan={7}>{model.beacon_name}</td>
+                        </tr>
+                        <tr>
+                            <th>사진</th>
+                            <td colSpan={7}><a onClick={() => setOpen(true)} className='text-blue-400 underline hover:text-bule-800 font-bold'>사진 보기</a></td>
                         </tr>
                         <tr>
                             <th>종류</th>

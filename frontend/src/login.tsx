@@ -88,10 +88,10 @@ function LoginPage() {
         })
         .then(result => {
             if(result['result'] == 'true') {
-                alert('로그인 성공');
+                // alert('로그인 성공');
                 location.href = Route.MAIN_PAGE_URL;
             } else {
-                alert('로그인 실패')
+                // alert('로그인 실패')
                 setInvalidLogin(true);
                 setFormMessage('아이디 또는 비밀번호가 잘못되었습니다.');
                 useDefaultCursor();
@@ -116,15 +116,15 @@ function LoginPage() {
     return (
         <div className='h-screen flex flex-col'>
             <Header className='p-4 bg-blue-500 flex items-center'>
-            <MainLogo logoLink={Route.MAIN_PAGE_URL} imgSrc={beaconLogo} text='B.M.S'/>
-            <NavBar className='ml-6'>
-                <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor>
-                <NavItemAnchor href={Route.SEARCH_PAGE_URL} selected={false}>탐색</NavItemAnchor>
-            </NavBar>
-            <NavBar className='ml-auto'>
-                <NavItemButton href={Route.LOGIN_PAGE_URL}>로그인</NavItemButton>
-                <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
-            </NavBar>
+                <MainLogo logoLink={Route.MAIN_PAGE_URL} imgSrc={beaconLogo} text='B.M.S'/>
+                <NavBar className='ml-6'>
+                    {/* <NavItemAnchor href={Route.MAIN_PAGE_URL} selected={false}>홈</NavItemAnchor> */}
+                    <NavItemAnchor href={Route.SEARCH_PAGE_URL} selected={false}>탐색</NavItemAnchor>
+                </NavBar>
+                <NavBar className='ml-auto'>
+                    <NavItemButton href={Route.LOGIN_PAGE_URL}>로그인</NavItemButton>
+                    <NavItemButton href={Route.SIGNUP_PAGE_URL}>회원가입</NavItemButton>
+                </NavBar>
             </Header>
             <Body className='py-6 flex justify-center items-start bg-slate-50 flex-1'>
                 <Form label='로그인' invalid={invalidLogin} invalidMessage={formMessage} onSubmit={handleSubmit} className='border rounded-md shadow-md bg-slate-100 p-6 mt-6 flex flex-col max-w-md flex-1'>

@@ -51,15 +51,17 @@ class DBConnection():
             cursor = conn.cursor()
             cursor.execute(sql, data)
             aRow = cursor.fetchone()
+            cursor.close()
             self.connPool.release(conn)
-            return aRow
-        except:
+            return aRow # None 일수도...
+        except Exception as e:
+            print(e)
             if(count < 5):
                 self.destoryPool()
                 self.initPool()
                 self.efo(sql, data, count+1)
             else:
-                raise "DB Connection Error"
+                raise Exception("DB Connection Error")
 
     def efa(self, sql, data = (), count=0):
         try:
@@ -67,23 +69,27 @@ class DBConnection():
             cursor = conn.cursor()
             cursor.execute(sql, data)
             rows = cursor.fetchall()
+            cursor.close()
             self.connPool.release(conn)
             return rows
-        except:
+        except Exception as e:
+            print('[efa]:', e)
             if(count < 5):
                 self.destoryPool()
                 self.initPool()
                 self.efa(sql, data, count+1)
             else:
-                raise "DB Connection Error"
+                raise Exception("DB Connection Error")
     
     def ec(self, sql, data = (), count=0):
         try:
             conn = self.connPool.get_conn()
             cursor = conn.cursor()
             rows = cursor.execute(sql, data)
+            cursor.close()
             conn.commit()
             self.connPool.release(conn)
             return rows
-        except:
-            raise "DB Connection Error"
+        except Exception as e:
+            print(e)
+            raise Exception("DB Connection Error")

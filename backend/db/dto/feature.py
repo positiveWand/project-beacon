@@ -1,19 +1,39 @@
-from .dataobject import DataObject
+from .data_model import DataModel
+import datetime
 
-class Feature(DataObject):
-    def __init__(self, feature_id = None, beacon_id = None, feature_type = None, feature_installDate = None, feature_uninstallDate = None):
-        # super().__init__()
-        self.feature_id = feature_id
-        self.beacon_id = beacon_id
-        self.feature_type = feature_type
-        self.feature_installDate = feature_installDate
-        self.feature_uninstallDate = feature_uninstallDate
+class Feature(DataModel):
+    dateformat = '%Y-%m-%d'
+    attr_map = {
+        'feature_id': 'id',
+        'beacon_id': 'beacon',
+        'feature_type': 'type',
+        'feature_installDate': 'install_date',
+        'feature_uninstallDate': 'uninstall_date'
+    }
 
-    def pyData(self):
-        return{
-            "feature_id": self.feature_id,
-            "beacon_id": self.beacon_id,
-            "feature_type": self.feature_type,
-            "feature_installDate": self.feature_installDate.strftime("%Y-%m-%d") if self.feature_installDate != None else None,
-            "featureUninstallDate": self.feature_uninstallDate.strftime("%Y-%m-%d") if self.feature_uninstallDate != None else None
-        }
+    def __init__(self,
+                 id: str, 
+                 beacon: str, 
+                 type: str, 
+                 install_date: datetime.datetime, 
+                 uninstall_date: datetime.datetime):
+        self.id = id
+        self.beacon = beacon
+        self.type = type
+        self.install_date = install_date
+        self.uninstall_date = uninstall_date
+
+        self.attr_map = Feature.attr_map
+        self.dateformat = Feature.dateformat
+    
+    def __init__(self, dictionary: dict):
+        for aKey in self.attr_map.keys():
+            dictionary.setdefault(aKey, None)
+        self.id = dictionary['feature_id']
+        self.beacon = dictionary['beacon_id']
+        self.type = dictionary['feature_type']
+        self.install_date = dictionary['feature_installDate']
+        self.uninstall_date = dictionary['feature_uninstallDate']
+
+        self.attr_map = Feature.attr_map
+        self.dateformat = Feature.dateformat

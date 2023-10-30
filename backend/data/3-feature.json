@@ -1,0 +1,58 @@
+{
+    "light": [
+        {
+            "feature_id": "2020LTE0910",
+            "beacon_id": "2020LC009",
+            "type": "light",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "solarbattery": [
+        {
+            "feature_id": "2021SCE0910",
+            "beacon_id": "2020LC009",
+            "type": "solarbattery",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "batterycharge": [
+        {
+            "feature_id": "2018BCE0910",
+            "beacon_id": "2020LC009",
+            "type": "batterycharge",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "storagebattery": [
+        {
+            "feature_id": "2019BTE0910",
+            "beacon_id": "2020LC009",
+            "type": "storagebattery",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "ais": [
+        {
+            "feature_id": "2015AIS0910",
+            "beacon_id": "2020LC009",
+            "type": "ais",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "rtu": [
+        {
+            "feature_id": "2016RTU0910",
+            "beacon_id": "2020LC009",
+            "type": "rtu",
+            "installDate": "2020-11-21",
+            "uninstallDate": ""
+        }
+    ],
+    "racon": [
+    ]
+}

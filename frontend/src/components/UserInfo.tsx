@@ -16,9 +16,9 @@ function UserInfo({name, children}: Prop) {
             return result.text()
         }).then(result => {
             if(result == 'true') {
-                alert('로그아웃 성공')
+                // alert('로그아웃 성공')
             } else {
-                alert('로그아웃 실패')
+                // alert('로그아웃 실패')
             }
             useDefaultCursor();
             location.href = Route.MAIN_PAGE_URL;

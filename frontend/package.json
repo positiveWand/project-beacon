@@ -13,7 +13,8 @@
     "chart.js": "^4.3.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "yet-another-react-lightbox": "^3.14.0"
   },
   "devDependencies": {
     "@types/navermaps": "^3.6.5",

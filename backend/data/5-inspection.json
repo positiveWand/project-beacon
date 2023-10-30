@@ -1,0 +1,82 @@
+[
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2000PT1303",
+        "inspector": "한용훈",
+        "purpose": "정기 점검",
+        "content": "특이사항 없음",
+        "note": "없음",
+        "startDate": "2000-06-15",
+        "endDate": "2000-06-19"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2002PT1304",
+        "inspector": "김부식",
+        "purpose": "비정상 작동 신고 접수",
+        "content": "민원 처리 완료",
+        "note": "없음",
+        "startDate": "2002-08-31",
+        "endDate": "2002-08-31"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2005PT1305",
+        "inspector": "한용훈",
+        "purpose": "정기 점검",
+        "content": "특이사항 없음",
+        "note": "없음",
+        "startDate": "2005-08-31",
+        "endDate": "2005-09-03"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2010PT1306",
+        "inspector": "한용훈",
+        "purpose": "정기 점검",
+        "content": "특이사항 없음",
+        "note": "없음",
+        "startDate": "2010-08-31",
+        "endDate": "2010-09-03"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2013PT1307",
+        "inspector": "김부식",
+        "purpose": "신호 이상 점검",
+        "content": "부품 재결착",
+        "note": "없음",
+        "startDate": "2013-03-01",
+        "endDate": "2013-03-10"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2015PT1308",
+        "inspector": "한용훈",
+        "purpose": "정기 점검",
+        "content": "특이사항 없음",
+        "note": "없음",
+        "startDate": "2015-07-28",
+        "endDate": "2015-07-30"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2015PT1309",
+        "inspector": "한용훈",
+        "purpose": "신호 미수신",
+        "content": "전선 교체",
+        "note": "없음",
+        "startDate": "2015-07-28",
+        "endDate": "2015-07-30"
+    },
+    {
+        "beacon_id": "1997LC013",
+        "inspection_id": "2020PT1310",
+        "inspector": "한용훈",
+        "purpose": "정기 점검",
+        "content": "특이사항 없음",
+        "note": "없음",
+        "startDate": "2020-08-31",
+        "endDate": "2020-09-03"
+    }
+]

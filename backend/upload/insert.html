@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항로표지 데이터 추가</title>
+</head>
+<body>
+    <h1>항로표지 데이터 추가하기</h1>
+    <section>
+        <h2>항로표지 데이터</h2>
+        <form action="/beacon/new" enctype=multipart/form-data method="post">
+            <label for="data"><b>항로표지 데이터:</b></label>
+            <input type="file" name="data" accept=".json" required><br><br>
+            <label for="image"><b>이미지:</b></label>
+            <input type="file" name="image" accept="image/jpeg"><br><br>
+            <label for="embedding"><b>임베딩:</b></label>
+            <input type="file" name="embedding" accept=".npy"><br><br>
+            <button type="submit" style="width: 300px; height: 50px;">업로드</button>
+        </form>
+    </section>
+    <section>
+        <h2>항로표지 장비 데이터</h2>
+        <h3>JSON 입력</h3>
+        <form action="/feature/new" enctype=multipart/form-data method="post">
+            <label for="data"><b>장비 데이터:</b></label>
+            <input type="file" name="features" accept=".json" required><br><br>
+            <button type="submit" style="width: 300px; height: 50px;">업로드</button>
+        </form>
+        <h3>데이터 일일 입력</h3>
+        <form action="/feature/new" method="post">
+            <label for="beacon_id"><b>항로표지 코드:</b></label>
+            <select name="beacon_id" id="" required>
+            </select>
+            <br><br>
+            <label for="feature_id"><b>장비 코드:</b></label>
+            <input type="text" name="feature_id"><br><br>
+            <label for="type"><b>장비 종류:</b></label>
+            <select name="type" id="" required>
+                <option value="light">등명기</option>
+                <option value="solarbattery">태양전지</option>
+                <option value="batterycharge">충방전조절기</option>
+                <option value="storagebattery">축전기</option>
+                <option value="ais">AIS</option>
+                <option value="rtu">RTU</option>
+                <option value="racon">레이콘</option>
+            </select><br><br>
+            <label for="installDate"><b>설치 일자:</b></label>
+            <input type="date" name="installDate"><br><br>
+            <label for="uninstallDate"><b>철거 일자:</b></label>
+            <input type="date" name="uninstallDate"><br><br>
+
+            <button type="submit" style="width: 300px; height: 50px;">업로드</button>
+        </form>
+    </section>
+    <section>
+        <h2>항로표지 정비이력 데이터</h2>
+        <h3>JSON 입력</h3>
+        <form action="/inspection/new" enctype=multipart/form-data method="post">
+            <label for="data"><b>장비 데이터:</b></label>
+            <input type="file" name="inspections" accept=".json" required><br><br>
+            <button type="submit" style="width: 300px; height: 50px;">업로드</button>
+        </form>
+        <h3>데이터 일일 입력</h3>
+        <form action="/inspection/new" method="post">
+            <label for="beacon_id"><b>항로표지 코드:</b></label>
+            <select name="beacon_id" id="" required>
+            </select>
+            <br><br>
+            <label for="inspection_id"><b>정비이력 코드:</b></label>
+            <input type="text" name="feature_id"><br><br>
+            <label for="inspector"><b>작업자:</b></label>
+            <input type="text" name="inspector"><br><br>
+            <label for="purpose"><b>작업 목표:</b></label>
+            <input type="text" name="purpose"><br><br>
+            <label for="content"><b>작업 내용:</b></label>
+            <input type="text" name="content"><br><br>
+            <label for="note"><b>비고:</b></label>
+            <input type="text" name="note"><br><br>
+            <label for="startDate"><b>작업 시작 일자:</b></label>
+            <input type="date" name="startDate"><br><br>
+            <label for="endDate"><b>작업 종료 일자:</b></label>
+            <input type="date" name="endDate"><br><br>
+            
+            <button type="submit" style="width: 300px; height: 50px;">업로드</button>
+        </form>
+    </section>
+</body>
+</html>
