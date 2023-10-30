@@ -1,4 +1,5 @@
-Flask
+Werkzeug==2.3.7
+Flask==2.3.3
 Flask-Cors
 Flask-APScheduler
 cryptography==40.0.1
