@@ -2,7 +2,7 @@ Flask
 Flask-Cors
 Flask-APScheduler
 cryptography==40.0.1
-PyMySQL==1.0.3
+PyMySQL
 pandas>=1.4.4
 numpy>=1.21.5
 --extra-index-url https://download.pytorch.org/whl/cpu
