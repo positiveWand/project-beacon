@@ -30,6 +30,7 @@ class Main():
         dataset = self.env_config['dataset']
         #train_orig = pd.read_csv(f'./data/{dataset}/994403586_2018.csv', sep=',', index_col=0)
         # train_orig = pd.read_csv(f'./data/{dataset}/anomaly.csv', sep=',', index_col=0)
+        # train_orig = pd.read_csv(f'./data/{dataset}/anomaly2.csv', sep=',', index_col=0)
         train_orig = pd.read_csv(f'./data/{dataset}/normal.csv', sep=',', index_col=0)
         train_orig = train_orig.fillna(0)
 
@@ -45,14 +46,14 @@ class Main():
             ]]
 
         # 그래프 구축
-        feature_map = get_feature_map(dataset) # list.txt 파일에 등록된 칼럼들 목록 list
-        fc_struc = get_fc_graph_struc(dataset) # feature_map의 칼럼들의 Fully-Connected 그래프
+        feature_map = get_feature_map(dataset)
+        fc_struc = get_fc_graph_struc(dataset)
         set_device(env_config['device'])
         self.device = get_device()
         self.feature_map = feature_map
-        fc_edge_index = build_loc_net(fc_struc, list(train.columns), feature_map=feature_map) # 0 -> 엣지 시작 노드 Feature Map에서의 인덱스, 1 -> 엣지 끝 노드 Feature Map에서의 인덱스
+        fc_edge_index = build_loc_net(fc_struc, list(train.columns), feature_map=feature_map)
         fc_edge_index = torch.tensor(fc_edge_index, dtype=torch.long)
-        train_dataset_indata = construct_data(train, feature_map, labels=0) # 1 row -> 1 tick의 데이터
+        train_dataset_indata = construct_data(train, feature_map, labels=0)
 
         cfg = {
             'slide_win': train_config['slide_win'],
@@ -71,29 +72,33 @@ class Main():
         edge_index_sets = []
         edge_index_sets.append(fc_edge_index)
 
-        self.model = GDN(edge_index_sets, len(feature_map),
+        if args.train_mode == 'pretrain':
+            self.model = GDN(edge_index_sets, len(feature_map),
                          dim=train_config['dim'],
                          input_dim=train_config['slide_win'],
                          out_layer_num=train_config['out_layer_num'],
                          out_layer_inter_dim=train_config['out_layer_inter_dim'],
                          topk=train_config['topk']
                          ).to(self.device)
+        else:
+            self.model.load_state_dict(torch.load('checkpoints/pretrained_model.pkl'))
+
 
     def run(self):
-
         if len(self.env_config['load_model_path']) > 0:
             model_save_path = self.env_config['load_model_path']
         else:
             model_save_path = self.get_save_path()[0]
 
-            self.train_log = train(self.model, model_save_path,
+            score = train(self.model, model_save_path,
                                    config=train_config,
                                    train_dataloader=self.train_dataloader,
                                    val_dataloader=self.val_dataloader,
                                    feature_map=self.feature_map,
                                    train_dataset=self.train_dataset,
-                                   dataset_name=self.env_config['dataset']
-                                   )
+                                   dataset_name=self.env_config['dataset'])
+
+        return score
 
 
     def get_loaders(self, train_dataset, seed, batch, val_ratio=0.1):
@@ -120,7 +125,6 @@ class Main():
         return train_dataloader, val_dataloader
 
     def get_score(self, test_result, val_result):
-
         feature_num = len(test_result[0][0])
         np_test_result = np.array(test_result)
         np_val_result = np.array(val_result)
@@ -145,10 +149,6 @@ class Main():
         print(f'recall: {info[2]}\n')
 
     def get_save_path(self, feature_name=''):
-        # print(__file__)
-        # print(os.path.realpath(__file__))
-        # print(os.path.abspath(__file__))
-
         dir_path = self.env_config['save_path']
 
         if self.datestr is None:
@@ -167,16 +167,6 @@ class Main():
 
         return paths
 
-    def get_maintenance_period(self, install_year, durability):
-        durability = durability * 365
-        date_install = datetime.strptime(install_year, '%Y-%m-%d')
-        date_now = datetime.today().strptime('%Y-%m-%d')
-        usage_period = date_now - date_install
-        usage_period = usage_period.days # 설치하고 지금까지 사용한 일수
-        maintenance_period = durability - usage_period # 내구년도 - 사용일수 = 내구도 몇일 남았는지
-
-        return maintenance_period
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -191,13 +181,14 @@ if __name__ == "__main__":
     parser.add_argument('-device', help='cuda / cpu', type=str, default='cpu')
     parser.add_argument('-random_seed', help='random seed', type=int, default=0)
     parser.add_argument('-comment', help='experiment comment', type=str, default='')
-    parser.add_argument('-out_layer_num', help='outlayer num', type=int, default=1)
+    parser.add_argument('-out_layer_num', help='outlayer num', type=int, default=3)
     parser.add_argument('-out_layer_inter_dim', help='out_layer_inter_dim', type=int, default=256)
     parser.add_argument('-decay', help='decay', type=float, default=0)
     parser.add_argument('-val_ratio', help='val ratio', type=float, default=0.1)
     parser.add_argument('-topk', help='topk num', type=int, default=20)
     parser.add_argument('-report', help='best / val', type=str, default='best')
     parser.add_argument('-load_model_path', help='trained model path', type=str, default='')
+    parser.add_argument('-train_mode', type=str, default='pretrain')
 
     args = parser.parse_args()
 
@@ -223,6 +214,7 @@ if __name__ == "__main__":
         'decay': args.decay,
         'val_ratio': args.val_ratio,
         'topk': args.topk,
+        'train_mode': args.train_mode
     }
 
     env_config = {

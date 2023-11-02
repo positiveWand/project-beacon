@@ -2,6 +2,7 @@ from flask import request, jsonify, send_file, current_app, make_response
 import datetime, io
 from db.dto.prediction import Prediction
 from db.dao.dao import DAO_Universal
+import pandas as pd
 
 
 def beacon():
@@ -125,17 +126,48 @@ def beacon_signal():
     return obejct
 
 
+def classify_time_series(data, window_size=5, threshold=0.01):
+    # Compute a rolling window mean with the specified window size
+    rolling_mean = data.rolling(window=window_size).mean()
 
+    # Calculate the difference between the original data and the rolling mean
+    diff = data - rolling_mean
 
+    # Classify the data points based on the threshold
+    result = []
+    for d in diff:
+        if d > threshold:
+            result.append("increase")
+        elif d < -threshold:
+            result.append("decrease")
+        else:
+            result.append("constant")
+
+    return result
 def beacon_prediction():
     dao: DAO_Universal = current_app.config.get('DAO')
-    ###### 수정 필요(미완성) ########
     beacon_id = request.args.get('id')
     dao.select_prediction(beacon_id)
-    obejct = {
-        'prediction_id' : None
+
+    result = {
+        'probabilities': [],
+        'anomaly_pattern': '데이터 부족...'
     }
-    return jsonify(obejct)
+
+    for prediction in dao.select_prediction(beacon_id=beacon_id, type='simple_probability'):
+        result['probabilities'].append(int(prediction.content))
+
+    if len(result['probabilities']) != 0:
+        pattern = classify_time_series(pd.Series(result['probabilities']), 3, 4)
+        if len(pattern) > 3:
+            if pattern[-4:].count('increase') == 2:
+                result['anomaly_pattern'] = '확률 증가 추세'
+            elif pattern[-4:].count('decrease') == 2:
+                result['anomaly_pattern'] = '확률 감소 추세'
+            else:
+                result['anomaly_pattern'] = '상태 유지'
+
+    return jsonify(result)
 
 
 def beacon_prediction_latest():
@@ -167,7 +199,10 @@ def beacon_prediction_range():
     if body['start'] is None:
         return 'Need Start Datetime Specified', 400
     
-    start_time = datetime.datetime.strptime(body['start'], datetime_format)
+    if body['start'] is not None:
+        start_time = datetime.datetime.strptime(body['start'], datetime_format)
+    else:
+        start_time = None
     if body['end'] is not None:
         end_time = datetime.datetime.strptime(body['end'], datetime_format)
     else:

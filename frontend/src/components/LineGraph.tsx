@@ -1,3 +1,4 @@
+import { useState, useEffect,useRef } from "react";
 import {MyComponentProp} from './utils/UtilType'
 import ClassNames from './utils/ClassNames'
 import { Line } from 'react-chartjs-2'
@@ -24,39 +25,47 @@ ChartJS.register(
 
 interface Prop extends MyComponentProp {
     height: string,
+    labels: string[],
+    data: number[]
 }
 
-function LineGraph({height, className, children}: Prop) {
-    let classes = new ClassNames(className)
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    let data = {
-        labels,
+function LineGraph({height, labels, data, className}: Prop) {
+    console.log(labels)
+    let graphData = {
+        labels: labels,
         datasets: [
             {
-                label: 'Dataset 1',
-                data: [10, 20, 100, 50, 30, 110, 120, 150, 100, 50, 0, 200],
+                label: '고장 확률',
+                data: data,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
         ],
-    };
+    }
+    
     let options = {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+            y: {
+                suggestedMin: 0,
+                suggestedMax: 100
+            }
+        },
         plugins: {
             legend: {
                 position: 'bottom' as const,
             },
             title: {
                 display: true,
-                text: 'Chart.js Line Chart',
+                text: '고장 확률 그래프',
             },
         },
     };
     return (
         <div className={className?.toString()} style={{height: height, width: '100%'}}>
             <Line
-                data={data}
+                data={graphData}
                 options={options}
             />
         </div>

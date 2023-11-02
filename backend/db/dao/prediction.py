@@ -9,18 +9,18 @@ class DAO_Prediction:
         prediction_list = []
 
         if start is None:
-            query = 'SELECT * FROM `PREDICTION_LOGS` WHERE `prediction_id` = %s ORDER BY `prediction_time` DESC'
+            query = 'SELECT date_format(prediction_time, "%%Y-%%m-%%d %%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM `PREDICTION_LOGS` WHERE `beacon_id` = %s ORDER BY `prediction_time`'
 
             for aPrediction in self.db.efa(query, (beacon_id)):
                 prediction_list.append(Prediction(aPrediction))
         else:
             if end is not None:
-                query = 'SELECT date_format(prediction_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND (prediction_time BETWEEN %s AND %s) AND prediction_type = %s ORDER BY prediction_time'
+                query = 'SELECT date_format(prediction_time, "%%Y-%%m-%%d %%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND (prediction_time BETWEEN %s AND %s) AND prediction_type = %s ORDER BY prediction_time'
                 print(query)
                 for aPrediction in self.db.efa(query, (beacon_id, start, end, type)):
                     prediction_list.append(Prediction(aPrediction))
             else:
-                query = 'SELECT date_format(prediction_time, "%%Y-%%m-%%dT%%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND prediction_time >= %s AND prediction_type = %s ORDER BY prediction_time'
+                query = 'SELECT date_format(prediction_time, "%%Y-%%m-%%d %%H:%%i:%%S") as prediction_time, prediction_type, prediction_content FROM prediction_logs WHERE beacon_id = %s AND prediction_time >= %s AND prediction_type = %s ORDER BY prediction_time'
                 print(query)
                 for aPrediction in self.db.efa(query, (beacon_id, start, type)):
                     prediction_list.append(Prediction(aPrediction))

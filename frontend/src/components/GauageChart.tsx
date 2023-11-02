@@ -31,9 +31,6 @@ function GauageChart({ threshold, labels, colors, value, height='70%', className
         sectionSize.push(threshold[i] - threshold[i-1])
     }
 
-    console.log(value)
-
-
     let sectionColor:string[] = []
     for (let i = 0; i < colors.length; i++) {
         switch (colors[i]) {
@@ -48,8 +45,6 @@ function GauageChart({ threshold, labels, colors, value, height='70%', className
                 break;
         }
     }
-
-    useEffect
 
     let currentColor = WHITE_COLOR
     for (let i = 1; i < threshold.length; i++) {
@@ -92,12 +87,13 @@ function GauageChart({ threshold, labels, colors, value, height='70%', className
             },
         },
         cutout: '70%',
-        aspectRatio: 1.8
+        aspectRatio: 1.8,
+        sectionColor: sectionColor
     }
     let plugins:Plugin<"doughnut", object>[] = [
         {
             id: 'needle',
-            afterDatasetDraw(chart) {
+            afterDatasetDraw: function(chart) {
                 const {ctx, data} = chart
                 const value = data.datasets[0].data[0] as number
                 const maxValue = (data.datasets[0].data[0]  as number) + (data.datasets[0].data[1] as number)
@@ -110,7 +106,6 @@ function GauageChart({ threshold, labels, colors, value, height='70%', className
                 const yCenter = chart.getDatasetMeta(0).data[0].y
 
                 const length = xCenter * 0.7
-                const radius = 5
 
                 for (let i = 1; i < threshold.length; i++) {
                     const startAngle = (threshold[i-1] / maxValue + 1) * Math.PI
