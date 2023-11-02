@@ -67,10 +67,12 @@ function DetailPage() {
         inspectionInfo: [],
     })
     const [signalModel, setSignalModel] = useState<SignalModel>({});
-    const [prob, setProb] = useState<number>(0)
+    const [currentProb, setCurrentProb] = useState<number>(-1);
+    const [probs, setProbs] = useState<number[]>([]);
+    const [anomalyPattern, setAnomalyPattern] = useState<string>('알 수 없음');
+    const [thresholds, _] = useState<number[]>([0, 30, 60, 100]);
 
     function fetchBeaconInfo(beaconID: string) {
-        setProb(30);
         fetch(Route.API_BASE_URL+'/beacon/detailInfo?id='+beaconID, {
             method: 'GET',
         })
@@ -95,7 +97,6 @@ function DetailPage() {
         })
     }
     function fetchPredictionInfo(beaconID: string) {
-        setProb(30);
         setTimeout(() => {
             setAlert(true);
         }, 6000);
@@ -106,8 +107,12 @@ function DetailPage() {
             return result.json();
         })
         .then(result => {
-            // setDetailModel(result)
-            console.log(result)
+            console.log('prediction:', result)
+            if(result.probabilities.length > 0) {
+                setProbs(result.probabilities)
+                setCurrentProb(result.probabilities.slice(-1)[0])
+                setAnomalyPattern(result.anomaly_pattern)
+            }
         })
     }
 
@@ -126,13 +131,24 @@ function DetailPage() {
         fetchPredictionInfo(receivedObject['id']);
     }, []);
 
-    useInterval(() => {
-        if(alert && backgroundColor == 'bg-slate-50') {
-            setBackgroundColor('bg-red-400')
-        } else {
-            setBackgroundColor('bg-slate-50')
-        }
-    }, 1000);
+    // useInterval(() => {
+    //     if(alert && backgroundColor == 'bg-slate-50') {
+    //         setBackgroundColor('bg-red-400')
+    //     } else {
+    //         setBackgroundColor('bg-slate-50')
+    //     }
+    // }, 1000);
+
+    let currentAnomalyType = null;
+    if(currentProb < thresholds[0]) {
+        currentAnomalyType = '알 수 없음';
+    } else if(currentProb < thresholds[1]) {
+        currentAnomalyType = '이상 없음';
+    } else if(currentProb < thresholds[2]) {
+        currentAnomalyType = '고장 의심';
+    } else if(currentProb < thresholds[3]) {
+        currentAnomalyType = '고장 확실';
+    }
 
     return (
         <div className='h-screen flex flex-col'>
@@ -147,13 +163,13 @@ function DetailPage() {
             </Header>
             <Body className={'px-10 py-6 flex flex-col items-center ' + backgroundColor}>
                 <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>분석 정보</Heading>
-                <GridBox cols={3} className='gap-5 w-full'>
+                <GridBox cols={2} className='gap-5 w-full'>
                     <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 확률</h2>
-                        <GauageChart threshold={[0, 50, 66, 100]} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={prob} height='170px' className='mx-auto'/>
-                        <p className='text-2xl font-bold text-center'>고장 의심</p>
+                        <GauageChart threshold={thresholds} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={currentProb} height='170px' className='mx-auto'/>
+                        <p className='text-2xl font-bold text-center'>{currentAnomalyType}</p>
                     </GridItem>
-                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                    {/* <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
                         <ScrollableRecordTable
                             className='mt-3'
@@ -161,14 +177,14 @@ function DetailPage() {
                             records={[{순위: '1', 장비: '등명기'}, {순위: '2', 장비: '축전기'}, {순위: '3', 장비: '태양열판'}, {순위: '4', 장비: '전원'}, {순위: '5', 장비: '임의의 장비'}]}
                             maxHeight='14rem'
                         />
-                    </GridItem>
+                    </GridItem> */}
                     <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 유형</h2>
-                        <TextInfoBox className='my-auto'>꾸준한 이상치 증가</TextInfoBox>
+                        <TextInfoBox className='my-auto'>{anomalyPattern}</TextInfoBox>
                     </GridItem>
                     <GridItem colSpan={3} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 확률 추세선</h2>
-                        <LineGraph height='300px' className='w-full'></LineGraph>
+                        <LineGraph height='300px' labels={probs.map((_, i) => i.toString())} data={probs} className='w-full'></LineGraph>
                     </GridItem>
                 </GridBox>
 

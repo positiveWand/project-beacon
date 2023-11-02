@@ -38,7 +38,7 @@ class DBConnection():
         self.initPool()
 
     def initPool(self):
-        self.connPool = Pool(host=self.host, port=self.port, user=self.user, password=self.password, db=self.database, charset='utf8', max_size=10)
+        self.connPool = Pool(host=self.host, port=self.port, user=self.user, password=self.password, db=self.database, interval=100, charset='utf8', max_size=10)
         self.connPool.init()
     
     def destoryPool(self):
@@ -52,6 +52,7 @@ class DBConnection():
             cursor.execute(sql, data)
             aRow = cursor.fetchone()
             cursor.close()
+            conn.commit()
             self.connPool.release(conn)
             return aRow # None 일수도...
         except Exception as e:
@@ -70,6 +71,7 @@ class DBConnection():
             cursor.execute(sql, data)
             rows = cursor.fetchall()
             cursor.close()
+            conn.commit()
             self.connPool.release(conn)
             return rows
         except Exception as e:

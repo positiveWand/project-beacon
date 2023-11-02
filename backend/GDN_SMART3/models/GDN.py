@@ -8,6 +8,10 @@ import torch.nn.functional as F
 from .graph_layer import GraphLayer
 
 
+
+
+
+
 def get_batch_edge_index(org_edge_index, batch_num, node_num):
     # org_edge_index:(2, edge_num)
     edge_index = org_edge_index.clone().detach()
@@ -65,12 +69,14 @@ class GNNLayer(nn.Module):
         self.leaky_relu = nn.LeakyReLU()
 
     def forward(self, x, edge_index, embedding=None, node_num=0):
-
+        print("gnnlayer-input:", x.shape)
+        print(edge_index.shape)
         out, (new_edge_index, att_weight) = self.gnn(x, edge_index, embedding, return_attention_weights=True)
         self.att_weight_1 = att_weight
         self.edge_index_1 = new_edge_index
   
         out = self.bn(out)
+        print("gnnlayer-output:", out.shape)
         
         return self.relu(out)
 
@@ -128,6 +134,7 @@ class GDN(nn.Module):
 
         gcn_outs = []
         for i, edge_index in enumerate(edge_index_sets):
+            print(edge_index)
             edge_num = edge_index.shape[1]
             cache_edge_index = self.cache_edge_index_sets[i]
 
@@ -159,13 +166,16 @@ class GDN(nn.Module):
             gated_j = topk_indices_ji.flatten().unsqueeze(0)
             gated_edge_index = torch.cat((gated_j, gated_i), dim=0)
 
+            print('gated_edge_index', gated_edge_index.shape)
+
             batch_gated_edge_index = get_batch_edge_index(gated_edge_index, batch_num, node_num).to(device)
             gcn_out = self.gnn_layers[i](x, batch_gated_edge_index, node_num=node_num*batch_num, embedding=all_embeddings)
 
             
             gcn_outs.append(gcn_out)
-
+        print('len', len(gcn_outs))
         x = torch.cat(gcn_outs, dim=1)
+        print('xshape', x.shape)
         x = x.view(batch_num, node_num, -1)
 
         indexes = torch.arange(0,node_num).to(device)

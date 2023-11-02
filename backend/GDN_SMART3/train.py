@@ -1,12 +1,8 @@
-from torch.utils.tensorboard import SummaryWriter
 import numpy as np
-import time
-from util.env import get_device
-import torch
+import torch.nn
+import math
 from test import *
 import torch.nn.functional as F
-import tensorflow as tf
-import tensorboard as tb
 
 
 
@@ -16,10 +12,10 @@ def loss_func(y_pred, y_true):
 
     return loss
 
-def anomaly_score(node_embedding, c):
+def anomaly_score(c, node_embedding):
     # anomaly score of an instance is calculated by
     # square Euclidean distance between the node embedding and the center c
-    return torch.sum((node_embedding - c) ** 2)
+    return (torch.mean(c) - max(node_embedding)) ** 2
 
 
 def nor_loss(node_embedding_list, c):
@@ -28,9 +24,15 @@ def nor_loss(node_embedding_list, c):
     s = 0
     num_node = node_embedding_list.size()[0]
     for i in range(num_node):
-        s = s + anomaly_score(node_embedding_list[i], c)
+        s = s + anomaly_score(c, node_embedding_list[i])
 
-    score = 100 * (1 - (s/num_node)) # 여기 수정
+    avg_dist = s/num_node
+    center = torch.mean(c)
+    score = torch.abs(center - avg_dist) * 100
+
+    if score >= 100:
+        score = 99
+
     return score
 
 def AUC_loss(anomaly_node_emb, normal_node_emb, c):
@@ -49,8 +51,6 @@ def AUC_loss(anomaly_node_emb, normal_node_emb, c):
 
 
 def train(model = None, save_path = '', config={},  train_dataloader=None, val_dataloader=None, feature_map={}, dataset_name='smart', train_dataset=None):
-    tf.io.gfile = tb.compat.tensorflow_stub.io.gfile
-    writer = SummaryWriter('runs')
     seed = config['seed']
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=config['decay'])
@@ -63,28 +63,11 @@ def train(model = None, save_path = '', config={},  train_dataloader=None, val_d
     out_list2 = []
 
     device = get_device()
-
-
-    acu_loss = 0
-    min_loss = 1e+8
-    min_f1 = 0
-    min_pre = 0
-    best_prec = 0
-
-    i = 0
     epoch = config['epoch']
-    early_stop_win = 15
-
     model.train()
-
-    log_interval = 1000
-    stop_improve_count = 0
-
     dataloader = train_dataloader
 
     for i_epoch in range(epoch):
-
-        acu_loss = 0
         model.train()
 
         for x, labels, attack_labels, edge_index in dataloader:
@@ -92,10 +75,10 @@ def train(model = None, save_path = '', config={},  train_dataloader=None, val_d
 
             x, labels, edge_index = [item.float().to(device) for item in [x, labels, edge_index]]
 
+            optimizer.zero_grad()
             out = model(x, edge_index).float().to(device)
+            optimizer.step()
 
-
-            #out = torch.tensor(out)
             out = out.cpu()
             out = out.view(-1)
 
@@ -104,34 +87,14 @@ def train(model = None, save_path = '', config={},  train_dataloader=None, val_d
             else:
                 out_list2.append(out)
 
-            i += 1
-
-
-    #out_tensor = torch.stack(out_list)
     out_tensor2 = torch.stack(out_list2)
-    print(out_tensor2)
-    print(out_tensor2.shape)
 
-    # pretrained
-    #out_tensor2 = out_tensor2.detach().numpy()
-    #np.save("C:/Users/H/PycharmProjects/smart_ais_new/GDN_SMART3/data/smart/pretrained", out_tensor2)
-
-    #writer.add_embedding(out_tensor)
-    #writer.add_embedding(out_tensor2, global_step=None)
-    #writer.close()
-
-    pretrained = np.load("./data/smart/pretrained.npy")
-    print(pretrained)
-    print(pretrained.dtype)
-    print(pretrained.shape)
-    pretrained = pretrained.tobytes()
-    # print(pretrained)
-    pretrained = np.frombuffer(pretrained, dtype=np.float32)
-    print(pretrained)
-    print(pretrained.shape)
-    pretrained = np.copy(pretrained.reshape(34222,48)) # 텐서 크기는 마지막 차원=48(=칼럼 개수)이면 됨
-    pretrained = torch.Tensor(pretrained)
-    print(pretrained)
+    if config['train_mode'] == 'pretrain':
+        pretrained = np.load("./data/smart/pretrained.npy")
+        pretrained = torch.Tensor(pretrained)
+    else:
+        torch.save(model.state_dict(), 'checkpoints/pretrained_model.pkl')
+        np.save('C:/Users/H/PycharmProjects/smart_ais_new/GDN_SMART3/data/smart', out_tensor2)
 
     c = torch.mean(pretrained, 0)
 
@@ -139,8 +102,5 @@ def train(model = None, save_path = '', config={},  train_dataloader=None, val_d
     #score = AUC_loss(out_tensor2, pretrained, c) # (new, pretrained, center)
     score = float(score)
     print("Anomaly Score: ", score)
-
-
-    # 여기 PCA, tsne plot 찍어보기
 
     return score
