@@ -65,8 +65,8 @@ class Predict:
                         topk=4
                     ).to(self.device)
         
-        PATH = pathlib.Path(__file__).parent.resolve()
-        model_save_path = f'{PATH}\\pretrained\\test\\pretrained.pt'
+        PATH = pathlib.Path(__file__).parent.joinpath('pretrained', 'test', 'pretrained.pt').resolve()
+        model_save_path = PATH
         self.model.load_state_dict(torch.load(model_save_path))
         self.model = self.model.to(self.device)
 
@@ -107,27 +107,6 @@ class Predict:
         anomaly_score = np.abs(np.subtract(ground_truth, prediction)).mean(0).sum()
 
         return anomaly_score, self.anomaly_probability(anomaly_score)
-
-
-    def get_save_path(self, feature_name=''):
-
-        dir_path = self.env_config['save_path']
-        
-        if self.datestr is None:
-            now = datetime.now()
-            self.datestr = now.strftime('%mT%d-%H-M-%S')
-        datestr = self.datestr          
-        PATH = os.getcwd()
-        paths = [
-            f'{PATH}\\pretrained\\{dir_path}\\best_{datestr}.pt',
-            f'{PATH}\\results\\{dir_path}\\{datestr}.csv',
-        ]
-
-        for path in paths:
-            dirname = os.path.dirname(path)
-            Path(dirname).mkdir(parents=True, exist_ok=True)
-
-        return paths
 
 # input = pd.read_csv('./data/smart/anomaly3.csv')
 
