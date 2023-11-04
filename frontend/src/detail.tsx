@@ -34,7 +34,7 @@ function useInterval(callback, delay) {
   
     useEffect(() => {
         function tick() {
-            savedCallback.current(); // tick이 실행되면 callback 함수를 실행시킨다.
+            savedCallback.current(alert); // tick이 실행되면 callback 함수를 실행시킨다.
         }
         if (delay !== null) { // 만약 delay가 null이 아니라면 
             let id = setInterval(tick, delay); // delay에 맞추어 interval을 새로 실행시킨다.
@@ -97,9 +97,6 @@ function DetailPage() {
         })
     }
     function fetchPredictionInfo(beaconID: string) {
-        setTimeout(() => {
-            setAlert(true);
-        }, 6000);
         fetch(Route.API_BASE_URL+'/beacon/predictionInfo?id='+beaconID, {
             method: 'GET',
         })
@@ -111,6 +108,10 @@ function DetailPage() {
             if(result.probabilities.length > 0) {
                 setProbs(result.probabilities)
                 setCurrentProb(result.probabilities.slice(-1)[0])
+                console.log('currentProb', result.probabilities.slice(-1)[0])
+                if(result.probabilities.slice(-1)[0] >= thresholds[2]) {
+                    setAlert(true);
+                }
                 setAnomalyPattern(result.anomaly_pattern)
             }
         })
@@ -131,22 +132,22 @@ function DetailPage() {
         fetchPredictionInfo(receivedObject['id']);
     }, []);
 
-    // useInterval(() => {
-    //     if(alert && backgroundColor == 'bg-slate-50') {
-    //         setBackgroundColor('bg-red-400')
-    //     } else {
-    //         setBackgroundColor('bg-slate-50')
-    //     }
-    // }, 1000);
+    useInterval(() => {
+        if(alert && backgroundColor == 'bg-slate-50') {
+            setBackgroundColor('bg-red-400')
+        } else {
+            setBackgroundColor('bg-slate-50')
+        }
+    }, 1000);
 
     let currentAnomalyType = null;
     if(currentProb < thresholds[0]) {
         currentAnomalyType = '알 수 없음';
-    } else if(currentProb < thresholds[1]) {
+    } else if(currentProb <= thresholds[1]) {
         currentAnomalyType = '이상 없음';
-    } else if(currentProb < thresholds[2]) {
+    } else if(currentProb <= thresholds[2]) {
         currentAnomalyType = '고장 의심';
-    } else if(currentProb < thresholds[3]) {
+    } else if(currentProb <= thresholds[3]) {
         currentAnomalyType = '고장 확실';
     }
 

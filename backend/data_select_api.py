@@ -158,11 +158,11 @@ def beacon_prediction():
         result['probabilities'].append(int(prediction.content))
 
     if len(result['probabilities']) != 0:
-        pattern = classify_time_series(pd.Series(result['probabilities']), 3, 4)
+        pattern = classify_time_series(pd.Series(result['probabilities']), 2, 3)
         if len(pattern) > 3:
-            if pattern[-4:].count('increase') == 2:
+            if pattern[-4:].count('increase') >= 2:
                 result['anomaly_pattern'] = '확률 증가 추세'
-            elif pattern[-4:].count('decrease') == 2:
+            elif pattern[-4:].count('decrease') >= 2:
                 result['anomaly_pattern'] = '확률 감소 추세'
             else:
                 result['anomaly_pattern'] = '상태 유지'
