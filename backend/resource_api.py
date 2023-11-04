@@ -30,6 +30,9 @@ def page_upload_insert():
 def page_upload_update():
     return send_file('./upload/update.html', mimetype='text/html')
 
+def page_upload_simulation():
+    return send_file('./upload/simulation.html', mimetype='text/html')
+
 def resource_from_dist(filename):
     print("resource", filename)
     return send_from_directory("../frontend/dist", filename)

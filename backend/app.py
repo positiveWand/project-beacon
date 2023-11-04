@@ -12,6 +12,8 @@ from user_api import *
 from data_select_api import *
 from data_insert_api import *
 from data_update_api import *
+from simulation_api import *
+from model.predict import Predict
 
 app = Flask(__name__, template_folder="../frontend/dist")
 app.secret_key = "Beaconzzang!"
@@ -34,6 +36,8 @@ dao = DAO_Universal(conn = db)
 
 app.config["DAO"] = dao
 
+app.config['PREDICTION_MODEL'] = Predict()
+
 app.add_url_rule('/', view_func=index, methods=['GET'])
 app.add_url_rule('/main', view_func=page_main, methods=['GET'])
 app.add_url_rule('/login', view_func=page_login, methods=['GET'])
@@ -42,6 +46,7 @@ app.add_url_rule('/search', view_func=page_search, methods=['GET'])
 app.add_url_rule('/detail', view_func=page_detail, methods=['GET'])
 app.add_url_rule('/upload/insert', view_func=page_upload_insert, methods=['GET'])
 app.add_url_rule('/upload/update', view_func=page_upload_update, methods=['GET'])
+app.add_url_rule('/simulation/insert', view_func=page_upload_simulation, methods=['GET'])
 app.add_url_rule('/<path:filename>', view_func=resource_from_dist, methods=['GET'])
 app.add_url_rule('/assets/<path:filename>', view_func=resource_from_assets, methods=['GET'])
 
@@ -71,6 +76,9 @@ app.add_url_rule('/inspection/new', view_func=inspection_insert, methods=['POST'
 
 app.add_url_rule('/beacon/updateImage', view_func=beacon_image_update, methods=['POST'])
 app.add_url_rule('/beacon/updateEmbedding', view_func=beacon_embedding_update, methods=['POST'])
+
+app.add_url_rule('/simulation/proabability', view_func=insert_anomaly_probability, methods=['GET'])
+app.add_url_rule('/simulation/prediction', view_func=insert_anomaly_prediction, methods=['GET'])
 
 if __name__ == "__main__":
     app.run()

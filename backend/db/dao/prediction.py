@@ -29,9 +29,25 @@ class DAO_Prediction:
 
     def select_prediction_latest(self, beacon_id: str) -> list[Prediction]:
         prediction_list = []
-        query = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE `prediction_id` IN (SELECT MAX(prediction_id) FROM `prediction_logs` GROUP BY beacon_id) and beacon_id = %s'
+        query = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE `prediction_id` IN (SELECT CAST(MAX(CAST(prediction_id as UNSIGNED)) as NCHAR) FROM `prediction_logs` GROUP BY beacon_id) and beacon_id = %s'
 
         for aPrediction in self.db.efa(query, (beacon_id)):
             prediction_list.append(Prediction(aPrediction))
 
         return prediction_list
+    
+    def select_max_prediction_id(self) -> str:
+        query = 'SELECT MAX(CAST(PREDICTION_ID as SIGNED)) as max FROM `PREDICTION_LOGS`'
+
+        result = self.db.efo(query)
+
+        return result['max']
+    
+    def insert_prediction(self, prediction_id: str, beacon_id: str, type: str, predict_time: datetime.datetime, content: str):
+        query = 'INSERT `PREDICTION_LOGS` (PREDICTION_ID, PREDICTION_TYPE, BEACON_ID, PREDICTION_TIME, PREDICTION_CONTENT) VALUES(%s, %s, %s, %s, %s)'
+
+        try:
+            self.db.ec(query, (prediction_id, type, beacon_id, predict_time, content))
+            return True
+        except:
+            return False
