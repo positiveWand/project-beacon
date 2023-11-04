@@ -67,7 +67,7 @@ class Predict:
         
         PATH = pathlib.Path(__file__).parent.joinpath('pretrained', 'test', 'pretrained.pt').resolve()
         model_save_path = PATH
-        self.model.load_state_dict(torch.load(model_save_path))
+        self.model.load_state_dict(torch.load(model_save_path, map_location=torch.device('cpu')))
         self.model = self.model.to(self.device)
 
 
