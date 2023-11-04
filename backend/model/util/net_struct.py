@@ -1,8 +1,8 @@
 import pathlib
 
 def get_feature_map(dataset):
-    PATH = pathlib.Path(__file__).parent.parent.resolve()
-    feature_file = open(f'{PATH}\\data\\{dataset}\\list.txt', 'r')
+    PATH = pathlib.Path(__file__).parent.parent.joinpath('data', dataset, 'list.txt').resolve()
+    feature_file = open(PATH, 'r')
     feature_list = []
     for ft in feature_file:
         feature_list.append(ft.strip())
@@ -10,8 +10,8 @@ def get_feature_map(dataset):
     return feature_list
 # graph is 'fully-connect'
 def get_fc_graph_struc(dataset):
-    PATH = pathlib.Path(__file__).parent.parent.resolve()
-    feature_file = open(f'{PATH}\\data\\{dataset}\\list.txt', 'r')
+    PATH = pathlib.Path(__file__).parent.parent.joinpath('data', dataset, 'list.txt').resolve()
+    feature_file = open(PATH, 'r')
 
     struc_map = {}
     feature_list = []
