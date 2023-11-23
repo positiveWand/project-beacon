@@ -9,7 +9,7 @@ interface Prop extends MyComponentProp {
 function UserInfo({name, children}: Prop) {
     let handleClick = () => {
         useWaitCursor();
-        fetch('http://127.0.0.1:5000/logout/request', {
+        fetch(Route.LOGOUT_PAGE_URL+'/request', {
             credentials: "include",
         })
         .then(result => {
