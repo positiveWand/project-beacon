@@ -164,13 +164,13 @@ function DetailPage() {
             </Header>
             <Body className={'px-10 py-6 flex flex-col items-center ' + backgroundColor}>
                 <Heading level={1} className='bg-blue-500 text-white mr-auto my-4'>분석 정보</Heading>
-                <GridBox cols={2} className='gap-5 w-full'>
+                <GridBox cols={3} className='gap-5 w-full'>
                     <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 확률</h2>
                         <GauageChart threshold={thresholds} labels={['낮음', '중간', '높음']} colors={['green', 'yellow', 'red']} value={currentProb} height='170px' className='mx-auto'/>
                         <p className='text-2xl font-bold text-center'>{currentAnomalyType}</p>
                     </GridItem>
-                    {/* <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
+                    <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
                         <ScrollableRecordTable
                             className='mt-3'
@@ -178,7 +178,7 @@ function DetailPage() {
                             records={[{순위: '1', 장비: '등명기'}, {순위: '2', 장비: '축전기'}, {순위: '3', 장비: '태양열판'}, {순위: '4', 장비: '전원'}, {순위: '5', 장비: '임의의 장비'}]}
                             maxHeight='14rem'
                         />
-                    </GridItem> */}
+                    </GridItem>
                     <GridItem colSpan={1} className='flex flex-col rounded-md shadow-md p-3 bg-slate-100 border'>
                         <h2 className='text-center text-3xl font-bold'>고장 유형</h2>
                         <TextInfoBox className='my-auto'>{anomalyPattern}</TextInfoBox>
