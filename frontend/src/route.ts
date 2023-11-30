@@ -3,6 +3,7 @@
 // export const DETAIL_PAGE_URL = '/route/detail/'
 // export const SIGNUP_PAGE_URL = '/route/signup/'
 // export const LOGIN_PAGE_URL = '/route/login/'
+// export const LOGOUT_PAGE_URL = '/route/logout'
 // export const API_BASE_URL = 'http://127.0.0.1:5000'
 
 export const MAIN_PAGE_URL = '/main'
