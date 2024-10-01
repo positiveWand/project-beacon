@@ -1,0 +1,331 @@
+{
+    "storagebattery": [
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE333",
+            "installDate": "2023-08-03",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE332",
+            "installDate": "2022-04-24",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE331",
+            "installDate": "2023-04-29",
+            "uninstallDate": "2023-08-03",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE330",
+            "installDate": "2022-03-19",
+            "uninstallDate": "2023-04-29",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE329",
+            "installDate": "2022-01-30",
+            "uninstallDate": "2022-03-19",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE328",
+            "installDate": "2021-11-22",
+            "uninstallDate": "2022-01-30",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE327",
+            "installDate": "2021-02-28",
+            "uninstallDate": "2021-11-22",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE326",
+            "installDate": "2020-10-20",
+            "uninstallDate": "2021-02-28",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE325",
+            "installDate": "2019-12-25",
+            "uninstallDate": "2020-10-20",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE324",
+            "installDate": "2018-08-20",
+            "uninstallDate": "2019-12-25",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE323",
+            "installDate": "2017-09-18",
+            "uninstallDate": "2018-08-20",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE322",
+            "installDate": "2016-06-06",
+            "uninstallDate": "2017-09-18",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE321",
+            "installDate": "2015-04-01",
+            "uninstallDate": "2016-06-06",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE320",
+            "installDate": "2014-01-01",
+            "uninstallDate": "2015-04-01",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE319",
+            "installDate": "2013-03-01",
+            "uninstallDate": "2014-01-01",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE318",
+            "installDate": "2012-10-04",
+            "uninstallDate": "2013-03-01",
+            "type": "storagebattery"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2014SCE317",
+            "installDate": "2010-02-03",
+            "uninstallDate": "2012-10-04",
+            "type": "storagebattery"
+        }
+    ],
+    "ais": [
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE333",
+            "installDate": "2023-08-03",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE332",
+            "installDate": "2022-04-24",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE331",
+            "installDate": "2023-04-29",
+            "uninstallDate": "2023-08-03",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE330",
+            "installDate": "2022-03-19",
+            "uninstallDate": "2023-04-29",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE329",
+            "installDate": "2022-01-30",
+            "uninstallDate": "2022-03-19",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE328",
+            "installDate": "2021-11-22",
+            "uninstallDate": "2022-01-30",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE327",
+            "installDate": "2021-02-28",
+            "uninstallDate": "2021-11-22",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE326",
+            "installDate": "2020-10-20",
+            "uninstallDate": "2021-02-28",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE325",
+            "installDate": "2019-12-25",
+            "uninstallDate": "2020-10-20",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE324",
+            "installDate": "2018-08-20",
+            "uninstallDate": "2019-12-25",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE323",
+            "installDate": "2017-09-18",
+            "uninstallDate": "2018-08-20",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE322",
+            "installDate": "2016-06-06",
+            "uninstallDate": "2017-09-18",
+            "type": "ais"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2013SCE321",
+            "installDate": "2015-04-01",
+            "uninstallDate": "2016-06-06",
+            "type": "ais"
+        }
+    ],
+    "racon": [
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE333",
+            "installDate": "2023-08-03",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE332",
+            "installDate": "2022-04-24",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE331",
+            "installDate": "2023-04-29",
+            "uninstallDate": "2023-08-03",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE330",
+            "installDate": "2022-03-19",
+            "uninstallDate": "2023-04-29",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE329",
+            "installDate": "2022-01-30",
+            "uninstallDate": "2022-03-19",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE328",
+            "installDate": "2021-11-22",
+            "uninstallDate": "2022-01-30",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE327",
+            "installDate": "2021-02-28",
+            "uninstallDate": "2021-11-22",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE326",
+            "installDate": "2020-10-20",
+            "uninstallDate": "2021-02-28",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE325",
+            "installDate": "2019-12-25",
+            "uninstallDate": "2020-10-20",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE324",
+            "installDate": "2018-08-20",
+            "uninstallDate": "2019-12-25",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE323",
+            "installDate": "2017-09-18",
+            "uninstallDate": "2018-08-20",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE322",
+            "installDate": "2016-06-06",
+            "uninstallDate": "2017-09-18",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE321",
+            "installDate": "2015-04-01",
+            "uninstallDate": "2016-06-06",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE320",
+            "installDate": "2014-01-01",
+            "uninstallDate": "2015-04-01",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE319",
+            "installDate": "2013-03-01",
+            "uninstallDate": "2014-01-01",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE318",
+            "installDate": "2012-10-04",
+            "uninstallDate": "2013-03-01",
+            "type": "racon"
+        },
+        {
+            "beacon_id": "2016LB069",
+            "feature_id": "2012SCE317",
+            "installDate": "2010-02-03",
+            "uninstallDate": "2012-10-04",
+            "type": "racon"
+        }
+    ]
+}
