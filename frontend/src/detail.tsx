@@ -69,6 +69,7 @@ function DetailPage() {
     const [signalModel, setSignalModel] = useState<SignalModel>({});
     const [currentProb, setCurrentProb] = useState<number>(-1);
     const [probs, setProbs] = useState<number[]>([]);
+    const [anomalyScores, setAnomalyScores] = useState<Record<string, string>[]>([]);
     const [anomalyPattern, setAnomalyPattern] = useState<string>('알 수 없음');
     const [thresholds, _] = useState<number[]>([0, 30, 60, 100]);
 
@@ -113,6 +114,26 @@ function DetailPage() {
                     setAlert(true);
                 }
                 setAnomalyPattern(result.anomaly_pattern)
+            }
+        })
+
+        fetch(Route.API_BASE_URL+'/beacon/predictionInfo/latest?id='+beaconID+'&type='+'anomaly_scores', {
+            method: 'GET',
+        })
+        .then(result => {
+            return result.json();
+        })
+        .then(result => {
+            if('anomaly_scores' in result) {
+
+                let anomalyScores = []
+                for (const feature of result['anomaly_scores']) {
+                    anomalyScores.push({'특징': feature, '이상 점수': result['anomaly_scores'][feature]})
+                }
+
+                anomalyScores.sort((a, b) => b['이상 점수'] - a['이상 점수'])
+
+                setAnomalyScores(anomalyScores)
             }
         })
     }
@@ -174,8 +195,8 @@ function DetailPage() {
                         <h2 className='text-center text-3xl font-bold'>고장 원인</h2>
                         <ScrollableRecordTable
                             className='mt-3'
-                            columns={['순위', '장비']}
-                            records={[{순위: '1', 장비: '등명기'}, {순위: '2', 장비: '축전기'}, {순위: '3', 장비: '태양열판'}, {순위: '4', 장비: '전원'}, {순위: '5', 장비: '임의의 장비'}]}
+                            columns={['순위', '특징', '이상 점수']}
+                            records={anomalyScores.map((entry, index) => {return {'순위': index + 1, ...entry}})}
                             maxHeight='14rem'
                         />
                     </GridItem>
