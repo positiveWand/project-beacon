@@ -8,6 +8,42 @@
 <body>
     <h1>항로표지 예측 시뮬레이션</h1>
     <section>
+        <h2>항로표지 고장 예측</h2>
+        <form action="/simulation/prediction/one" id="simulationPredictionOneInsert" method="get">
+            <label for="beacon_id"><b>항로표지 코드:</b></label>
+            <select name="beacon_id" id="id" required>
+            </select>
+            <br><br>
+            <button type="submit" style="width: 300px; height: 50px;">강제 예측</button>
+        </form>
+    </section>
+    <section>
+        <h2>항로표지 센서 측정 데이터 삽입</h2>
+        <form action="/simulation/sensor" id="simulationSensorDataInsert" method="get">
+            <label for="beacon_id"><b>항로표지 코드:</b></label>
+            <select name="beacon_id" id="id" required>
+            </select>
+            <br><br>
+            <label for="type"><b>데이터 종류</b></label>
+            <select name="type" id="id" required>
+                <option value="normal">정상값</option>
+                <option value="anomaly1">이상값1: main-volt=50</option>
+                <option value="anomaly2">이상값2: main_volt=100</option>
+                <option value="anomaly3">이상값3: ais_curr_status=3</option>
+                <option value="anomaly4">이상값4: ais_curr_status=5</option>
+                <option value="anomaly5">이상값5: charger_curr=1</option>
+            </select>
+            <br><br>
+            <label for="count"><b>횟수</b></label>
+            <input type="number" id="count" name="count" min="0" max="100">
+            <br><br>
+            <label for="count"><b>미리 넣기(시간)</b></label>
+            <input type="number" id="delta" name="delta" min="0" max="100">
+            <br><br>
+            <button type="submit" style="width: 300px; height: 50px;">데이터 삽입</button>
+        </form>
+    </section>
+    <section>
         <h2>항로표지 이상 예측 삽입(임의 삽입)</h2>
         <form action="/simulation/probability" id="simulationProbabilityInsert" method="get">
             <label for="beacon_id"><b>항로표지 코드:</b></label>
@@ -22,7 +58,7 @@
     </section>
     <section>
         <h2>항로표지 데이터 삽입(예측 삽입)</h2>
-        <form action="/simulation/prediction" id="simulationPredictionInsert" method="get">
+        <form action="/simulation/prediction/dataset" id="simulationPredictionWithDatasetInsert" method="get">
             <label for="beacon_id"><b>항로표지 코드:</b></label>
             <select name="beacon_id" id="" required>
             </select>
@@ -50,7 +86,19 @@
                 newOption.setAttribute('value', aBeacon.id)
                 newOption.textContent = aBeacon.id
 
-                document.querySelector('#simulationPredictionInsert select').appendChild(newOption)
+                document.querySelector('#simulationPredictionWithDatasetInsert select').appendChild(newOption)
+
+                newOption = document.createElement('option')
+                newOption.setAttribute('value', aBeacon.id)
+                newOption.textContent = aBeacon.id
+
+                document.querySelector('#simulationSensorDataInsert #id').appendChild(newOption)
+
+                newOption = document.createElement('option')
+                newOption.setAttribute('value', aBeacon.id)
+                newOption.textContent = aBeacon.id
+
+                document.querySelector('#simulationPredictionOneInsert #id').appendChild(newOption)
             }
 
             console.log('got it')

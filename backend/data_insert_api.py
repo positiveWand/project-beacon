@@ -11,6 +11,7 @@ def beacon_insert():
     beacon_data = None
     image_data = None
     embedding_data = None
+    hyperparameter = request.form['hyperparam']
     
     if beacon_file.filename == '':
         return 'Need Beacon Data File!!'
@@ -28,7 +29,7 @@ def beacon_insert():
     geoNTen = round(geoNClock[0]+geoNClock[1]/60+geoNClock[2]/3600, 7)
     geoEClock = list(map(float, geoE.split()[1].split("-")))
     geoETen = round(geoEClock[0]+geoEClock[1]/60+geoEClock[2]/3600, 7)
-    information = json.loads(beacon_data["information"])
+    information = beacon_data["information"]
 
     if dao.insert_beacon(
         beacon_data['markCode'], beacon_data['markName'], beacon_data['markType'],
@@ -36,7 +37,7 @@ def beacon_insert():
         beacon_data["markGroupCode"], beacon_data["purposeCode"], beacon_data["officeCode"], beacon_data["installDate"],
         information["colour"], information["lightcolour"],
         information["lightCharacteristic"], information["signalPeriod"],
-        image_data, embedding_data
+        image_data, embedding_data, hyperparameter
     ):
         return 'true'
     
@@ -46,6 +47,7 @@ def feature_insert():
     dao: DAO_Universal = current_app.config.get('DAO')
     dateformat = '%Y-%m-%d'
     if request.content_type.startswith('multipart/form-data'):
+        request
         json_file = request.files['features']
         json_data = json.loads(json_file.stream.read())
 
@@ -53,17 +55,17 @@ def feature_insert():
             for aFeature in json_data[target_type]:
                 installDate = datetime.datetime.strptime(aFeature['installDate'], dateformat)
                 uninstallDate = None
-                if aFeature['uninstallDate'] != "":
+                if 'uninstallDate' in aFeature:
                     uninstallDate = datetime.datetime.strptime(aFeature['uninstallDate'], dateformat)
                 dao.insert_feature(
                     aFeature['feature_id'], aFeature['beacon_id'], aFeature['type'],
                     installDate, uninstallDate
                 )
     elif request.content_type.startswith('application/x-www-form-urlencoded'):
-        installDate = datetime.datetime.strptime(aFeature['installDate'], dateformat)
+        installDate = datetime.datetime.strptime(request.form['installDate'], dateformat)
         uninstallDate = None
-        if aFeature['uninstallDate'] != "":
-            uninstallDate = datetime.datetime.strptime(aFeature['uninstallDate'], dateformat)
+        if request.form['uninstallDate'] != "":
+            uninstallDate = datetime.datetime.strptime(request.form['uninstallDate'], dateformat)
         dao.insert_feature(
             request.form['feature_id'], request.form['beacon_id'], request.form['type'],
             installDate, uninstallDate

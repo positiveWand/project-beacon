@@ -34,7 +34,7 @@ def page_upload_simulation():
     return send_file('./upload/simulation.html', mimetype='text/html')
 
 def resource_from_dist(filename):
-    print("resource", filename)
+    # print("resource", filename)
     return send_from_directory("../frontend/dist", filename)
 
 def resource_from_assets(filename):

@@ -1,10 +1,10 @@
 from db.dbconnection import DBConnection
 from db.dao.dao import DAO_Universal
 
-# from batch.tasks import test_job, init_batch
+from batch.batch_task import predict_all_anomaly
 from flask import Flask
 from flask_cors import CORS
-# from flask_apscheduler import APScheduler
+from flask_apscheduler import APScheduler
 from datetime import timedelta
 
 from resource_api import *
@@ -21,22 +21,22 @@ app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10) # login time 10
 app.config["SCEDULER_API_ENABLED"] = True
 
 # CORS 허용
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+# CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 
 # 스케줄러 시작하기
-# scheduler = APScheduler()
-# init_batch()
-# scheduler.api_enabled = True
-# scheduler.init_app(app)
-# scheduler.start()
-# scheduler.add_job(id='test_job', func=test_job, trigger='interval', seconds=5)
+scheduler = APScheduler()
+scheduler.api_enabled = True
+scheduler.init_app(app)
+scheduler.start()
+scheduler.add_job(id='batch_anomaly_prediction', func=predict_all_anomaly, trigger='interval', minutes=2)
 
-db = DBConnection("azure-cnudb")
+# db = DBConnection("azure-cnudb")
+db = DBConnection("local-docker")
 dao = DAO_Universal(conn = db)
 
 app.config["DAO"] = dao
 
-app.config['PREDICTION_MODEL'] = Predict()
+# app.config['PREDICTION_MODEL'] = Predict()
 
 app.add_url_rule('/', view_func=index, methods=['GET'])
 app.add_url_rule('/main', view_func=page_main, methods=['GET'])
@@ -77,8 +77,11 @@ app.add_url_rule('/inspection/new', view_func=inspection_insert, methods=['POST'
 app.add_url_rule('/beacon/updateImage', view_func=beacon_image_update, methods=['POST'])
 app.add_url_rule('/beacon/updateEmbedding', view_func=beacon_embedding_update, methods=['POST'])
 
-app.add_url_rule('/simulation/proabability', view_func=insert_anomaly_probability, methods=['GET'])
-app.add_url_rule('/simulation/prediction', view_func=insert_anomaly_prediction, methods=['GET'])
+app.add_url_rule('/simulation/probability', view_func=insert_anomaly_probability, methods=['GET'])
+app.add_url_rule('/simulation/prediction/dataset', view_func=insert_anomaly_prediction, methods=['GET'])
+app.add_url_rule('/simulation/sensor', view_func=insert_sensor_data, methods=['GET'])
+
+app.add_url_rule('/simulation/prediction/one', view_func=insert_sensor_data, methods=['GET'])
 
 if __name__ == "__main__":
     app.run()

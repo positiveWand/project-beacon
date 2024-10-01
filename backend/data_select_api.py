@@ -33,9 +33,11 @@ def beacon_all():
     for aBeacon in dao.select_all_beacons():
         aPrediction = Prediction({}) # 항로표지의 최신 예측 정보
         for prediction in dao.select_prediction_latest(aBeacon.id):
-            if prediction.type == 'simple_probability':
+            if prediction.type == 'anomaly_probability':
                 aPrediction = prediction
 
+        # print(aPrediction.type)
+        # print(aPrediction.get_state())
         obejct = {
             'id': aBeacon.id,
             'name': aBeacon.name,
@@ -48,7 +50,7 @@ def beacon_all():
         }
 
         result.append(obejct)
-    print(result)
+    # print(result)
     return jsonify(result)
 
 
@@ -56,7 +58,6 @@ def beacon_image():
     dao: DAO_Universal = current_app.config.get('DAO')
     # 특정 항로표지 이미지 반환
     beacon_id = request.args.get('id')
-    print('beacon_image', type(beacon_id))
     aBeacon = dao.select_beacon(beacon_id)
 
     if aBeacon is not None:
@@ -70,7 +71,6 @@ def beacon_detail():
     dao: DAO_Universal = current_app.config.get('DAO')
     # 특정 항로표지 detail 반환
     beacon_id = request.args.get('id')
-    print('beacon_detail', beacon_id)
 
     aBeacon = dao.select_beacon(beacon_id) # 항로표지 정보
     beacon_dict = aBeacon.to_dict()
@@ -100,7 +100,7 @@ def beacon_detail():
             data["featureInfo"][feature.type].append(feature.to_dict())
     for inspection in inspections:
         data["inspectionInfo"].append(inspection.to_dict())
-    print(data)
+    # print(data)
     return jsonify(data)
 
 
@@ -154,7 +154,7 @@ def beacon_prediction():
         'anomaly_pattern': '데이터 부족...'
     }
 
-    for prediction in dao.select_prediction(beacon_id=beacon_id, type='simple_probability'):
+    for prediction in dao.select_prediction(beacon_id=beacon_id, type='anomaly_probability'):
         result['probabilities'].append(int(prediction.content))
 
     if len(result['probabilities']) != 0:
