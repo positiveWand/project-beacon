@@ -3,6 +3,7 @@ import datetime, io
 from db.dto.prediction import Prediction
 from db.dao.dao import DAO_Universal
 import pandas as pd
+import json
 
 
 def beacon():
@@ -173,17 +174,17 @@ def beacon_prediction():
 def beacon_prediction_latest():
     dao: DAO_Universal = current_app.config.get('DAO')
     beacon_id = request.args.get('id')
-    body = request.get_json()
+    anomaly_type = request.args.get('type')
 
-    if body['type'] is None or len(body['type']) == 0:
+    if anomaly_type is None:
         return 'Need Type Specified', 400
-    if body['start'] is None:
-        return 'Need Start Datetime Specified', 400
     
     result = dict()
-    for aPrediction in dao.select_prediction_latest(beacon_id):
-        if aPrediction.type in body['type']:
-            result[aPrediction.type] = aPrediction.content
+    aPrediction = dao.select_prediction_latest(beacon_id, anomaly_type)
+    if aPrediction.type == 'anomaly_scores':
+        result[aPrediction.type] = json.loads(aPrediction.content)
+    else:
+        result[aPrediction.type] = aPrediction.content
 
     return jsonify(result)
 

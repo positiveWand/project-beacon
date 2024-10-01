@@ -34,10 +34,9 @@ def predict_anomaly_score(beacon: Beacon, dao: DAO_Universal):
 
     # 각 feature별 anomaly score
     result = model.predict(feature_data, truth_data, median, iqr_range)
-    # Beacon의 anomaly score
-    anomaly_score = sum(result)
+    anomaly_scores = {feature: score for feature, score in zip(feature_list, result)}
 
-    return anomaly_score
+    return anomaly_scores
 
 def anomaly_probability(anomaly_score):
     k = 4.5

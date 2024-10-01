@@ -27,15 +27,13 @@ class DAO_Prediction:
 
         return prediction_list
 
-    def select_prediction_latest(self, beacon_id: str) -> list[Prediction]:
-        prediction_list = []
-        query = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE `prediction_id` IN (SELECT CAST(MAX(CAST(prediction_id as UNSIGNED)) as NCHAR) FROM `prediction_logs` GROUP BY beacon_id) and beacon_id = %s'
+    def select_prediction_latest(self, beacon_id: str, prediction_type: str) -> list[Prediction]:
+        prediction = []
+        query = 'SELECT `prediction_type`, `prediction_content` FROM `prediction_logs` WHERE beacon_id = %s AND prediction_type = %s ORDER BY `prediction_time` DESC LIMIT 1'
+        
+        aPrediction = self.db.efo(query, (beacon_id, prediction_type))
+        return Prediction(aPrediction)
 
-        for aPrediction in self.db.efa(query, (beacon_id)):
-            prediction_list.append(Prediction(aPrediction))
-
-        return prediction_list
-    
     def select_max_prediction_id(self) -> int:
         query = 'SELECT MAX(PREDICTION_ID) as max_id FROM `PREDICTION_LOGS`'
 
