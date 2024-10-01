@@ -56,6 +56,8 @@ class GraphLayer(MessagePassing):
             x = (x, x)
         else:
             x = (self.lin(x[0]), self.lin(x[1]))
+        
+        self.node_dim = 0
 
         edge_index, _ = remove_self_loops(edge_index)
         edge_index, _ = add_self_loops(edge_index,
@@ -64,10 +66,10 @@ class GraphLayer(MessagePassing):
         out = self.propagate(edge_index=edge_index, x=x, embedding=embedding, edges=edge_index,
                              return_attention_weights=return_attention_weights)
 
-        # if self.concat:
-        #     out = out.view(-1, self.heads * self.out_channels)
-        # else:
-        #     out = out.mean(dim=1)
+        if self.concat:
+            out = out.view(-1, self.heads * self.out_channels)
+        else:
+            out = out.mean(dim=1)
         out = out.view(-1, self.heads * self.out_channels)
 
         if self.bias is not None:
@@ -114,8 +116,8 @@ class GraphLayer(MessagePassing):
 
         alpha = F.dropout(alpha, p=self.dropout, training=self.training)
         
-        # return x_j * alpha.view(-1, self.heads, 1)
-        return (x_j * alpha.view(-1, self.heads, 1)).view(-1, self.heads * self.out_channels)
+        return x_j * alpha.view(-1, self.heads, 1)
+        # return (x_j * alpha.view(-1, self.heads, 1)).view(-1, self.heads * self.out_channels)
 
 
 
