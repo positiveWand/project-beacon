@@ -3,6 +3,7 @@ import datetime
 
 class SensorData(DataModel):
     dateformat = '%Y-%m-%d'
+    datetimeformat = '%Y-%m-%d %H:%M:%S'
     attr_map = {
         'sd_id': 'id',
         'beacon_id': 'beacon',
@@ -32,7 +33,7 @@ class SensorData(DataModel):
         'humidity_status': 'humidity_status',
         'dew_point_status': 'dew_point_status',
         'air_pressure_status': 'air_pressure_status',
-        'horizon_vibl_status': 'horizon_vibl_status',
+        'horizon_visibl_status': 'horizon_visibl_status',
         'water_level_status': 'water_level_status',
         'current1_status': 'current1_status',
         'current2_status': 'current2_status',
@@ -57,58 +58,58 @@ class SensorData(DataModel):
         'discharger_curr_status': 'discharger_curr_status'
     }
 
-    def __init__(self,
-                 id: str,
-                 beacon: str,
-                 regist_time: datetime.datetime,
-                 lantern_status: float,
-                 racon_status: float,
-                 battery_status: float,
-                 charger_status: float,
-                 solar_status: float,
-                 datalogger_status: float,
-                 spare_status: float,
-                 main_volt_status: float,
-                 sub_volt_status: float,
-                 solar_volt_status: float,
-                 wind_volt_status: float,
-                 wave_volt_status: float,
-                 charger_volt_status: float,
-                 battery_volt_status: float,
-                 spare_volt_status: float,
-                 ais_curr_status: float,
-                 lantern_curr_status: float,
-                 datalogger_curr_status: float,
-                 spare_curr_status: float,
-                 wind_speed_status: float,
-                 wind_direct_status: float,
-                 air_temper_status: float,
-                 humidity_status: float,
-                 dew_point_status: float,
-                 air_pressure_status: float,
-                 horizon_vibl_status: float,
-                 water_level_status: float,
-                 current1_status: float,
-                 current2_status: float,
-                 current3_status: float,
-                 wave_height_status: float,
-                 wave_drc_status: float,
-                 swell_height_status: float,
-                 swell_drc_status: float,
-                 water_temper_status: float,
-                 precipi_type_status: float,
-                 salinity_status: float,
-                 ice_status: float,
-                 heat_prostr_status: float,
-                 heliograph_status: float,
-                 oxygen_status: float,
-                 oxygen_satur_status: float,
-                 ph_status: float,
-                 chlorophyll_status: float,
-                 muddiness_status: float,
-                 precipi_status: float,
-                 charger_curr_status: float,
-                 discharger_curr_status: float):
+    def set_all_data(self,
+                 id: str = '',
+                 beacon: str = '',
+                 regist_time: datetime.datetime = datetime.datetime.now(),
+                 lantern_status: float = 0,
+                 racon_status: float = 0,
+                 battery_status: float = 0,
+                 charger_status: float = 0,
+                 solar_status: float = 0,
+                 datalogger_status: float = 0,
+                 spare_status: float = 0,
+                 main_volt_status: float = 0,
+                 sub_volt_status: float = 0,
+                 solar_volt_status: float = 0,
+                 wind_volt_status: float = 0,
+                 wave_volt_status: float = 0,
+                 charger_volt_status: float = 0,
+                 battery_volt_status: float = 0,
+                 spare_volt_status: float = 0,
+                 ais_curr_status: float = 0,
+                 lantern_curr_status: float = 0,
+                 datalogger_curr_status: float = 0,
+                 spare_curr_status: float = 0,
+                 wind_speed_status: float = 0,
+                 wind_direct_status: float = 0,
+                 air_temper_status: float = 0,
+                 humidity_status: float = 0,
+                 dew_point_status: float = 0,
+                 air_pressure_status: float = 0,
+                 horizon_visibl_status: float = 0,
+                 water_level_status: float = 0,
+                 current1_status: float = 0,
+                 current2_status: float = 0,
+                 current3_status: float = 0,
+                 wave_height_status: float = 0,
+                 wave_drc_status: float = 0,
+                 swell_height_status: float = 0,
+                 swell_drc_status: float = 0,
+                 water_temper_status: float = 0,
+                 precipi_type_status: float = 0,
+                 salinity_status: float = 0,
+                 ice_status: float = 0,
+                 heat_prostr_status: float = 0,
+                 heliograph_status: float = 0,
+                 oxygen_status: float = 0,
+                 oxygen_satur_status: float = 0,
+                 ph_status: float = 0,
+                 chlorophyll_status: float = 0,
+                 muddiness_status: float = 0,
+                 precipi_status: float = 0,
+                 charger_curr_status: float = 0,
+                 discharger_curr_status: float = 0):
         self.id = id
         self.beacon = beacon
         self.regist_time = regist_time
@@ -137,7 +138,7 @@ class SensorData(DataModel):
         self.humidity_status = humidity_status
         self.dew_point_status = dew_point_status
         self.air_pressure_status = air_pressure_status
-        self.horizon_vibl_status = horizon_vibl_status
+        self.horizon_visibl_status = horizon_visibl_status
         self.water_level_status = water_level_status
         self.current1_status = current1_status
         self.current2_status = current2_status
@@ -164,7 +165,7 @@ class SensorData(DataModel):
         self.attr_map = SensorData.attr_map
         self.dateformat = SensorData.dateformat
 
-    def __init__(self, dictionary):
+    def __init__(self, dictionary={}):
         for aKey in self.attr_map.keys():
             dictionary.setdefault(aKey, None)
         self.id = dictionary['sd_id']
@@ -195,7 +196,7 @@ class SensorData(DataModel):
         self.humidity_status = dictionary['humidity_status']
         self.dew_point_status = dictionary['dew_point_status']
         self.air_pressure_status = dictionary['air_pressure_status']
-        self.horizon_vibl_status = dictionary['horizon_vibl_status']
+        self.horizon_visibl_status = dictionary['horizon_visibl_status']
         self.water_level_status = dictionary['water_level_status']
         self.current1_status = dictionary['current1_status']
         self.current2_status = dictionary['current2_status']
@@ -221,3 +222,4 @@ class SensorData(DataModel):
 
         self.attr_map = SensorData.attr_map
         self.dateformat = SensorData.dateformat
+        self.datetimeformat = SensorData.datetimeformat

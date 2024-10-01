@@ -40,7 +40,7 @@ class Prediction(DataModel):
         self.dateformat = Prediction.dateformat
 
     def get_state(self):
-        if self.type != 'simple_probability':
+        if self.type != 'anomaly_probability':
             return None
         if int(self.content) < 33:
             return 'low'

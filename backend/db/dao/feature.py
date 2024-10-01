@@ -15,7 +15,7 @@ class DAO_Feature:
         return feature_list
 
     def insert_feature(self, feature_id: str, beacon_id: str, feature_type: str, 
-                       feature_installDate: datetime, feature_uninstallDate: datetime):
+                       feature_installDate: datetime.datetime, feature_uninstallDate: datetime.datetime):
         query = "INSERT INTO `features` (feature_id, beacon_id, feature_type, feature_installDate,\
           feature_uninstallDate) values(%s,%s,%s,%s,%s)"
         try:

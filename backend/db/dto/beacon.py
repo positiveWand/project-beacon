@@ -1,5 +1,6 @@
 from .data_model import DataModel
 import datetime
+import json
 
 class Beacon(DataModel):
     dateformat = '%Y-%m-%d'
@@ -18,7 +19,8 @@ class Beacon(DataModel):
         'beacon_lightCharacteristic': 'light_characteristic',
         'beacon_lightSignalPeriod': 'light_period',
         'beacon_image': 'image',
-        'beacon_embedding': 'embedding'
+        'beacon_embedding': 'embedding',
+        'beacon_model_hyperparam': 'model_hyperparam'
     }
 
     def __init__(self,
@@ -31,7 +33,8 @@ class Beacon(DataModel):
                color: str, 
                light_color: str, light_characteristic: str, light_period: str, 
                image: bytes, 
-               embedding: bytes):
+               embedding: bytes,
+               hyperparam: str):
         self.id = id
         self.name = name
         self.type = type
@@ -47,6 +50,7 @@ class Beacon(DataModel):
         self.light_period = light_period
         self.image = image
         self.embedding = embedding
+        self.model_hyperparam = hyperparam
 
         self.attr_map = Beacon.attr_map
         self.dateformat = Beacon.dateformat
@@ -69,6 +73,10 @@ class Beacon(DataModel):
         self.light_period = dictionary['beacon_lightSignalPeriod']
         self.image = dictionary['beacon_image']
         self.embedding = dictionary['beacon_embedding']
+        hyperparam = None
+        if isinstance(dictionary['beacon_model_hyperparam'], str):
+            hyperparam = json.loads(dictionary['beacon_model_hyperparam'])
+        self.model_hyperparam = hyperparam
 
         self.attr_map = Beacon.attr_map
         self.dateformat = Beacon.dateformat

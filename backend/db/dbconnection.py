@@ -35,6 +35,14 @@ class DBConnection():
             self.database = "beacon"
             self.ssl_disabled = True
         
+        elif target == "local-docker":
+            self.host = "127.0.0.1"
+            self.user = "dockertest"
+            self.password = "dockerpassword"
+            self.port = 3306
+            self.database = "beacon_project"
+            self.ssl_disabled = True
+        
         self.initPool()
 
     def initPool(self):
@@ -55,6 +63,25 @@ class DBConnection():
             conn.commit()
             self.connPool.release(conn)
             return aRow # None 일수도...
+        except Exception as e:
+            print(e)
+            if(count < 5):
+                self.destoryPool()
+                self.initPool()
+                self.efo(sql, data, count+1)
+            else:
+                raise Exception("DB Connection Error")
+
+    def efm(self, sql, data = (), size=None, count=0):
+        try:
+            conn = self.connPool.get_conn()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            rows = cursor.fetchmany(size)
+            cursor.close()
+            conn.commit()
+            self.connPool.release(conn)
+            return rows # None 일수도...
         except Exception as e:
             print(e)
             if(count < 5):

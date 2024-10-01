@@ -36,14 +36,16 @@ class DAO_Prediction:
 
         return prediction_list
     
-    def select_max_prediction_id(self) -> str:
-        query = 'SELECT MAX(CAST(PREDICTION_ID as SIGNED)) as max FROM `PREDICTION_LOGS`'
+    def select_max_prediction_id(self) -> int:
+        query = 'SELECT MAX(PREDICTION_ID) as max_id FROM `PREDICTION_LOGS`'
 
-        result = self.db.efo(query)
-
-        return result['max']
+        result = self.db.efo(query)['max_id']
+        if result == None:
+            return -1
+        else:
+            return result
     
-    def insert_prediction(self, prediction_id: str, beacon_id: str, type: str, predict_time: datetime.datetime, content: str):
+    def insert_prediction(self, prediction_id: int, beacon_id: str, type: str, predict_time: datetime.datetime, content: str):
         query = 'INSERT `PREDICTION_LOGS` (PREDICTION_ID, PREDICTION_TYPE, BEACON_ID, PREDICTION_TIME, PREDICTION_CONTENT) VALUES(%s, %s, %s, %s, %s)'
 
         try:

@@ -32,22 +32,23 @@ class DAO_Beacon:
                       group: str,
                       purpose: str,
                       office: str,
-                      install_date: datetime.datetime,
+                      install_date: datetime.date,
                       color: str,
                       light_color: str,
                       light_characteristic: str,
                       light_period: str,
                       image: bytes = None,
-                      embedding: bytes = None):
+                      embedding: bytes = None,
+                      hyperparam: str = None):
         query = 'INSERT INTO `BEACONS` (beacon_id, beacon_name, beacon_type, beacon_lat, beacon_lng,\
         beacon_group, beacon_purpose, beacon_office, beacon_installDate, beacon_color,\
-            beacon_lightColor, beacon_lightCharacteristic, beacon_lightSignalPeriod, beacon_image, beacon_embedding)\
-                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            beacon_lightColor, beacon_lightCharacteristic, beacon_lightSignalPeriod, beacon_image, beacon_embedding, beacon_model_hyperparam)\
+                values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
         
         try:
             self.db.ec(query, (beacon_id, name, type, lat,
                 lng, group, purpose, office, install_date, color, light_color,
-                light_characteristic, light_period, image, embedding))
+                light_characteristic, light_period, image, embedding, hyperparam))
             return True
         except:
             return False
@@ -64,6 +65,14 @@ class DAO_Beacon:
         query = 'UPDATE `BEACONS` SET beacon_embedding = %s WHERE beacon_id = %s'
         try:
             self.db.ec(query, (embedding, beacon_id))
+            return True
+        except:
+            return False
+    
+    def update_beacon_hyperparam(self, hyperparam: dict):
+        query = 'UPDATE `BEACONS` SET beacon_model_hyperparam = %s WHERE beacon_id = %s'
+        try:
+            self.db.ec(query, (hyperparam))
             return True
         except:
             return False
