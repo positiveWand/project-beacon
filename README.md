@@ -12,3 +12,11 @@
 ### 인공지능 모델
 - 모델: AAAI 2021년에 출판된 논문 "Graph Neural Network-Based Anomaly Detection in Multivariate Time Series"에서 제안된 GDN(Graph Deviation Network)
 - 사용 언어 및 라이브러리: Python, Pytorch
+## 관련 사진
+![프로젝트 사진1](./image/ui1.png)
+
+![프로젝트 사진2](./image/ui2.png)
+
+![프로젝트 사진3](./image/ui3.png)
+
+![프로젝트 사진4](./image/ui4.png)
